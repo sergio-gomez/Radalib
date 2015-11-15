@@ -1,0 +1,66 @@
+V "GNAT Lib v2014"
+A -O2
+P ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_EXCEPTIONS
+RV NO_LOCAL_ALLOCATORS
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_DEALLOCATION
+RV SPARK_05
+
+U data_clusters%b	data_clusters.adb	063f82fa NE OO PK GE
+W ada%s			ada.ads			ada.ali
+W ada.unchecked_deallocation%s
+
+U data_clusters%s	data_clusters.ads	8e166d74 BN EE NE OO PK GE
+W finite_disjoint_lists%s  finite_disjoint_lists.adb  finite_disjoint_lists.ali
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D a-uncdea.ads		20140406181358 f15a5ed1 ada.unchecked_deallocation%s
+D data_clusters.ads	20150322182906 e6d59ec8 data_clusters%s
+D data_clusters.adb	20150322182942 11b042e3 data_clusters%b
+D finite_disjoint_lists.ads  20150322182910 68c3f3bc finite_disjoint_lists%s
+D stacks.ads		20150322182932 6f253f87 stacks%s
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+X 1 ada.ads
+16K9*Ada 19e8 5|22r6 30r28
+X 3 a-uncdea.ads
+20u15*Unchecked_Deallocation 5|22w10 30r32
+X 4 data_clusters.ads
+25+8 Data_Item 26r49 62r72 5|72r72
+26A8 Data_Array(25+8)<integer> 27r30
+27P8 Pdata_Array(26A8) 42r58 69r10 5|36r59
+28k9*Data_Clusters 25z8 26z8 27z8 67E8 74l5 74e18 5|24b14 80l5 80t18
+31P8*Data_Clustering 42r32 48r29 54r32 62r33 72c8 5|30r76 36r33 50r29 63r33
+. 72r33
+34X3*Void_Data_Set_Error 5|39r13
+42U13*Initialize 42<24 42>49 5|36b13 44l7 44t17
+42p24 Dc{31P8} 5|36b25 41m5 42r5 43r16
+42*49 Data{27P8} 5|36b50 38r8 42r15 43r24
+48U13*Free 48=18 5|50b13 57l7 57t11
+48p18 Dc{31P8} 5|50b18 52r8 53r12 54m15 55m7
+54V12*Get_Clusters{6|35P8} 54>25 5|63b12 66l7 66t19
+54p25 Dc{31P8} 5|63b26 65r12
+62V12*Get_Data_Item{25+8} 62>26 62>50 5|72b12 78l7 78t20
+62p26 Dc{31P8} 5|72b26 74r26 77r12 77r19
+62r50 E{6|27R8} 5|72b50 74r23 77r43
+67R8 Data_Clustering_Rec 70e13 72r34 5|30r55 41r15
+68p5 Lol{6|35P8} 5|43m19 53m15 65r15 74r29
+69*5 Dat{27P8} 5|42m8 77r14 77r15 77r22
+X 5 data_clusters.adb
+30U13 Dispose[3|20] 54s7
+X 6 finite_disjoint_lists.ads
+24K9*Finite_Disjoint_Lists 4|22w6 22r33 6|425e26
+27R8*Element 4|62r56 5|72r56 6|358e13
+35P8*List_Of_Lists 4|54r56 68r10 5|63r57
+45X3*Incompatible_Lists_Of_Lists_Error 5|75r13
+55U13*Initialize 5|43s5
+73U13*Free 5|53s7
+230V12*Index_Of{positive} 5|77s34
+325V12*Belongs_To{boolean} 5|74s12
+

@@ -1,0 +1,140 @@
+V "GNAT Lib v2014"
+A -O2
+P SS ZX
+
+RN
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_ALLOCATORS
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U statistics_float%b	statistics_float.ads	8e9dab42 EE OO PK
+Z ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.numerics%s	a-numeri.ads		a-numeri.ali
+Z ada.numerics.aux%s	a-numaux.adb		a-numaux.ali
+Z ada.numerics.float_random%s  a-nuflra.adb	a-nuflra.ali
+Z ada.numerics.generic_elementary_functions%s
+W ada.tags%s		a-tags.adb		a-tags.ali
+Z ada.unchecked_deallocation%s
+W interfaces%s		interfac.ads		interfac.ali
+Z minheaps%s		minheaps.adb		minheaps.ali
+Z queues_integer%s	queues_integer.ads	queues_integer.ali
+Z random_numbers%s	random_numbers.adb	random_numbers.ali
+W statistics%s		statistics.adb		statistics.ali  AD
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.exn_llf%s	s-exnllf.adb		s-exnllf.ali
+W system.fat_flt%s	s-fatflt.ads		s-fatflt.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W utils%s		utils.adb		utils.ali
+
+U statistics_float%s	statistics_float.ads	b39d2404 EB EE OO PK
+Z ada%s			ada.ads			ada.ali
+Z ada.numerics%s	a-numeri.ads		a-numeri.ali
+Z ada.numerics.float_random%s  a-nuflra.adb	a-nuflra.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W statistics%s		statistics.adb		statistics.ali  AD
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W utils%s		utils.adb		utils.ali
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-calend.ads		20140406181358 d86d6c8c ada.calendar%s
+D a-charac.ads		20140406181358 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140406181358 66457d31 ada.characters.latin_1%s
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-finali.ads		20140406181358 69f99942 ada.finalization%s
+D a-flteio.ads		20140406181358 e18a47a0 ada.float_text_io%s
+D a-inteio.ads		20140406181358 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20140406181358 e4a01f64 ada.io_exceptions%s
+D a-lfteio.ads		20140406181354 4969a46f ada.long_float_text_io%s
+D a-llitio.ads		20140406181354 9aecf52b ada.long_long_integer_text_io%s
+D a-numeri.ads		20140406181358 bb51c45a ada.numerics%s
+D a-numaux.ads		20140406181356 243fe0b7 ada.numerics.aux%s
+D a-nuflra.ads		20140406181358 49c50e0b ada.numerics.float_random%s
+D a-ngelfu.ads		20140406181358 ff061ca9 ada.numerics.generic_elementary_functions%s
+D a-ngelfu.adb		20140406181356 859ccdff ada.numerics.generic_elementary_functions%b
+D a-ngrear.ads		20140406181358 86992c51 ada.numerics.generic_real_arrays%s
+D a-stream.ads		20140406181354 1a984740 ada.streams%s
+D a-string.ads		20140406181358 90ac6797 ada.strings%s
+D a-strmap.ads		20140406181358 e8bb714a ada.strings.maps%s
+D a-strunb.ads		20140406181358 3f91d4c5 ada.strings.unbounded%s
+D a-tags.ads		20140406181356 dc4d0634 ada.tags%s
+D a-textio.ads		20140406181358 386df5d4 ada.text_io%s
+D a-tiflio.ads		20140406181358 56fbda09 ada.text_io.float_io%s
+D a-tiinio.ads		20140406181358 aa04e5d6 ada.text_io.integer_io%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D a-uncdea.ads		20140406181358 f15a5ed1 ada.unchecked_deallocation%s
+D arrays_double.ads	20150322182902 4fb5de93 arrays_double%s
+D arrays_float.ads	20150322182902 7beec0f0 arrays_float%s
+D interfac.ads		20140406181358 69adb1b9 interfaces%s
+D i-cstrea.ads		20140406181356 febc86ed interfaces.c_streams%s
+D minheaps.ads		20150322182926 3f4bcee1 minheaps%s
+D minheaps.adb		20150322182950 eec334f7 minheaps%b
+D queues.ads		20150322182930 08e33eaf queues%s
+D queues_integer.ads	20150322182932 ff2d5383 queues_integer%s
+D random_numbers.ads	20150322182932 514c7970 random_numbers%s
+D statistics.ads	20150322182934 72d4df6c statistics%s
+D statistics.adb	20150322182954 8fc07efc statistics%b
+D statistics_float.ads	20150322182934 8e9dab42 statistics_float%s
+D statistics_float.ads	20150322182934 8e9dab42 statistics_float%b
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-atocou.ads		20140406181358 cd7c94ca system.atomic_counters%s
+D s-atocou.adb		20140406181356 276bb8fc system.atomic_counters%b
+D s-crtl.ads		20140406181356 2c012597 system.crtl%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-exnllf.ads		20140406181354 81841eef system.exn_llf%s
+D s-fatflt.ads		20140406181356 11beb392 system.fat_flt%s
+D s-fatgen.ads		20140406181356 9267ca45 system.fat_gen%s
+D s-ficobl.ads		20140406181354 078245e4 system.file_control_block%s
+D s-finmas.ads		20140406181356 814daec4 system.finalization_masters%s
+D s-finroo.ads		20140406181358 4ff27390 system.finalization_root%s
+D s-maccod.ads		20140406181358 0fbb7bce system.machine_code%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-pooglo.ads		20140406181356 542f33d0 system.pool_global%s
+D s-rannum.ads		20140406181354 5eb33f0a system.random_numbers%s
+D s-secsta.ads		20140406181358 86a2856d system.secondary_stack%s
+D s-soflin.ads		20140406181358 aa763b52 system.soft_links%s
+D s-stache.ads		20140406181354 a37c21ec system.stack_checking%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-stoele.ads		20140406181356 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20140406181354 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20140406181356 b16154c2 system.storage_pools%s
+D s-stposu.ads		20140406181354 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20140406181358 aedef97e system.stream_attributes%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+D s-unstyp.ads		20140406181356 510692af system.unsigned_types%s
+D s-wchcon.ads		20140406181358 1b7d22d2 system.wch_con%s
+D utils.ads		20150322182940 4fd4502a utils%s
+D utils_generics.ads	20150322182940 91194a83 utils_generics%s
+X 17 a-ngrear.ads
+43A9*Real_Vector(float)<integer>
+X 37 statistics.ads
+25F8 Num 40|26r18
+26A8 Nums(25F8)<integer> 40|26r32
+27P8 PNums(26A8) 40|26r48
+30k9*Statistics 363e15 40|23w6 26r7
+X 38 statistics.adb
+2120V15 "<"{boolean} 32|25i18
+2201V15 "<"{boolean} 32|25i18[40|25]
+X 40 statistics_float.ads
+25K9*Statistics_Float[37|30]
+X 68 utils.ads
+34K9*Utils 40|22w6 22r17 68|1124e10
+64A11*Floats{17|43A9[29|24]}<integer> 40|26r40
+65P8*PFloats(64A11) 40|26r57
+316V12*Alloc[69|33]{65P8} 37|28i17
+422U13*Free[69|120] 37|29i18
+

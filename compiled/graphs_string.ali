@@ -1,0 +1,180 @@
+V "GNAT Lib v2014"
+A -O2
+P SS ZX
+
+RN
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_ALLOCATORS
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_DISPATCH
+RV NO_DISPATCHING_CALLS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_IMPLICIT_LOOPS
+RV NO_LOCAL_ALLOCATORS
+RV NO_NESTED_FINALIZATION
+RV NO_RECURSION
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_STREAMS
+RV NO_UNCHECKED_ACCESS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_IMPLEMENTATION_ATTRIBUTES
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLICIT_ALIASING
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U graphs_string%b	graphs_string.ads	267004d8 NE OO PK
+Z ada%s			ada.ads			ada.ali
+Z ada.containers%s	a-contai.ads		a-contai.ali
+Z ada.containers.hash_tables%s  a-cohata.ads	a-cohata.ali
+Z ada.containers.hashed_maps%s
+W ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.finalization%s	a-finali.adb		a-finali.ali
+Z ada.iterator_interfaces%s
+W ada.streams%s		a-stream.adb		a-stream.ali
+Z ada.strings%s		a-string.ads		a-string.ali
+Z ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
+Z ada.strings.unbounded.hash%s  a-stunha.adb	a-stunha.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+Z ada.unchecked_deallocation%s
+W graphs%s		graphs.adb		graphs.ali  AD
+W interfaces%s		interfac.ads		interfac.ali
+Z linked_lists%s	linked_lists.adb	linked_lists.ali
+Z stacks%s		stacks.adb		stacks.ali
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.finalization_masters%s  s-finmas.adb	s-finmas.ali
+W system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.storage_elements%s  s-stoele.adb	s-stoele.ali
+W system.storage_pools%s  s-stopoo.adb		s-stopoo.ali
+W system.storage_pools.subpools%s  s-stposu.adb	s-stposu.ali
+W system.stream_attributes%s  s-stratt.adb	s-stratt.ali
+W system.strings.stream_ops%s  s-ststop.adb	s-ststop.ali
+W utils%s		utils.adb		utils.ali
+
+U graphs_string%s	graphs_string.ads	824aae85 EB EE OO PK
+Z ada%s			ada.ads			ada.ali
+Z ada.containers%s	a-contai.ads		a-contai.ali
+Z ada.containers.hash_tables%s  a-cohata.ads	a-cohata.ali
+Z ada.containers.hash_tables.generic_keys%s
+Z ada.containers.hash_tables.generic_operations%s
+Z ada.containers.hashed_maps%s
+Z ada.containers.prime_numbers%s  a-coprnu.adb	a-coprnu.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.finalization%s	a-finali.adb		a-finali.ali
+Z ada.iterator_interfaces%s
+W ada.streams%s		a-stream.adb		a-stream.ali
+Z ada.strings%s		a-string.ads		a-string.ali
+Z ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
+Z ada.strings.unbounded.hash%s  a-stunha.adb	a-stunha.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+Z ada.unchecked_deallocation%s
+W graphs%s		graphs.adb		graphs.ali  AD
+Z linked_lists%s	linked_lists.adb	linked_lists.ali
+Z stacks%s		stacks.adb		stacks.ali
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.finalization_masters%s  s-finmas.adb	s-finmas.ali
+W system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.storage_elements%s  s-stoele.adb	s-stoele.ali
+W system.storage_pools%s  s-stopoo.adb		s-stopoo.ali
+W system.storage_pools.subpools%s  s-stposu.adb	s-stposu.ali
+W system.stream_attributes%s  s-stratt.adb	s-stratt.ali
+W utils%s		utils.adb		utils.ali
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-calend.ads		20140406181358 d86d6c8c ada.calendar%s
+D a-charac.ads		20140406181358 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140406181358 66457d31 ada.characters.latin_1%s
+D a-contai.ads		20140406181356 61e5e089 ada.containers%s
+D a-cohata.ads		20140406181358 04abccc5 ada.containers.hash_tables%s
+D a-chtgke.ads		20140406181358 a7b0f3a2 ada.containers.hash_tables.generic_keys%s
+D a-chtgke.adb		20140406181358 ee7af212 ada.containers.hash_tables.generic_keys%b
+D a-chtgop.ads		20140406181358 b47ea0e7 ada.containers.hash_tables.generic_operations%s
+D a-chtgop.adb		20140406181358 c00683b2 ada.containers.hash_tables.generic_operations%b
+D a-cohama.ads		20140406181356 9f97b812 ada.containers.hashed_maps%s
+D a-cohama.adb		20140406181358 55a9a6dc ada.containers.hashed_maps%b
+D a-coprnu.ads		20140406181356 0cdf1864 ada.containers.prime_numbers%s
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-finali.ads		20140406181358 69f99942 ada.finalization%s
+D a-flteio.ads		20140406181358 e18a47a0 ada.float_text_io%s
+D a-inteio.ads		20140406181358 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20140406181358 e4a01f64 ada.io_exceptions%s
+D a-iteint.ads		20140406181354 7c7305e9 ada.iterator_interfaces%s
+D a-lfteio.ads		20140406181354 4969a46f ada.long_float_text_io%s
+D a-llitio.ads		20140406181354 9aecf52b ada.long_long_integer_text_io%s
+D a-numeri.ads		20140406181358 bb51c45a ada.numerics%s
+D a-ngrear.ads		20140406181358 86992c51 ada.numerics.generic_real_arrays%s
+D a-stream.ads		20140406181354 1a984740 ada.streams%s
+D a-string.ads		20140406181358 90ac6797 ada.strings%s
+D a-strmap.ads		20140406181358 e8bb714a ada.strings.maps%s
+D a-strunb.ads		20140406181358 3f91d4c5 ada.strings.unbounded%s
+D a-stunha.ads		20140406181354 115e053b ada.strings.unbounded.hash%s
+D a-tags.ads		20140406181356 dc4d0634 ada.tags%s
+D a-textio.ads		20140406181358 386df5d4 ada.text_io%s
+D a-tiflio.ads		20140406181358 56fbda09 ada.text_io.float_io%s
+D a-tiinio.ads		20140406181358 aa04e5d6 ada.text_io.integer_io%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D a-uncdea.ads		20140406181358 f15a5ed1 ada.unchecked_deallocation%s
+D arrays_double.ads	20150322182902 4fb5de93 arrays_double%s
+D arrays_float.ads	20150322182902 7beec0f0 arrays_float%s
+D graphs.ads		20150322182912 ebeefa77 graphs%s
+D graphs.adb		20150322182950 832cb3c7 graphs%b
+D graphs_string.ads	20150322182922 267004d8 graphs_string%s
+D graphs_string.ads	20150322182922 267004d8 graphs_string%b
+D interfac.ads		20140406181358 69adb1b9 interfaces%s
+D i-cstrea.ads		20140406181356 febc86ed interfaces.c_streams%s
+D linked_lists.ads	20150322182924 f903bd62 linked_lists%s
+D linked_lists.adb	20150322182950 a3ad63f8 linked_lists%b
+D stacks.ads		20150322182932 6f253f87 stacks%s
+D stacks.adb		20150322182954 fc6a8cb0 stacks%b
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-atocou.ads		20140406181358 cd7c94ca system.atomic_counters%s
+D s-atocou.adb		20140406181356 276bb8fc system.atomic_counters%b
+D s-crtl.ads		20140406181356 2c012597 system.crtl%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-ficobl.ads		20140406181354 078245e4 system.file_control_block%s
+D s-finmas.ads		20140406181356 814daec4 system.finalization_masters%s
+D s-finroo.ads		20140406181358 4ff27390 system.finalization_root%s
+D s-maccod.ads		20140406181358 0fbb7bce system.machine_code%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-pooglo.ads		20140406181356 542f33d0 system.pool_global%s
+D s-secsta.ads		20140406181358 86a2856d system.secondary_stack%s
+D s-soflin.ads		20140406181358 aa763b52 system.soft_links%s
+D s-stache.ads		20140406181354 a37c21ec system.stack_checking%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-stoele.ads		20140406181356 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20140406181354 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20140406181356 b16154c2 system.storage_pools%s
+D s-stposu.ads		20140406181354 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20140406181358 aedef97e system.stream_attributes%s
+D s-string.ads		20140406181358 8fe54fb7 system.strings%s
+D s-ststop.ads		20140406181356 e6693757 system.strings.stream_ops%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+D s-unstyp.ads		20140406181356 510692af system.unsigned_types%s
+D s-wchcon.ads		20140406181358 1b7d22d2 system.wch_con%s
+D utils.ads		20150322182940 4fd4502a utils%s
+D utils_generics.ads	20150322182940 91194a83 utils_generics%s
+X 19 a-iteint.ads
+24h9 Forward_Iterator
+X 37 graphs.ads
+28+8 Edge_Value 40|26r14
+29*3 Default_Edge_Value{28+8} 40|26r37
+30k9*Graphs 560e11 40|23w6 26r7
+X 40 graphs_string.ads
+25K9*Graphs_String[37|30]
+X 72 utils.ads
+34K9*Utils 40|22w6 22r17 72|1124e10
+38R11*Ustring{27|79R9} 40|26r28
+1015V12*S2U=1015:62{27|79R9} 40|26s59
+

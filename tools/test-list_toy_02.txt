@@ -1,0 +1,15 @@
+# network with numeric labels and some weights
+3 	1
+
+ 0 ;  1 ,  #comment1
+1   2#comment2
+  2 0
+    	#comment3
+  3 ,3
+10;3:10_3
+10	4 54
+3 4 34
+4 3 43
+one four weight_14
+four one weight_41
+Four Four "unrecognized quote marks"

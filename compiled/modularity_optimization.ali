@@ -1,0 +1,579 @@
+V "GNAT Lib v2014"
+A -O2
+P SS ZX
+
+RN
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_ALLOCATORS
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_IMPLICIT_LOOPS
+RV NO_LOCAL_ALLOCATORS
+RV NO_RECURSION
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK_05
+
+U modularity_optimization%b  modularity_optimization.adb  9a60583e NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.numerics%s	a-numeri.ads		a-numeri.ali
+Z ada.numerics.aux%s	a-numaux.adb		a-numaux.ali
+W ada.numerics.elementary_functions%s  a-nuelfu.ads  a-nuelfu.ali
+Z ada.numerics.float_random%s  a-nuflra.adb	a-nuflra.ali
+Z ada.numerics.generic_elementary_functions%s
+Z ada.strings%s		a-string.ads		a-string.ali
+Z ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+Z ada.text_io%s		a-textio.adb		a-textio.ali
+Z ada.text_io.float_aux%s  a-tiflau.adb		a-tiflau.ali
+W ada.text_io.float_io%s
+Z ada.unchecked_deallocation%s
+W finite_disjoint_lists%s  finite_disjoint_lists.adb  finite_disjoint_lists.ali
+W finite_disjoint_lists.algorithms%s  finite_disjoint_lists-algorithms.adb  finite_disjoint_lists-algorithms.ali
+Z graphs_double%s	graphs_double.ads	graphs_double.ali
+Z graphs_double_algorithms%s  graphs_double_algorithms.ads  graphs_double_algorithms.ali
+Z graphs_double_modularities_d%s  graphs_double_modularities_d.ads  graphs_double_modularities_d.ali
+W interfaces%s		interfac.ads		interfac.ali
+Z linked_lists%s	linked_lists.adb	linked_lists.ali
+Z minheaps%s		minheaps.adb		minheaps.ali
+W modularities_exhaustive%s  modularities_exhaustive.adb  modularities_exhaustive.ali
+W modularities_extremal%s  modularities_extremal.adb  modularities_extremal.ali
+W modularities_fast%s	modularities_fast.adb	modularities_fast.ali
+W modularities_reposition%s  modularities_reposition.adb  modularities_reposition.ali
+W modularities_spectral%s  modularities_spectral.adb  modularities_spectral.ali
+W modularities_tabu%s	modularities_tabu.adb	modularities_tabu.ali
+Z queues%s		queues.adb		queues.ali
+Z stacks%s		stacks.adb		stacks.ali
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.exn_llf%s	s-exnllf.adb		s-exnllf.ali
+W system.fat_flt%s	s-fatflt.ads		s-fatflt.ali
+W system.fat_lflt%s	s-fatlfl.ads		s-fatlfl.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+Z utils%s		utils.adb		utils.ali
+Z vectors%s		vectors.adb		vectors.ali
+
+U modularity_optimization%s  modularity_optimization.ads  f02948d5 BN EE NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.strings%s		a-string.ads		a-string.ali
+W ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
+W finite_disjoint_lists%s  finite_disjoint_lists.adb  finite_disjoint_lists.ali
+W graphs_double%s	graphs_double.ads	graphs_double.ali
+W graphs_double_modularities_d%s  graphs_double_modularities_d.ads  graphs_double_modularities_d.ali
+W utils%s		utils.adb		utils.ali
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-calend.ads		20140406181358 d86d6c8c ada.calendar%s
+D a-charac.ads		20140406181358 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140406181358 66457d31 ada.characters.latin_1%s
+D a-contai.ads		20140406181356 61e5e089 ada.containers%s
+D a-cohata.ads		20140406181358 04abccc5 ada.containers.hash_tables%s
+D a-cohama.ads		20140406181356 9f97b812 ada.containers.hashed_maps%s
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-finali.ads		20140406181358 69f99942 ada.finalization%s
+D a-flteio.ads		20140406181358 e18a47a0 ada.float_text_io%s
+D a-inteio.ads		20140406181358 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20140406181358 e4a01f64 ada.io_exceptions%s
+D a-iteint.ads		20140406181354 7c7305e9 ada.iterator_interfaces%s
+D a-lfteio.ads		20140406181354 4969a46f ada.long_float_text_io%s
+D a-llitio.ads		20140406181354 9aecf52b ada.long_long_integer_text_io%s
+D a-numeri.ads		20140406181358 bb51c45a ada.numerics%s
+D a-numaux.ads		20140406181356 243fe0b7 ada.numerics.aux%s
+D a-nuelfu.ads		20140406181356 03e83d1c ada.numerics.elementary_functions%s
+D a-nuflra.ads		20140406181358 49c50e0b ada.numerics.float_random%s
+D a-ngelfu.ads		20140406181358 ff061ca9 ada.numerics.generic_elementary_functions%s
+D a-ngelfu.adb		20140406181356 859ccdff ada.numerics.generic_elementary_functions%b
+D a-ngrear.ads		20140406181358 86992c51 ada.numerics.generic_real_arrays%s
+D a-stream.ads		20140406181354 1a984740 ada.streams%s
+D a-string.ads		20140406181358 90ac6797 ada.strings%s
+D a-strmap.ads		20140406181358 e8bb714a ada.strings.maps%s
+D a-strunb.ads		20140406181358 3f91d4c5 ada.strings.unbounded%s
+D a-stunha.ads		20140406181354 115e053b ada.strings.unbounded.hash%s
+D a-tags.ads		20140406181356 dc4d0634 ada.tags%s
+D a-textio.ads		20140406181358 386df5d4 ada.text_io%s
+D a-tiflau.ads		20140406181356 c0393f21 ada.text_io.float_aux%s
+D a-tiflio.ads		20140406181358 56fbda09 ada.text_io.float_io%s
+D a-tiflio.adb		20140406181356 fd9b1cfc ada.text_io.float_io%b
+D a-tiinio.ads		20140406181358 aa04e5d6 ada.text_io.integer_io%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D a-uncdea.ads		20140406181358 f15a5ed1 ada.unchecked_deallocation%s
+D arrays_double.ads	20150322182902 4fb5de93 arrays_double%s
+D arrays_float.ads	20150322182902 7beec0f0 arrays_float%s
+D finite_disjoint_lists.ads  20150322182910 68c3f3bc finite_disjoint_lists%s
+D finite_disjoint_lists-algorithms.ads  20150322182910 a408888a finite_disjoint_lists.algorithms%s
+D graphs.ads		20150322182912 ebeefa77 graphs%s
+D graphs-algorithms.ads	20150322182910 d9b03449 graphs.algorithms%s
+D graphs-modularities.ads  20150923142430 482870ea graphs.modularities%s
+D graphs-properties.ads	20150322182912 80b457cc graphs.properties%s
+D graphs_double.ads	20150322182912 3ca3532c graphs_double%s
+D graphs_double_algorithms.ads  20150322182914 56a6c6b1 graphs_double_algorithms%s
+D graphs_double_modularities_d.ads  20150322182914 b39b4177 graphs_double_modularities_d%s
+D interfac.ads		20140406181358 69adb1b9 interfaces%s
+D i-cstrea.ads		20140406181356 febc86ed interfaces.c_streams%s
+D linked_lists.ads	20150322182924 f903bd62 linked_lists%s
+D linked_lists.adb	20150322182950 a3ad63f8 linked_lists%b
+D minheaps.ads		20150322182926 3f4bcee1 minheaps%s
+D minheaps.adb		20150322182950 eec334f7 minheaps%b
+D modularities_exhaustive.ads  20150322182928 fbb31d80 modularities_exhaustive%s
+D modularities_extremal.ads  20150322182928 85f0c963 modularities_extremal%s
+D modularities_extremal.adb  20150322182950 d4c82633 modularities_extremal%b
+D modularities_fast.ads	20150322182928 84a260f4 modularities_fast%s
+D modularities_fast.adb	20150322182950 53d5cc5e modularities_fast%b
+D modularities_reposition.ads  20150322182928 30c1579c modularities_reposition%s
+D modularities_reposition.adb  20150322182952 294e9dac modularities_reposition%b
+D modularities_spectral.ads  20150322182928 70c95e4f modularities_spectral%s
+D modularities_spectral.adb  20150322182952 a1ac9354 modularities_spectral%b
+D modularities_tabu.ads	20150322182930 4df25eed modularities_tabu%s
+D modularities_tabu.adb	20150322182952 0b65a6e6 modularities_tabu%b
+D modularity_optimization.ads  20150322182930 67972ddd modularity_optimization%s
+D modularity_optimization.adb  20150322182952 ad0c235c modularity_optimization%b
+D queues.ads		20150322182930 08e33eaf queues%s
+D queues.adb		20150322182954 b48d0db1 queues%b
+D stacks.ads		20150322182932 6f253f87 stacks%s
+D stacks.adb		20150322182954 fc6a8cb0 stacks%b
+D statistics.ads	20150322182934 72d4df6c statistics%s
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-atocou.ads		20140406181358 cd7c94ca system.atomic_counters%s
+D s-atocou.adb		20140406181356 276bb8fc system.atomic_counters%b
+D s-crtl.ads		20140406181356 2c012597 system.crtl%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-exnllf.ads		20140406181354 81841eef system.exn_llf%s
+D s-fatflt.ads		20140406181356 11beb392 system.fat_flt%s
+D s-fatgen.ads		20140406181356 9267ca45 system.fat_gen%s
+D s-fatlfl.ads		20140406181354 378cba9f system.fat_lflt%s
+D s-ficobl.ads		20140406181354 078245e4 system.file_control_block%s
+D s-finmas.ads		20140406181356 814daec4 system.finalization_masters%s
+D s-finroo.ads		20140406181358 4ff27390 system.finalization_root%s
+D s-maccod.ads		20140406181358 0fbb7bce system.machine_code%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-pooglo.ads		20140406181356 542f33d0 system.pool_global%s
+D s-rannum.ads		20140406181354 5eb33f0a system.random_numbers%s
+D s-secsta.ads		20140406181358 86a2856d system.secondary_stack%s
+D s-soflin.ads		20140406181358 aa763b52 system.soft_links%s
+D s-stache.ads		20140406181354 a37c21ec system.stack_checking%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-stoele.ads		20140406181356 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20140406181354 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20140406181356 b16154c2 system.storage_pools%s
+D s-stposu.ads		20140406181354 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20140406181358 aedef97e system.stream_attributes%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+D s-unstyp.ads		20140406181356 510692af system.unsigned_types%s
+D s-wchcon.ads		20140406181358 1b7d22d2 system.wch_con%s
+D utils.ads		20150322182940 4fd4502a utils%s
+D utils_generics.ads	20150322182940 91194a83 utils_generics%s
+D vectors.ads		20150322182940 841a625f vectors%s
+D vectors.adb		20150322182958 2f8b503a vectors%b
+X 1 ada.ads
+16K9*Ada 19e8 64|23r6 23r33 65|23r6 23r45
+X 13 a-iteint.ads
+24h9 Forward_Iterator
+X 16 a-numeri.ads
+16K13*Numerics 32e17 65|23r10 23r49
+X 18 a-nuelfu.ads
+18K22*Elementary_Functions[20|39] 65|23w19 23r58
+X 20 a-ngelfu.ads
+51V13*Log{float} 65|66s10[18|18]
+51f21 Base{float} 65|66r35[18|18]
+X 22 a-ngrear.ads
+43A9*Real_Vector(long_float)<integer>
+44A9*Real_Matrix(long_float)<integer><integer>
+X 24 a-string.ads
+16K13*Strings 35e16 64|23r10 23r37
+X 26 a-strunb.ads
+76K21*Unbounded 489e26 64|23w18 23r45
+79R9*Unbounded_String<9|43R9> 473e14 64|55r18 60r18 73r20 77r20 89r18 100r18
+. 106r20 110r20 123r18 135r18 141r20 145r20 156r18 166r18 172r20 176r20 188r18
+. 198r18 209r18 215r20 219r20 231r18 242r18 252r18 258r20 262r20 274r18 285r18
+. 65|40r18 52r18 108r18 134r18 159r18 188r18 209r18 233r18 255r18 279r18
+. 301r18 323r18 348r18 369r18 391r18 416r18
+82r4*Null_Unbounded_String{79R9} 64|89r38 100r38 123r38 135r38 156r38 166r38
+. 188r38 198r38 209r38 231r38 242r38 252r38 274r38 285r38 65|108r38 134r38
+. 159r38 188r38 209r38 233r38 255r38 279r38 301r38 323r38 348r38 369r38 391r38
+. 416r38
+X 38 finite_disjoint_lists.ads
+24K9*Finite_Disjoint_Lists 425e26 64|26w6 26r33 65|25r6 25r44
+35P8*List_Of_Lists 64|37r19 45r19 56r13 61r13 74r15 78r15 82r17 83r19 93r17
+. 94r19 107r15 111r15 115r17 116r19 127r17 128r19 142r15 146r15 150r19 160r19
+. 173r15 177r15 181r17 182r19 192r19 202r17 203r19 216r15 220r15 224r17 225r19
+. 235r17 236r19 246r19 259r15 263r15 267r17 268r19 278r17 279r19 65|41r13
+. 53r13 76r19 88r19 101r17 102r19 127r17 128r19 151r17 152r19 180r17 181r19
+. 203r19 227r19 248r17 249r19 273r19 281r14 294r17 295r19 316r17 317r19 341r17
+. 342r19 363r19 371r14 384r17 385r19 409r17 410r19
+38n68*Isolated_Initialization{38E8} 65|373r49
+38n93*Together_Initialization{38E8} 65|283r49
+55U13*Initialize 65|283s5 373s5
+73U13*Free 65|285s5 375s5
+X 39 finite_disjoint_lists-algorithms.ads
+22K31*Algorithms 150e37 65|25w28 25r66
+43U13*Sort_Lists 65|118s5 218s5 264s5 332s5 400s5
+X 40 graphs.ads
+28+8 Edge_Value
+35P8*Graph 64|36r12[44|25] 44r12[44|25] 81r12[44|25] 92r12[44|25] 114r12[44|25]
+. 126r12[44|25] 149r12[44|25] 159r12[44|25] 180r13[44|25] 191r12[44|25] 201r13[44|25]
+. 223r13[44|25] 234r13[44|25] 245r13[44|25] 266r12[44|25] 277r12[44|25] 65|75r12[44|25]
+. 87r12[44|25] 100r12[44|25] 126r12[44|25] 150r12[44|25] 179r12[44|25] 202r12[44|25]
+. 226r12[44|25] 247r13[44|25] 272r12[44|25] 293r13[44|25] 315r13[44|25] 340r13[44|25]
+. 362r13[44|25] 383r12[44|25] 408r12[44|25]
+90V12*Number_Of_Vertices{natural} 65|283s25[44|25] 373s25[44|25]
+X 42 graphs-modularities.ads
+27F8 Num
+28A8 Nums(27F8)<integer>
+29P8 PNums(28A8)
+30A8 Numss(27F8)<integer><integer>
+31P8 PNumss(30A8)
+32V17 To_Num{27F8} 43|33i17
+33V17 To_Value{40|28+8} 43|34i17
+34V17 Alloc{29P8} 43|35i17 70|28i17
+35U18 Free 43|36i18 70|29i18
+36V17 Alloc{31P8} 43|37i17
+37U18 Free 43|38i18
+45E8*Modularity_Type 64|39r12[46|26] 48r12[46|26] 85r12[46|26] 96r12[46|26]
+. 118r12[46|26] 130r12[46|26] 152r12[46|26] 162r12[46|26] 184r12[46|26] 194r12[46|26]
+. 205r12[46|26] 227r12[46|26] 238r12[46|26] 248r12[46|26] 270r12[46|26] 281r12[46|26]
+. 65|78r12[46|26] 91r12[46|26] 104r12[46|26] 130r12[46|26] 154r12[46|26]
+. 183r12[46|26] 205r12[46|26] 229r12[46|26] 251r12[46|26] 275r12[46|26] 297r12[46|26]
+. 319r12[46|26] 344r12[46|26] 365r12[46|26] 387r12[46|26] 412r12[46|26]
+48n5*Weighted_Newman{45E8[46|26]} 64|39r31[46|26] 48r31[46|26] 85r31[46|26]
+. 96r31[46|26] 118r31[46|26] 130r31[46|26] 152r31[46|26] 162r31[46|26] 184r31[46|26]
+. 194r31[46|26] 205r31[46|26] 227r31[46|26] 238r31[46|26] 248r31[46|26] 270r31[46|26]
+. 281r31[46|26] 65|78r31[46|26] 91r31[46|26] 104r31[46|26] 130r31[46|26]
+. 154r31[46|26] 183r31[46|26] 205r31[46|26] 229r31[46|26] 251r31[46|26] 275r31[46|26]
+. 297r31[46|26] 319r31[46|26] 344r31[46|26] 365r31[46|26] 387r31[46|26] 412r31[46|26]
+62R8*Modularity_Rec 64|38r17[46|26] 46r17[46|26] 57r11[46|26] 62r11[46|26]
+. 75r13[46|26] 79r13[46|26] 84r17[46|26] 95r17[46|26] 108r13[46|26] 112r13[46|26]
+. 117r17[46|26] 129r17[46|26] 143r13[46|26] 147r13[46|26] 151r17[46|26] 161r17[46|26]
+. 174r13[46|26] 178r13[46|26] 183r17[46|26] 193r17[46|26] 204r17[46|26] 217r13[46|26]
+. 221r13[46|26] 226r17[46|26] 237r17[46|26] 247r17[46|26] 260r13[46|26] 264r13[46|26]
+. 269r17[46|26] 280r17[46|26] 65|42r11[46|26] 54r11[46|26] 77r17[46|26] 89r17[46|26]
+. 103r17[46|26] 129r17[46|26] 153r17[46|26] 182r17[46|26] 204r17[46|26] 228r17[46|26]
+. 250r17[46|26] 274r17[46|26] 296r17[46|26] 318r17[46|26] 343r17[46|26] 364r17[46|26]
+. 386r17[46|26] 411r17[46|26]
+71f3*No_Resistance{long_float} 64|40r21[46|26] 49r21[46|26] 87r21[46|26]
+. 98r21[46|26] 121r21[46|26] 133r21[46|26] 154r21[46|26] 164r21[46|26] 186r21[46|26]
+. 196r21[46|26] 207r21[46|26] 229r21[46|26] 240r21[46|26] 250r21[46|26] 272r21[46|26]
+. 283r21[46|26] 65|79r21[46|26] 92r21[46|26] 106r21[46|26] 132r21[46|26]
+. 157r21[46|26] 186r21[46|26] 207r21[46|26] 231r21[46|26] 253r21[46|26] 277r21[46|26]
+. 299r21[46|26] 321r21[46|26] 346r21[46|26] 367r21[46|26] 389r21[46|26] 414r21[46|26]
+X 43 graphs-properties.ads
+28F8 Num
+29A8 Nums(28F8)<integer>
+30P8 PNums(29A8)
+35V17 Alloc{30P8} 70|28i17
+36U18 Free 70|29i18
+X 44 graphs_double.ads
+25K9*Graphs_Double[40|30] 64|27w6 27r25
+X 46 graphs_double_modularities_d.ads
+26K9*Graphs_Double_Modularities_D[42|38] 64|28w6 28r40
+X 53 modularities_exhaustive.ads
+28K9*Modularities_Exhaustive 47e28 65|26w6 26r35
+30U13*Exhaustive_Modularity 65|80r35
+38U13*Exhaustive_Modularity 65|93r35
+X 54 modularities_extremal.ads
+33i3 Number_Of_Repetitions{positive} 65|258r7
+35U18 Improvement_Action 65|259r7
+40U18 Repetition_Action 65|260r7
+45k9*Modularities_Extremal 110e26 65|29w6 257r33
+47U13 Extremal_Modularity 65|263s5[257]
+X 56 modularities_fast.ads
+33i3 Number_Of_Repetitions{positive} 65|326r7
+35U18 Improvement_Action 65|327r7
+40U18 Repetition_Action 65|328r7
+45k9*Modularities_Fast 117e22 65|30w6 325r29
+47U13 Newman_Fast_Algorithm 65|331s5[325]
+X 58 modularities_reposition.ads
+32i3 Number_Of_Repetitions{positive} 65|394r7
+34U18 Improvement_Action 65|395r7
+39U18 Repetition_Action 65|396r7
+44k9*Modularities_Reposition 91e28 65|31w6 393r35
+46U13 Reposition_Modularity 65|399s5[393]
+X 60 modularities_spectral.ads
+37i3 Number_Of_Repetitions{positive} 65|212r7
+39U18 Improvement_Action 65|213r7
+44U18 Repetition_Action 65|214r7
+49k9*Modularities_Spectral 181e26 65|27w6 211r33
+53U13 Spectral_Modularity 65|217s5[211]
+X 62 modularities_tabu.ads
+32i4 Number_Of_Repetitions{positive} 65|111r7
+34V18 Maximum_Of_Nonimprovements{natural} 65|112r7
+38U19 Improvement_Action 65|113r7
+43U19 Repetition_Action 65|114r7
+48k9*Modularities_Tabu 134e22 65|28w6 110r29
+54U14 Tabu_Modularity 65|117s5[110]
+X 64 modularity_optimization.ads
+31K9*Modularity_Optimization 287l5 287e28 65|33b14 425l5 425t28
+35U13*Exhaustive_Modularity_Optimization 36>5 37<5 38<5 39>5 40>5 41>5 65|74b13
+36p5 Gr{40|35P8[44|25]} 65|75b5
+37p5 Lol_Best{38|35P8} 65|76b5
+38r5 Q_Best{42|62R8[46|26]} 65|77b5
+39e5 MT{42|45E8[46|26]} 65|78b5
+40f5 R{99|36F11} 65|79b5
+41f5 Pc{99|36F11} 65|80b5
+43U13*Exhaustive_Modularity_Optimization 44>5 45<5 46<5 47<5 48>5 49>5 50>5
+. 65|86b13
+44p5 Gr{40|35P8[44|25]} 65|87b5
+45p5 Lol_Best{38|35P8} 65|88b5
+46r5 Q_Best{42|62R8[46|26]} 65|89b5
+47i5 Degeneration{positive} 65|90b5
+48e5 MT{42|45E8[46|26]} 65|91b5
+49f5 R{99|36F11} 65|92b5
+50f5 Pc{99|36F11} 65|93b5
+54U13*Default_Improvement_Action 55>5 56>5 57>5 75r32 108r32 143r32 174r32
+. 217r32 260r32 65|39b13 45l7 45t33 139r37 191r37 236r37 304r37 351r37 419r37
+55r5 Log_Name{26|79R9} 65|40b5
+56p5 Lol{38|35P8} 65|41b5
+57r5 Q{42|62R8[46|26]} 65|42b5
+59U13*Default_Repetition_Action 60>5 61>5 62>5 79r32 112r32 147r32 178r32
+. 221r32 264r32 65|51b13 57l7 57t32 140r37 192r37 237r37 305r37 352r37 420r37
+60r5 Log_Name{26|79R9} 65|52b5
+61p5 Lol{38|35P8} 65|53b5
+62r5 Q{42|62R8[46|26]} 65|54b5
+64V12*Default_Maximum_Of_Nonimprovements{natural} 65>5 71r48 65|63b12 68l7
+. 68t41 138r37
+65i5 Num_Vertices{natural} 65|63b47 66r20
+70V19 Maximum_Of_Nonimprovements{natural} 71>7 65|112r37 138r7 167r7
+71i7 Num_Vertices{natural}
+72U20 Improvement_Action 73>7 74>7 75>7 65|113r37 139r7 168r7
+73r7 Log_Name{26|79R9}
+74p7 Lol{38|35P8}
+75r7 Q{42|62R8[46|26]}
+76U20 Repetition_Action 77>7 78>7 79>7 65|114r37 140r7 169r7
+77r7 Log_Name{26|79R9}
+78p7 Lol{38|35P8}
+79r7 Q{42|62R8[46|26]}
+80u13*Generic_Tabu_Modularity_Optimization 81>5 82>5 83<5 84<5 85>5 86>5
+. 87>5 88>5 89>5 65|99b13 119l7 119t43 137r11 166r36
+81p5 Gr{40|35P8[44|25]} 65|100b5 117r25
+82p5 Lol_Ini{38|35P8} 65|101b5 117r39
+83p5 Lol_Best{38|35P8} 65|102b5 117m48 118r16
+84r5 Q_Best{42|62R8[46|26]} 65|103b5 117m58
+85e5 MT{42|45E8[46|26]} 65|104b5 117r21
+86i5 Num_Repetitions{positive} 65|105b5 111r37
+87f5 R{99|36F11} 65|106b5 117r66
+88f5 Pc{99|36F11} 65|107b5 117r69
+89r5 Log_Name{26|79R9} 65|108b5 117r29
+91U13*Tabu_Modularity_Optimization 92>5 93>5 94<5 95<5 96>5 97>5 98>5 99>5
+. 100>5 65|125b13 143l7 143t35
+92p5 Gr{40|35P8[44|25]} 65|126b5 142r26
+93p5 Lol_Ini{38|35P8} 65|127b5 142r30
+94p5 Lol_Best{38|35P8} 65|128b5 142m39
+95r5 Q_Best{42|62R8[46|26]} 65|129b5 142m49
+96e5 MT{42|45E8[46|26]} 65|130b5 142r57
+97i5 Num_Repetitions{positive} 65|131b5 142r61
+98f5 R{99|36F11} 65|132b5 142r78
+99f5 Pc{99|36F11} 65|133b5 142r81
+100r5 Log_Name{26|79R9} 65|134b5 142r85
+105U20 Improvement_Action 106>7 107>7 108>7 65|168r37 191r7
+106r7 Log_Name{26|79R9}
+107p7 Lol{38|35P8}
+108r7 Q{42|62R8[46|26]}
+109U20 Repetition_Action 110>7 111>7 112>7 65|169r37 192r7
+110r7 Log_Name{26|79R9}
+111p7 Lol{38|35P8}
+112r7 Q{42|62R8[46|26]}
+113u13*Generic_Tabu_Modularity_Bootstrapping 114>5 115>5 116<5 117<5 118>5
+. 119>5 120>5 121>5 122>5 123>5 65|149b13 172l7 172t44 190r36
+114p5 Gr{40|35P8[44|25]} 65|150b5 171r19
+115p5 Lol_Ini{38|35P8} 65|151b5 171r23
+116p5 Lol_Best{38|35P8} 65|152b5 171m32
+117r5 Q_Best{42|62R8[46|26]} 65|153b5 171m42
+118e5 MT{42|45E8[46|26]} 65|154b5 171r50
+119i5 Num_Repetitions{positive} 65|155b5 171r54
+120i5 Num_Nonimprovements{natural} 65|156b5 163r14
+121f5 R{99|36F11} 65|157b5 171r71
+122f5 Pc{99|36F11} 65|158b5 171r74
+123r5 Log_Name{26|79R9} 65|159b5 171r78
+125U13*Tabu_Modularity_Bootstrapping 126>5 127>5 128<5 129<5 130>5 131>5
+. 132>5 133>5 134>5 135>5 65|178b13 195l7 195t36
+126p5 Gr{40|35P8[44|25]} 65|179b5 194r19
+127p5 Lol_Ini{38|35P8} 65|180b5 194r23
+128p5 Lol_Best{38|35P8} 65|181b5 194m32
+129r5 Q_Best{42|62R8[46|26]} 65|182b5 194m42
+130e5 MT{42|45E8[46|26]} 65|183b5 194r50
+131i5 Num_Repetitions{positive} 65|184b5 194r54
+132i5 Num_Nonimprovements{natural} 65|185b5 194r71
+133f5 R{99|36F11} 65|186b5 194r92
+134f5 Pc{99|36F11} 65|187b5 194r95
+135r5 Log_Name{26|79R9} 65|188b5 194r99
+140U20 Improvement_Action 141>7 142>7 143>7 65|213r37 236r7
+141r7 Log_Name{26|79R9}
+142p7 Lol{38|35P8}
+143r7 Q{42|62R8[46|26]}
+144U20 Repetition_Action 145>7 146>7 147>7 65|214r37 237r7
+145r7 Log_Name{26|79R9}
+146p7 Lol{38|35P8}
+147r7 Q{42|62R8[46|26]}
+148u13*Generic_Spectral_Modularity_Optimization 149>5 150<5 151<5 152>5 153>5
+. 154>5 155>5 156>5 65|201b13 219l7 219t47 235r47
+149p5 Gr{40|35P8[44|25]} 65|202b5 217r29
+150p5 Lol_Best{38|35P8} 65|203b5 217m43 218r16
+151r5 Q_Best{42|62R8[46|26]} 65|204b5 217m53
+152e5 MT{42|45E8[46|26]} 65|205b5 217r25
+153i5 Num_Repetitions{positive} 65|206b5 212r37
+154f5 R{99|36F11} 65|207b5 217r61
+155f5 Pc{99|36F11} 65|208b5 217r64
+156r5 Log_Name{26|79R9} 65|209b5 217r33
+158U13*Spectral_Modularity_Optimization 159>5 160<5 161<5 162>5 163>5 164>5
+. 165>5 166>5 65|225b13 240l7 240t39
+159p5 Gr{40|35P8[44|25]} 65|226b5 239r30
+160p5 Lol_Best{38|35P8} 65|227b5 239m34
+161r5 Q_Best{42|62R8[46|26]} 65|228b5 239m44
+162e5 MT{42|45E8[46|26]} 65|229b5 239r52
+163i5 Num_Repetitions{positive} 65|230b5 239r56
+164f5 R{99|36F11} 65|231b5 239r73
+165f5 Pc{99|36F11} 65|232b5 239r76
+166r5 Log_Name{26|79R9} 65|233b5 239r80
+171U20 Improvement_Action 172>7 173>7 174>7 65|259r37 304r7
+172r7 Log_Name{26|79R9}
+173p7 Lol{38|35P8}
+174r7 Q{42|62R8[46|26]}
+175U20 Repetition_Action 176>7 177>7 178>7 65|260r37 305r7
+176r7 Log_Name{26|79R9}
+177p7 Lol{38|35P8}
+178r7 Q{42|62R8[46|26]}
+179u13*Generic_Extremal_Modularity_Optimization 180>5 181>5 182<5 183<5 184>5
+. 185>5 186>5 187>5 188>5 65|246b13 265l7 265t47 303r47
+180p5 Gr{40|35P8[44|25]} 65|247b5 263r30
+181p5 Lol_Ini{38|35P8} 65|248b5 263r44
+182p5 Lol_Best{38|35P8} 65|249b5 263m53 264r16
+183r5 Q_Best{42|62R8[46|26]} 65|250b5 263m63
+184e5 MT{42|45E8[46|26]} 65|251b5 263r26
+185i5 Num_Repetitions{positive} 65|252b5 258r37
+186f5 R{99|36F11} 65|253b5 263r71
+187f5 Pc{99|36F11} 65|254b5 263r74
+188r5 Log_Name{26|79R9} 65|255b5 263r34
+190U13*Extremal_Modularity_Optimization 191>5 192<5 193<5 194>5 195>5 196>5
+. 197>5 198>5 65|271b13 286l7 286t39
+191p5 Gr{40|35P8[44|25]} 65|272b5 283r44 284r38
+192p5 Lol_Best{38|35P8} 65|273b5 284m51
+193r5 Q_Best{42|62R8[46|26]} 65|274b5 284m61
+194e5 MT{42|45E8[46|26]} 65|275b5 284r69
+195i5 Num_Repetitions{positive} 65|276b5 284r73
+196f5 R{99|36F11} 65|277b5 284r90
+197f5 Pc{99|36F11} 65|278b5 284r93
+198r5 Log_Name{26|79R9} 65|279b5 284r97
+200U13*Extremal_Modularity_Optimization 201>5 202>5 203<5 204<5 205>5 206>5
+. 207>5 208>5 209>5 65|284s5 292b13 308l7 308t39
+201p5 Gr{40|35P8[44|25]} 65|293b5 307r30
+202p5 Lol_Ini{38|35P8} 65|294b5 307r34
+203p5 Lol_Best{38|35P8} 65|295b5 307m43
+204r5 Q_Best{42|62R8[46|26]} 65|296b5 307m53
+205e5 MT{42|45E8[46|26]} 65|297b5 307r61
+206i5 Num_Repetitions{positive} 65|298b5 307r65
+207f5 R{99|36F11} 65|299b5 307r82
+208f5 Pc{99|36F11} 65|300b5 307r85
+209r5 Log_Name{26|79R9} 65|301b5 307r89
+214U20 Improvement_Action 215>7 216>7 217>7 65|327r37 351r7
+215r7 Log_Name{26|79R9}
+216p7 Lol{38|35P8}
+217r7 Q{42|62R8[46|26]}
+218U20 Repetition_Action 219>7 220>7 221>7 65|328r37 352r7
+219r7 Log_Name{26|79R9}
+220p7 Lol{38|35P8}
+221r7 Q{42|62R8[46|26]}
+222u13*Generic_Fast_Algorithm_Modularity_Optimization 223>5 224>5 225<5 226<5
+. 227>5 228>5 229>5 230>5 231>5 65|314b13 333l7 333t53 350r45
+223p5 Gr{40|35P8[44|25]} 65|315b5 331r31
+224p5 Lol_Ini{38|35P8} 65|316b5 331r45
+225p5 Lol_Best{38|35P8} 65|317b5 331m54 332r16
+226r5 Q_Best{42|62R8[46|26]} 65|318b5 331m64
+227e5 MT{42|45E8[46|26]} 65|319b5 331r27
+228i5 Num_Repetitions{positive} 65|320b5 326r37
+229f5 R{99|36F11} 65|321b5 331r72
+230f5 Pc{99|36F11} 65|322b5 331r75
+231r5 Log_Name{26|79R9} 65|323b5 331r35
+233U13*Fast_Algorithm_Modularity_Optimization 234>5 235>5 236<5 237<5 238>5
+. 239>5 240>5 241>5 242>5 65|339b13 355l7 355t45 374s5
+234p5 Gr{40|35P8[44|25]} 65|340b5 354r28
+235p5 Lol_Ini{38|35P8} 65|341b5 354r32
+236p5 Lol_Best{38|35P8} 65|342b5 354m41
+237r5 Q_Best{42|62R8[46|26]} 65|343b5 354m51
+238e5 MT{42|45E8[46|26]} 65|344b5 354r59
+239i5 Num_Repetitions{positive} 65|345b5 354r63
+240f5 R{99|36F11} 65|346b5 354r80
+241f5 Pc{99|36F11} 65|347b5 354r83
+242r5 Log_Name{26|79R9} 65|348b5 354r87
+244U13*Fast_Algorithm_Modularity_Optimization 245>5 246<5 247<5 248>5 249>5
+. 250>5 251>5 252>5 65|361b13 376l7 376t45
+245p5 Gr{40|35P8[44|25]} 65|362b5 373r44 374r44
+246p5 Lol_Best{38|35P8} 65|363b5 374m57
+247r5 Q_Best{42|62R8[46|26]} 65|364b5 374m67
+248e5 MT{42|45E8[46|26]} 65|365b5 374r75
+249i5 Num_Repetitions{positive} 65|366b5 374r79
+250f5 R{99|36F11} 65|367b5 374r96
+251f5 Pc{99|36F11} 65|368b5 374r99
+252r5 Log_Name{26|79R9} 65|369b5 374r103
+257U20 Improvement_Action 258>7 259>7 260>7 65|395r37 419r7
+258r7 Log_Name{26|79R9}
+259p7 Lol{38|35P8}
+260r7 Q{42|62R8[46|26]}
+261U20 Repetition_Action 262>7 263>7 264>7 65|396r37 420r7
+262r7 Log_Name{26|79R9}
+263p7 Lol{38|35P8}
+264r7 Q{42|62R8[46|26]}
+265u13*Generic_Reposition_Modularity_Optimization 266>5 267>5 268<5 269<5
+. 270>5 271>5 272>5 273>5 274>5 65|382b13 401l7 401t49 418r49
+266p5 Gr{40|35P8[44|25]} 65|383b5 399r31
+267p5 Lol_Ini{38|35P8} 65|384b5 399r45
+268p5 Lol_Best{38|35P8} 65|385b5 399m54 400r16
+269r5 Q_Best{42|62R8[46|26]} 65|386b5 399m64
+270e5 MT{42|45E8[46|26]} 65|387b5 399r27
+271i5 Num_Repetitions{positive} 65|388b5 394r37
+272f5 R{99|36F11} 65|389b5 399r72
+273f5 Pc{99|36F11} 65|390b5 399r75
+274r5 Log_Name{26|79R9} 65|391b5 399r35
+276U13*Reposition_Modularity_Optimization 277>5 278>5 279<5 280<5 281>5 282>5
+. 283>5 284>5 285>5 65|407b13 423l7 423t41
+277p5 Gr{40|35P8[44|25]} 65|408b5 422r32
+278p5 Lol_Ini{38|35P8} 65|409b5 422r36
+279p5 Lol_Best{38|35P8} 65|410b5 422m45
+280r5 Q_Best{42|62R8[46|26]} 65|411b5 422m55
+281e5 MT{42|45E8[46|26]} 65|412b5 422r63
+282i5 Num_Repetitions{positive} 65|413b5 422r67
+283f5 R{99|36F11} 65|414b5 422r84
+284f5 Pc{99|36F11} 65|415b5 422r87
+285r5 Log_Name{26|79R9} 65|416b5 422r91
+X 65 modularity_optimization.adb
+64f5 F{float} 66m5 67r46
+110K13 Tabu_Mod[62|48] 115r9
+136U15 Default_Tabu_Mod_Opt[64|80] 99b13 142s5
+161V14 Fixed_Nonimprovements{natural} 161b14 161>36 164l9 164t30 167r37
+161i36 Num_Vertices{natural}
+166U15 Tabu_Mod_Boot[64|80] 99b13[190] 171s5
+190U15 Tabu_Mod_Boot[64|113] 149b13 194s5
+211K13 Spectral_Mod[60|49] 215r9
+235U15 Default_Spectral_Mod_Opt[64|148] 201b13 239s5
+257K13 Extremal_Mod[54|45] 261r9
+281p5 Lol_Ini{38|35P8} 283m16 283r16 284r42 285m10 285r10
+303U15 Default_Extremal_Mod_Opt[64|179] 246b13 307s5
+325K13 Fast_Alg[56|45] 329r9
+350U15 Default_Fast_Algorithm[64|222] 314b13 354s5
+371p5 Lol_Ini{38|35P8} 373m16 373r16 374r48 375m10 375r10
+393K13 Reposition_Mod[58|44] 397r9
+418U15 Default_Reposition_Mod_Opt[64|265] 382b13 422s5
+X 99 utils.ads
+34K9*Utils 64|25w6 25r17 99|1124e10
+36F11*Double{long_float} 64|40r11 41r12 49r11 50r12 87r11 88r12 98r11 99r12
+. 121r11 122r12 133r11 134r12 154r11 155r12 164r11 165r12 186r11 187r12 196r11
+. 197r12 207r11 208r12 229r11 230r12 240r11 241r12 250r11 251r12 272r11 273r12
+. 283r11 284r12 65|79r11 80r12 92r11 93r12 106r11 107r12 132r11 133r12 157r11
+. 158r12 186r11 187r12 207r11 208r12 231r11 232r12 253r11 254r12 277r11 278r12
+. 299r11 300r12 321r11 322r12 346r11 347r12 367r11 368r12 389r11 390r12 414r11
+. 415r12
+68A11*Doubles{22|43A9[36|24]}<integer>
+69P8*PDoubles(68A11)
+94A11*Doubless{22|44A9[36|24]}<integer><integer>
+95P8*PDoubless(94A11)
+317V12*Alloc[100|33]{69P8} 42|34i17
+345V12*Alloc[100|57]{95P8} 42|36i17
+423U13*Free[100|120] 42|35i18
+434U13*Free[100|129] 42|37i18
+675V12*To_Double{36F11} 43|33i17 34i17
+1086V12*To_Num=1086:55{36F11} 42|32i17
+1115V12*To_Value=1115:57{36F11} 42|33i17
+

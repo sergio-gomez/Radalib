@@ -1,0 +1,9 @@
+# first comment
+nom1	nom2;33  nom4
+
+N/A	1.1	str	N/A
+1.1	1	N/A	N/A
+str	N/A	N/A	7#comment1
+   	#comment2
+
+N/A	N/A	8	zz

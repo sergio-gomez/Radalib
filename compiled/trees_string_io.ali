@@ -1,0 +1,176 @@
+V "GNAT Lib v2014"
+A -O2
+P SS ZX
+
+RN
+RV NO_IO
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U trees_string_io%b	trees_string_io.adb	fc9ac77f NE OO PK
+W ada.tags%s		a-tags.adb		a-tags.ali
+W utils%s		utils.adb		utils.ali
+W utils.io%s		utils-io.adb		utils-io.ali
+
+U trees_string_io%s	trees_string_io.ads	d5e2d1cc EE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.integer_text_io%s	a-inteio.ads		a-inteio.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W interfaces%s		interfac.ads		interfac.ali
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W trees%s		trees.adb		trees.ali
+W trees.io%s		trees-io.adb		trees-io.ali  AD
+W trees_string%s	trees_string.ads	trees_string.ali
+W utils%s		utils.adb		utils.ali
+Z utils.io%s		utils-io.adb		utils-io.ali
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-calend.ads		20140406181358 d86d6c8c ada.calendar%s
+D a-charac.ads		20140406181358 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140406181358 66457d31 ada.characters.latin_1%s
+D a-contai.ads		20140406181356 61e5e089 ada.containers%s
+D a-coorma.ads		20140406181356 f6e6861b ada.containers.ordered_maps%s
+D a-crbltr.ads		20140406181356 b8a2dc05 ada.containers.red_black_trees%s
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-finali.ads		20140406181358 69f99942 ada.finalization%s
+D a-flteio.ads		20140406181358 e18a47a0 ada.float_text_io%s
+D a-inteio.ads		20140406181358 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20140406181358 e4a01f64 ada.io_exceptions%s
+D a-iteint.ads		20140406181354 7c7305e9 ada.iterator_interfaces%s
+D a-lfteio.ads		20140406181354 4969a46f ada.long_float_text_io%s
+D a-llitio.ads		20140406181354 9aecf52b ada.long_long_integer_text_io%s
+D a-numeri.ads		20140406181358 bb51c45a ada.numerics%s
+D a-ngrear.ads		20140406181358 86992c51 ada.numerics.generic_real_arrays%s
+D a-stream.ads		20140406181354 1a984740 ada.streams%s
+D a-string.ads		20140406181358 90ac6797 ada.strings%s
+D a-strmap.ads		20140406181358 e8bb714a ada.strings.maps%s
+D a-strunb.ads		20140406181358 3f91d4c5 ada.strings.unbounded%s
+D a-tags.ads		20140406181356 dc4d0634 ada.tags%s
+D a-textio.ads		20140406181358 386df5d4 ada.text_io%s
+D a-tiflio.ads		20140406181358 56fbda09 ada.text_io.float_io%s
+D a-tiinio.ads		20140406181358 aa04e5d6 ada.text_io.integer_io%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D arrays_double.ads	20150322182902 4fb5de93 arrays_double%s
+D arrays_float.ads	20150322182902 7beec0f0 arrays_float%s
+D interfac.ads		20140406181358 69adb1b9 interfaces%s
+D i-cstrea.ads		20140406181356 febc86ed interfaces.c_streams%s
+D linked_lists.ads	20150322182924 f903bd62 linked_lists%s
+D stacks.ads		20150322182932 6f253f87 stacks%s
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-atocou.ads		20140406181358 cd7c94ca system.atomic_counters%s
+D s-atocou.adb		20140406181356 276bb8fc system.atomic_counters%b
+D s-crtl.ads		20140406181356 2c012597 system.crtl%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-ficobl.ads		20140406181354 078245e4 system.file_control_block%s
+D s-finmas.ads		20140406181356 814daec4 system.finalization_masters%s
+D s-finroo.ads		20140406181358 4ff27390 system.finalization_root%s
+D s-maccod.ads		20140406181358 0fbb7bce system.machine_code%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-pooglo.ads		20140406181356 542f33d0 system.pool_global%s
+D s-secsta.ads		20140406181358 86a2856d system.secondary_stack%s
+D s-soflin.ads		20140406181358 aa763b52 system.soft_links%s
+D s-stache.ads		20140406181354 a37c21ec system.stack_checking%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-stoele.ads		20140406181356 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20140406181354 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20140406181356 b16154c2 system.storage_pools%s
+D s-stposu.ads		20140406181354 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20140406181358 aedef97e system.stream_attributes%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+D s-unstyp.ads		20140406181356 510692af system.unsigned_types%s
+D s-wchcon.ads		20140406181358 1b7d22d2 system.wch_con%s
+D trees.ads		20150322182936 124bc4fc trees%s
+D trees-io.ads		20150923152026 0f06a511 trees.io%s
+D trees-io.adb		20150923152402 5cb1d25a trees.io%b
+D trees_string.ads	20150322182938 d9122779 trees_string%s
+D trees_string_io.ads	20150322182938 744ff65a trees_string_io%s
+D trees_string_io.adb	20150322182956 d8fe3c3b trees_string_io%b
+D utils.ads		20150322182940 4fd4502a utils%s
+D utils-io.ads		20150322182938 502b0d1e utils.io%s
+D utils_generics.ads	20150322182940 91194a83 utils_generics%s
+X 1 ada.ads
+16K9*Ada 19e8 60|22r6 22r23
+X 13 a-iteint.ads
+24h9 Forward_Iterator
+32h9 Reversible_Iterator<24R9[6|68]>
+X 21 a-strunb.ads
+166V14*"="{boolean} 6|45i19
+178V14*"<"{boolean} 6|44i19
+X 23 a-textio.ads
+49K13*Text_IO 471e16 60|22w10 22r27
+52P9*File_Type 60|35r29 39r29
+53E9*File_Mode 53e54 60|36r101
+53n32*Out_File{53E9} 60|36r114
+73I12*Field{integer}
+X 56 trees.ads
+27k9*Trees 377e10 60|25r6
+30R8*Node_Rec
+31P8*Node(30R8[59|25])
+32P11*Tree{31P8[59|25]} 60|34r28[59|25] 35r46[59|25] 36r43[59|25] 38r29[59|25]
+. 39r47[59|25] 40r44[59|25]
+45E8*Tree_Format 60|29r88[59|25] 30r47[59|25] 34r88[59|25] 35r106[59|25]
+. 36r135[59|25] 61|30r88[59|25] 43r47[59|25]
+46e3*Default_Tree_Format{45E8[59|25]} 60|34r103[59|25] 35r121[59|25] 36r150[59|25]
+X 57 trees-io.ads
+27k15 IO 87e13 60|25w12
+40U13*Put_Tree 60|34r143[32]
+52U13*Put_Tree 60|35r161[32]
+65U13*Put_Tree 60|36r190[32]
+71U13*Get_Tree 60|38r54[32]
+78U13*Get_Tree 60|39r72[32]
+85U13*Get_Tree 60|40r69[32]
+X 59 trees_string.ads
+25K9*Trees_String[56|27] 60|24w6 24r24 32r29
+X 60 trees_string_io.ads
+27K9*Trees_String_IO 42l5 42e20 61|24b14 48l5 48t20
+29V12*To_S{string} 29>17 29>33 29>77 32r45 61|30b12 37l7 37t11
+29r17 Us{62|38R11} 61|30b17 33r18 35r32
+29i33 Width{natural} 61|30b33 32r8 35r46
+29e77 Format{56|45E8[59|25]} 61|30b77
+30U13*Get_S 30<19 30>36 32r51 61|43b13 46l7 46t12
+30r19 Us{62|38R11} 61|43b19 45m14
+30e36 Format{56|45E8[59|25]} 61|43b36
+32K11*Trees_IO_S[57|27] 34r132 35r150 36r179 38r43 39r61 40r58
+34U13*Put_Tree=34:143
+34p22 T{56|32P11[59|25]}
+34i34 Width{natural}
+34e77 Format{56|45E8[59|25]}
+35U13*Put_Tree=35:161
+35p22 Ft{23|52P9}
+35p40 T{56|32P11[59|25]}
+35i52 Width{natural}
+35e95 Format{56|45E8[59|25]}
+36U13*Put_Tree=36:190
+36a22 Fn{string}
+36p37 T{56|32P11[59|25]}
+36i49 Width{natural}
+36e92 Mode{23|53E9}
+36e124 Format{56|45E8[59|25]}
+38U13*Get_Tree=38:54
+38p22 T{56|32P11[59|25]}
+39U13*Get_Tree=39:72
+39p22 Ft{23|52P9}
+39p40 T{56|32P11[59|25]}
+40U13*Get_Tree=40:69
+40a22 Fn{string}
+40p37 T{56|32P11[59|25]}
+X 62 utils.ads
+34K9*Utils 60|23w6 23r17 61|22r6 22r20 62|1124e10
+38R11*Ustring{21|79R9} 60|29r24 30r27 61|30r24 43r27
+134i3*Default_String_Width{natural} 60|34r55 35r73 36r70
+136i3*Default_Integer_Width{23|73I12} 60|29r54 61|30r54
+795V12*Right_Justify{string} 61|35s14
+795i40 Width{natural} 61|35r37
+795e59 Pad{character} 61|35r53
+1016V12*U2S=1016:62{string} 61|33s14 35s28
+X 63 utils-io.ads
+24K15*IO 61|22w12 22r26 63|813e13
+224U13*Get_Word 61|45s5
+

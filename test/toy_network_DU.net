@@ -1,0 +1,15 @@
+*Vertices 5
+1 "accordion"
+2 "ambulance"
+3 "bagpipe"
+4 "balloon"
+5 "banjo"
+*Arcs
+1 2 1
+1 3 1
+2 1 1
+3 2 1
+3 4 1
+3 5 1
+4 5 1
+5 3 1

@@ -1,0 +1,246 @@
+V "GNAT Lib v2014"
+A -O2
+P SS ZX
+
+RN
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_IMPLICIT_LOOPS
+RV NO_NESTED_FINALIZATION
+RV NO_RECURSION
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U dendrograms.structure%b  dendrograms-structure.adb  4841a6d3 NE OO PK
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W dendrograms%s		dendrograms.adb		dendrograms.ali
+W dendrograms.algorithms%s  dendrograms-algorithms.adb  dendrograms-algorithms.ali
+W dendrograms_nodes%s	dendrograms_nodes.adb	dendrograms_nodes.ali
+W interfaces%s		interfac.ads		interfac.ali
+W system%s		system.ads		system.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+
+U dendrograms.structure%s  dendrograms-structure.ads  ca8b1046 EE OO PF PK
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W dendrograms%s		dendrograms.adb		dendrograms.ali
+W system%s		system.ads		system.ali
+W system.finalization_masters%s  s-finmas.adb	s-finmas.ali
+W system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.storage_elements%s  s-stoele.adb	s-stoele.ali
+W system.storage_pools%s  s-stopoo.adb		s-stopoo.ali
+W system.storage_pools.subpools%s  s-stposu.adb	s-stposu.ali
+W utils%s		utils.adb		utils.ali
+W utils_generics%s	utils_generics.adb	utils_generics.ali  ED
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-calend.ads		20140406181358 d86d6c8c ada.calendar%s
+D a-charac.ads		20140406181358 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140406181358 66457d31 ada.characters.latin_1%s
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-finali.ads		20140406181358 69f99942 ada.finalization%s
+D a-flteio.ads		20140406181358 e18a47a0 ada.float_text_io%s
+D a-inteio.ads		20140406181358 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20140406181358 e4a01f64 ada.io_exceptions%s
+D a-lfteio.ads		20140406181354 4969a46f ada.long_float_text_io%s
+D a-llitio.ads		20140406181354 9aecf52b ada.long_long_integer_text_io%s
+D a-numeri.ads		20140406181358 bb51c45a ada.numerics%s
+D a-nuflra.ads		20140406181358 49c50e0b ada.numerics.float_random%s
+D a-ngrear.ads		20140406181358 86992c51 ada.numerics.generic_real_arrays%s
+D a-stream.ads		20140406181354 1a984740 ada.streams%s
+D a-string.ads		20140406181358 90ac6797 ada.strings%s
+D a-strmap.ads		20140406181358 e8bb714a ada.strings.maps%s
+D a-strunb.ads		20140406181358 3f91d4c5 ada.strings.unbounded%s
+D a-tags.ads		20140406181356 dc4d0634 ada.tags%s
+D a-textio.ads		20140406181358 386df5d4 ada.text_io%s
+D a-tiflio.ads		20140406181358 56fbda09 ada.text_io.float_io%s
+D a-tiinio.ads		20140406181358 aa04e5d6 ada.text_io.integer_io%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D a-uncdea.ads		20140406181358 f15a5ed1 ada.unchecked_deallocation%s
+D arrays_double.ads	20150322182902 4fb5de93 arrays_double%s
+D arrays_float.ads	20150322182902 7beec0f0 arrays_float%s
+D dendrograms.ads	20150322182908 a1079adf dendrograms%s
+D dendrograms-algorithms.ads  20150322182908 1fb921b2 dendrograms.algorithms%s
+D dendrograms-structure.ads  20150412222454 b5419030 dendrograms.structure%s
+D dendrograms-structure.adb  20150412222504 4a83c034 dendrograms.structure%b
+D dendrograms_nodes.ads	20150322182908 a83ad765 dendrograms_nodes%s
+D finite_disjoint_lists.ads  20150322182910 68c3f3bc finite_disjoint_lists%s
+D interfac.ads		20140406181358 69adb1b9 interfaces%s
+D i-cstrea.ads		20140406181356 febc86ed interfaces.c_streams%s
+D linked_lists.ads	20150322182924 f903bd62 linked_lists%s
+D queues.ads		20150322182930 08e33eaf queues%s
+D stacks.ads		20150322182932 6f253f87 stacks%s
+D statistics.ads	20150322182934 72d4df6c statistics%s
+D statistics_double.ads	20150322182934 99c22116 statistics_double%s
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-atocou.ads		20140406181358 cd7c94ca system.atomic_counters%s
+D s-atocou.adb		20140406181356 276bb8fc system.atomic_counters%b
+D s-crtl.ads		20140406181356 2c012597 system.crtl%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-ficobl.ads		20140406181354 078245e4 system.file_control_block%s
+D s-finmas.ads		20140406181356 814daec4 system.finalization_masters%s
+D s-finroo.ads		20140406181358 4ff27390 system.finalization_root%s
+D s-maccod.ads		20140406181358 0fbb7bce system.machine_code%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-pooglo.ads		20140406181356 542f33d0 system.pool_global%s
+D s-rannum.ads		20140406181354 5eb33f0a system.random_numbers%s
+D s-secsta.ads		20140406181358 86a2856d system.secondary_stack%s
+D s-soflin.ads		20140406181358 aa763b52 system.soft_links%s
+D s-stache.ads		20140406181354 a37c21ec system.stack_checking%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-stoele.ads		20140406181356 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20140406181354 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20140406181356 b16154c2 system.storage_pools%s
+D s-stposu.ads		20140406181354 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20140406181358 aedef97e system.stream_attributes%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+D s-unstyp.ads		20140406181356 510692af system.unsigned_types%s
+D s-wchcon.ads		20140406181358 1b7d22d2 system.wch_con%s
+D trees.ads		20150322182936 124bc4fc trees%s
+D trees.adb		20150322182956 c544c10d trees%b
+D utils.ads		20150322182940 4fd4502a utils%s
+D utils_generics.ads	20150322182940 91194a83 utils_generics%s
+D utils_generics.adb	20150322182958 0f6cad93 utils_generics%b
+X 14 a-ngrear.ads
+43A9*Real_Vector(long_float)<integer>
+X 27 dendrograms.ads
+25K9*Dendrograms 41e16 29|25r9 81r5 30|23r6 23r34 25r14 189r5
+32P11*Dendrogram{64|32P11[28]} 29|73r43 79r43 30|31r43 75r43
+X 28 dendrograms-algorithms.ads
+26K21*Algorithms 438e27 30|23w18 23r46
+X 29 dendrograms-structure.ads
+25K21*Structure 27|25k9 29|81l17 81e26 30|25b26 189l17 189t26
+28E8*Node_Type 28e42 31r17
+28n22*Leaf{28E8} 30|49r33
+28n28*Cluster{28E8} 30|51r33
+28n37*Root{28E8} 30|45r31
+30R8*Dendrogram_Structure_Rec 40e13 42r64 45r40 46r39
+31e5*Kind{28E8} 30|45m23 49m25 51m25
+32i5*Node_Id{integer} 30|42m21
+33i5*Parent_Id{integer} 30|44m23 47m23
+34f5*Position{66|36F11} 30|54m21
+35f5*Height{66|36F11} 30|55m21
+36f5*Width{66|36F11} 30|56m21
+37f5*Length{66|36F11} 30|57m21
+38f5*Margin{66|36F11} 30|58m21
+39r5*Name{66|38R11} 30|59m21
+42A8*Dendrogram_Structure_Recs(30R8)<integer> 43r39 45r66 46r65
+43P8*Dendrogram_Structure(42A8) 45r93 46r92 73r62 30|31r62 33r9
+45V12*Alloc[67|33]{43P8} 30|66s11 68|30b12
+46U13*Free[67|120] 68|113b13
+50E8*Plot_Info_Type 50e49 53r17
+50n27*Member{50E8} 30|137r38
+50n35*Cluster{50E8} 30|115r36
+50n44*Band{50E8} 30|163r36
+52R8*Dendrogram_Plot_Info_Rec 60e13 62r64 65r40 66r39
+53e5*Kind{50E8} 30|115m23 137m25 163m23
+54i5*Id{integer} 30|116m23 138m25 164m23
+55f5*Position1{66|36F11} 30|117m23 139m25 165m23
+56f5*Height1{66|36F11} 30|118m23 141m27 143m27 166m23
+57f5*Position2{66|36F11} 30|119m23 145m25 167m23
+58f5*Height2{66|36F11} 30|120m23 146m25 168m23
+59r5*Name{66|38R11} 30|121m23 147m25 169m23
+62A8*Dendrogram_Plot_Info_Recs(52R8)<integer> 63r39 65r66 66r65
+63P8*Dendrogram_Plot_Info(62A8) 65r93 66r92 79r94 30|75r94 77r9
+65V12*Alloc[67|33]{63P8} 30|180s11 68|30b12
+66U13*Free[67|120] 68|113b13
+73V12*Get_Dendrogram_Structure{43P8} 73>37 30|31b12 69l7 69t31
+73p37 T{27|32P11} 30|31b37 65r34 67r20
+79V12*Get_Dendrogram_Plot_Info{63P8} 79>37 79>55 30|75b12 187l7 187t31
+79p37 T{27|32P11} 30|75b37 179r17 181r19 182r18 184r18
+79b55 Include_Bands{boolean} 30|75b55 100r10 140r14 158r10 183r8
+X 30 dendrograms-structure.adb
+33p5 Ds{29|43P8} 42r7 44r9 45r9 47r9 49r11 51r11 54r7 55r7 56r7 57r7 58r7
+. 59r7 66m5 68r12
+34i5 Ds_Cursor{natural} 40m7 40r20 42r10 44r12 45r12 47r12 49r14 51r14 54r10
+. 55r10 56r10 57r10 58r10 59r10
+35i5 Num_Nodes{natural} 65m5 66r20
+37U15 Fill_Node 37b15 37>25 60l9 60t18 62r77
+37p25 Nod{64|31P8[27|28]} 41r24 43r18 47r60 48r20
+38r7 Nod_Inf{31|27R8} 41m7 42r39 54r46 55r44 56r43 57r44 58r44 59r42
+62U15 Fill_Structure[64|342] 67s5
+77p5 Dp{29|63P8} 115r9 116r9 117r9 118r9 119r9 120r9 121r9 137r11 138r11
+. 139r11 141r13 143r13 145r11 146r11 147r11 163r9 164r9 165r9 166r9 167r9
+. 168r9 169r9 180m5 186r12
+78i5 Dp_Cursor{natural} 114m9 114r22 115r12 116r12 117r12 118r12 119r12 120r12
+. 121r12 136m11 136r24 137r14 138r14 139r14 141r16 143r16 145r14 146r14 147r14
+. 162m9 162r22 163r12 164r12 165r12 166r12 167r12 168r12 169r12
+79i5 Num_Items{natural} 89m9 89r22 95m11 95r24 101m9 101r22 180r20
+81U15 Add_Items 81b15 81>25 103l9 103t18 173r76
+81p25 Nod{64|31P8[27|28]} 85r24 92r22
+82r7 Nod_Inf{31|27R8} 85m7 87r26 93r30 99r28
+83f7 Width{66|36F11} 87m7 88r10
+83f14 Length{66|36F11} 93m9 94r12
+83f22 Margin{66|36F11} 99m7 100r28
+105U15 Fill_Cluster 105b15 105>28 123l9 123t21 174r76
+105p28 Nod{64|31P8[27|28]} 109r24
+106r7 Nod_Inf{31|27R8} 109m7 110r26 112r29 113r30 116r43 121r45
+107f7 Pos{66|36F11} 112m9 117r36 119r36
+107f12 Height{66|36F11} 113m9 118r36 120r36
+107f20 Width{66|36F11} 110m7 111r10 117r42 119r42
+125U15 Fill_Member 125b15 125>27 150l9 150t20 175r76
+125p27 Nod{64|31P8[27|28]} 129r22 130r26
+126r7 Nod_Inf{31|27R8} 130m9 131r29 132r30 133r30 134r30 138r45 147r47
+127f7 Pos{66|36F11} 131m9 139r38 145r38
+127f12 Height{66|36F11} 132m9 141r38 143r38 146r38
+127f20 Length{66|36F11} 133m9 135r12 146r47
+127f28 Margin{66|36F11} 134m9 140r32 141r47
+152U15 Fill_Band 152b15 152>25 171l9 171t18 176r76
+152p25 Nod{64|31P8[27|28]} 156r24
+153r7 Nod_Inf{31|27R8} 156m7 157r28 159r29 160r30 161r28 164r43 169r45
+154f7 Pos{66|36F11} 159m9 165r36 167r36
+154f12 Height{66|36F11} 160m9 166r36 168r36
+154f20 Width{66|36F11} 161m9 165r42 167r42
+154f27 Margin{66|36F11} 157m7 158r28 168r45
+173U15 Count_Items[64|342] 179s5
+174U15 Fill_Clusters[64|342] 181s5
+175U15 Fill_Members[64|342] 182s5
+176U15 Fill_Bands[64|342] 184s7
+X 31 dendrograms_nodes.ads
+24K9*Dendrograms_Nodes 30|22w6 22r29 31|205e22
+27R8*Node_Info 30|38r16 82r16 106r16 126r16 153r16 31|201e13
+82V12*Get_Name{66|38R11} 30|59s33 121s36 147s38 169s36
+96V12*Get_Position{66|36F11} 30|54s33 112s16 131s16 159s16
+109V12*Get_Height{66|36F11} 30|55s33 113s19 132s19 160s19
+123V12*Get_Width{66|36F11} 30|56s33 87s16 110s16 161s18
+137V12*Get_Length{66|36F11} 30|57s33 93s19 133s19
+150V12*Get_Margin{66|36F11} 30|58s33 99s17 134s19 157s17
+186V12*Get_Id{integer} 30|42s32 47s36 116s36 138s38 164s36
+X 64 trees.ads
+30R8*Node_Rec
+31P8*Node(30R8[27|28]) 30|37r33[27|28] 81r33[27|28] 105r36[27|28] 125r35[27|28]
+. 152r33[27|28]
+75V12*Value{31|27R8} 30|41s18[27|28] 47s43[27|28] 85s18[27|28] 109s18[27|28]
+. 130s20[27|28] 156s18[27|28]
+143V12*Is_Root{boolean} 30|43s10[27|28] 92s14[27|28] 129s14[27|28]
+159V12*Is_Leaf{boolean} 30|48s12[27|28]
+199V12*Get_Parent{31P8[27|28]} 30|47s49[27|28]
+303V12*Number_Of_Nodes{natural} 30|65s18[27|28]
+342u13*Generic_Depth_First_Postorder_Traversal 30|62r37[27|28] 173r36[27|28]
+. 174r36[27|28] 175r36[27|28] 176r36[27|28]
+X 66 utils.ads
+34K9*Utils 29|22w6 22r17 66|1124e10
+36F11*Double{long_float} 29|34r17 35r17 36r17 37r17 38r17 55r17 56r17 57r17
+. 58r17 30|83r30 107r27 127r36 154r35
+38R11*Ustring{18|79R9} 29|39r17 59r17
+68A11*Doubles{14|43A9[25|24]}<integer>
+69P8*PDoubles(68A11)
+317V12*Alloc[67|33]{69P8} 38|28i17
+423U13*Free[67|120] 38|29i18
+X 67 utils_generics.ads
+22K9*Utils_Generics 29|23w6 23r26 67|142e19
+33v12*Alloc_1D_Array 29|45r25 65r25
+120u13*Free_1D_Array 29|46r25 66r25
+

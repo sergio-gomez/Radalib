@@ -1,0 +1,218 @@
+V "GNAT Lib v2014"
+A -O2
+P SS ZX
+
+RN
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_NESTED_FINALIZATION
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U dendrograms_nodes%b	dendrograms_nodes.adb	fc12d2dd NE OO PK
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W system%s		system.ads		system.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.storage_pools.subpools%s  s-stposu.adb	s-stposu.ali
+
+U dendrograms_nodes%s	dendrograms_nodes.ads	e7ee874f EE OO PK
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W utils%s		utils.adb		utils.ali
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-calend.ads		20140406181358 d86d6c8c ada.calendar%s
+D a-charac.ads		20140406181358 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140406181358 66457d31 ada.characters.latin_1%s
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-finali.ads		20140406181358 69f99942 ada.finalization%s
+D a-flteio.ads		20140406181358 e18a47a0 ada.float_text_io%s
+D a-inteio.ads		20140406181358 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20140406181358 e4a01f64 ada.io_exceptions%s
+D a-lfteio.ads		20140406181354 4969a46f ada.long_float_text_io%s
+D a-llitio.ads		20140406181354 9aecf52b ada.long_long_integer_text_io%s
+D a-numeri.ads		20140406181358 bb51c45a ada.numerics%s
+D a-ngrear.ads		20140406181358 86992c51 ada.numerics.generic_real_arrays%s
+D a-stream.ads		20140406181354 1a984740 ada.streams%s
+D a-string.ads		20140406181358 90ac6797 ada.strings%s
+D a-strmap.ads		20140406181358 e8bb714a ada.strings.maps%s
+D a-strunb.ads		20140406181358 3f91d4c5 ada.strings.unbounded%s
+D a-tags.ads		20140406181356 dc4d0634 ada.tags%s
+D a-textio.ads		20140406181358 386df5d4 ada.text_io%s
+D a-tiflio.ads		20140406181358 56fbda09 ada.text_io.float_io%s
+D a-tiinio.ads		20140406181358 aa04e5d6 ada.text_io.integer_io%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D arrays_double.ads	20150322182902 4fb5de93 arrays_double%s
+D arrays_float.ads	20150322182902 7beec0f0 arrays_float%s
+D dendrograms_nodes.ads	20150322182908 a83ad765 dendrograms_nodes%s
+D dendrograms_nodes.adb	20150322182946 542805b8 dendrograms_nodes%b
+D interfac.ads		20140406181358 69adb1b9 interfaces%s
+D i-cstrea.ads		20140406181356 febc86ed interfaces.c_streams%s
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-atocou.ads		20140406181358 cd7c94ca system.atomic_counters%s
+D s-atocou.adb		20140406181356 276bb8fc system.atomic_counters%b
+D s-crtl.ads		20140406181356 2c012597 system.crtl%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-ficobl.ads		20140406181354 078245e4 system.file_control_block%s
+D s-finmas.ads		20140406181356 814daec4 system.finalization_masters%s
+D s-finroo.ads		20140406181358 4ff27390 system.finalization_root%s
+D s-maccod.ads		20140406181358 0fbb7bce system.machine_code%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-pooglo.ads		20140406181356 542f33d0 system.pool_global%s
+D s-secsta.ads		20140406181358 86a2856d system.secondary_stack%s
+D s-soflin.ads		20140406181358 aa763b52 system.soft_links%s
+D s-stache.ads		20140406181354 a37c21ec system.stack_checking%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-stoele.ads		20140406181356 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20140406181354 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20140406181356 b16154c2 system.storage_pools%s
+D s-stposu.ads		20140406181354 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20140406181358 aedef97e system.stream_attributes%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+D s-unstyp.ads		20140406181356 510692af system.unsigned_types%s
+D s-wchcon.ads		20140406181358 1b7d22d2 system.wch_con%s
+D utils.ads		20150322182940 4fd4502a utils%s
+D utils_generics.ads	20150322182940 91194a83 utils_generics%s
+X 25 dendrograms_nodes.ads
+24K9*Dendrograms_Nodes 191E8 205l5 205e22 26|22b14 275l5 275t22
+27R8*Node_Info 29r28 51r40 52r40 67r39 68r39 74r35 75r35 81r33 82r33 90r39
+. 96r37 103r37 109r35 117r36 123r34 131r37 137r35 144r37 150r35 156r35 162r32
+. 168r41 174r39 180r33 186r31 191c8 201e13 203r28 26|28r40 43r40 58r39 75r39
+. 92r35 101r35 110r33 119r33 128r39 140r37 149r37 158r35 167r36 179r34 188r37
+. 197r35 206r37 215r35 224r35 233r32 242r41 251r39 260r33 269r31
+29r3*Void_Node_Info{27R8} 203c3
+31X3*Node_Info_Error 26|32r13 35r13 47r13 50r13 132r13 171r13
+51U13*Set_Node_Info 51<27 51>51 51>68 51>78 51>86 51>93 51>101 51>120 51>141
+. 51>165 26|28b13 37l7 37t20
+51r27 Nod_Inf{27R8} 26|28b27 30m5
+51a51 Name{string} 26|28b51 30r21
+51f68 Position{52|36F11} 26|28b68 30r28 31r8
+51f78 Height{52|36F11} 26|28b78 30r38
+51f86 Width{52|36F11} 26|28b86 30r46 31r26 34r20
+51f93 Length{52|36F11} 26|28b93 30r53
+51f101 Margin{52|36F11} 26|28b101 30r61
+51b120 Is_Leaf{boolean} 26|28b120 30r69 34r8
+51i141 Num_Leaves{natural} 26|28b141 30r78
+51i165 Id{integer} 26|28b165 30r90
+52U13*Set_Node_Info 52<27 52>51 52>69 52>79 52>87 52>94 52>102 52>121 52>142
+. 52>166 26|43b13 52l7 52t20
+52r27 Nod_Inf{27R8} 26|43b27 45m5
+52r51 Name{52|38R11} 26|43b51 45r17
+52f69 Position{52|36F11} 26|43b69 45r23 46r8
+52f79 Height{52|36F11} 26|43b79 45r33
+52f87 Width{52|36F11} 26|43b87 45r41 46r26 49r20
+52f94 Length{52|36F11} 26|43b94 45r48
+52f102 Margin{52|36F11} 26|43b102 45r56
+52b121 Is_Leaf{boolean} 26|43b121 45r64 49r8
+52i142 Num_Leaves{natural} 26|43b142 45r73
+52i166 Id{integer} 26|43b166 45r85
+67U13*Get_Node_Info 67>27 67<50 67<68 67<78 67<86 67<93 67<101 67<121 67<143
+. 67<168 26|58b13 69l7 69t20
+67r27 Nod_Inf{27R8} 26|58b27 60r23 61r19 62r19 63r19 64r19 65r19 66r19 67r19
+. 68r19
+67a50 Name{string} 26|58b50 60m5
+67f68 Position{52|36F11} 26|58b68 61m5
+67f78 Height{52|36F11} 26|58b78 62m5
+67f86 Width{52|36F11} 26|58b86 63m5
+67f93 Length{52|36F11} 26|58b93 64m5
+67f101 Margin{52|36F11} 26|58b101 65m5
+67b121 Is_Leaf{boolean} 26|58b121 66m5
+67i143 Num_Leaves{natural} 26|58b143 67m5
+67i168 Id{integer} 26|58b168 68m5
+68U13*Get_Node_Info 68>27 68<50 68<69 68<79 68<87 68<94 68<102 68<122 68<144
+. 68<169 26|75b13 86l7 86t20
+68r27 Nod_Inf{27R8} 26|75b27 77r19 78r19 79r19 80r19 81r19 82r19 83r19 84r19
+. 85r19
+68r50 Name{52|38R11} 26|75b50 77m5
+68f69 Position{52|36F11} 26|75b69 78m5
+68f79 Height{52|36F11} 26|75b79 79m5
+68f87 Width{52|36F11} 26|75b87 80m5
+68f94 Length{52|36F11} 26|75b94 81m5
+68f102 Margin{52|36F11} 26|75b102 82m5
+68b122 Is_Leaf{boolean} 26|75b122 83m5
+68i144 Num_Leaves{natural} 26|75b144 84m5
+68i169 Id{integer} 26|75b169 85m5
+74U13*Set_Name 74<22 74>46 26|92b13 95l7 95t15
+74r22 Nod_Inf{27R8} 26|92b22 94m5
+74a46 Name{string} 26|92b46 94r25
+75U13*Set_Name 75<22 75>46 26|101b13 104l7 104t15
+75r22 Nod_Inf{27R8} 26|101b22 103m5
+75r46 Name{52|38R11} 26|101b46 103r21
+81V12*Get_Name{string} 81>21 26|110b12 113l7 113t15
+81r21 Nod_Inf{27R8} 26|110b21 112r16
+82V12*Get_Name{52|38R11} 82>21 26|119b12 122l7 122t15
+82r21 Nod_Inf{27R8} 26|119b21 121r12
+90U13*Set_Position 90<26 90>50 26|128b13 134l7 134t19
+90r26 Nod_Inf{27R8} 26|128b26 130m5
+90f50 Position{52|36F11} 26|128b50 130r24 131r8
+96V12*Get_Position{52|36F11} 96>25 26|140b12 143l7 143t19
+96r25 Nod_Inf{27R8} 26|140b25 142r12
+103U13*Set_Height 103<24 103>48 26|149b13 152l7 152t17
+103r24 Nod_Inf{27R8} 26|149b24 151m5
+103f48 Height{52|36F11} 26|149b48 151r23
+109V12*Get_Height{52|36F11} 109>23 26|158b12 161l7 161t17
+109r23 Nod_Inf{27R8} 26|158b23 160r12
+117U13*Set_Width 117<23 117>47 26|167b13 173l7 173t16
+117r23 Nod_Inf{27R8} 26|167b23 169m5 170r24
+117f47 Width{52|36F11} 26|167b47 169r21 170r8 170r44
+123V12*Get_Width{52|36F11} 123>22 26|179b12 182l7 182t16
+123r22 Nod_Inf{27R8} 26|179b22 181r12
+131U13*Set_Length 131<24 131>48 26|188b13 191l7 191t17
+131r24 Nod_Inf{27R8} 26|188b24 190m5
+131f48 Length{52|36F11} 26|188b48 190r22
+137V12*Get_Length{52|36F11} 137>23 26|197b12 200l7 200t17
+137r23 Nod_Inf{27R8} 26|197b23 199r12
+144U13*Set_Margin 144<24 144>48 26|206b13 209l7 209t17
+144r24 Nod_Inf{27R8} 26|206b24 208m5
+144f48 Margin{52|36F11} 26|206b48 208r23
+150V12*Get_Margin{52|36F11} 150>23 26|215b12 218l7 218t17
+150r23 Nod_Inf{27R8} 26|215b23 217r12
+156U13*Set_Leaf 156<22 156>46 26|224b13 227l7 227t15
+156r22 Nod_Inf{27R8} 26|224b22 226m5
+156b46 Is_Leaf{boolean} 26|224b46 226r24
+162V12*Is_Leaf{boolean} 162>20 26|233b12 236l7 236t14
+162r20 Nod_Inf{27R8} 26|233b20 235r12
+168U13*Set_Num_Leaves 168<28 168>52 26|242b13 245l7 245t21
+168r28 Nod_Inf{27R8} 26|242b28 244m5
+168i52 Num_Leaves{natural} 26|242b52 244r27
+174V12*Get_Num_Leaves{natural} 174>27 26|251b12 254l7 254t21
+174r27 Nod_Inf{27R8} 26|251b27 253r12
+180U13*Set_Id 180<20 180>44 26|260b13 263l7 263t13
+180r20 Nod_Inf{27R8} 26|260b20 262m5
+180i44 Id{integer} 26|260b44 262r19
+186V12*Get_Id{integer} 186>19 26|269b12 272l7 272t13
+186r19 Nod_Inf{27R8} 26|269b19 271r12
+192r5*Name{52|38R11} 26|60r31 77r27 94m13 103m13 112r24 121r20
+193f5*Position{52|36F11} 26|61r27 78r27 130m13 142r20
+194f5*Height{52|36F11} 26|62r27 79r27 151m13 160r20
+195f5*Width{52|36F11} 26|63r27 80r27 169m13 181r20
+196f5*Length{52|36F11} 26|64r27 81r27 190m13 199r20
+197f5*Margin{52|36F11} 26|65r27 82r27 208m13 217r20
+198b5*Is_Leaf{boolean} 26|66r27 83r27 170r32 226m13 235r20
+199i5*Num_Leaves{natural} 26|67r27 84r27 244m13 253r20
+200i5*Id{integer} 26|68r27 85r27 262m13 271r20
+X 52 utils.ads
+34K9*Utils 25|22w6 22r17 52|1124e10
+36F11*Double{long_float} 25|51r112 52r113 67r113 68r114 90r63 96r55 103r59
+. 109r53 117r57 123r52 131r59 137r53 144r59 150r53 193r18 194r18 195r18 196r18
+. 197r18 26|28r112 43r113 58r113 75r114 128r63 140r55 149r59 158r53 167r57
+. 179r52 188r59 197r53 206r59 215r53
+38R11*Ustring{17|79R9} 25|52r60 68r60 75r55 82r51 192r18 26|43r60 75r60 101r55
+. 119r51
+40r3*Null_Ustring{38R11} 25|192r29 203r42
+1015V12*S2U=1015:62{17|79R9} 26|30s17 94s21
+1016V12*U2S=1016:62{string} 26|60s19 112s12
+

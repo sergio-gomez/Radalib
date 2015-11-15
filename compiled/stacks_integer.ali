@@ -1,0 +1,48 @@
+V "GNAT Lib v2014"
+A -O2
+P ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_EXCEPTIONS
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U stacks_integer%b	stacks_integer.ads	24c5d89c NE OO PK
+Z ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.unchecked_deallocation%s
+W stacks%s		stacks.adb		stacks.ali  AD
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+
+U stacks_integer%s	stacks_integer.ads	4be0e71b EB EE OO PK
+W stacks%s		stacks.adb		stacks.ali  AD
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D a-uncdea.ads		20140406181358 f15a5ed1 ada.unchecked_deallocation%s
+D stacks.ads		20150322182932 6f253f87 stacks%s
+D stacks.adb		20150322182954 fc6a8cb0 stacks%b
+D stacks_integer.ads	20150322182934 24c5d89c stacks_integer%s
+D stacks_integer.ads	20150322182934 24c5d89c stacks_integer%b
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+X 5 stacks.ads
+23+8 Item 8|25r14
+24k9*Stacks 132e11 8|22w6 25r7
+X 8 stacks_integer.ads
+24K9*Stacks_Integer[5|24]
+

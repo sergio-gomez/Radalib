@@ -1,0 +1,20 @@
+#############################
+# This is a properties file #
+#############################
+
+Int01=123456
+Int02=666
+Double02=1.2345e-01
+Bool01=false
+
+   # More properties
+
+Longer_Name  =  word1 word2 word3  .		
+Other_Separator+Trailing_Tabs_&_Spaces:  	 one;two;three,for,five		   
+Void =     
+Strange_Separator,  a comma!
+
+   # Repeated key overrides previous value
+    
+Name01=54321
+Name01=98765

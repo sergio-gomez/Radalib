@@ -1,0 +1,109 @@
+==================
+radalib in Windows
+==================
+
+------------------------------------
+How to install the GNAT Ada compiler
+------------------------------------
+
+0) Pre-requisites:
+      Windows XP SP2, Windows Vista, Windows 7, Windows 8, Windows 10 or newer
+
+1) Download and install the GNAT Ada GPL 2015, or newer, from
+      http://libre.adacore.com
+   Choose at least the following components:
+      GNAT Ada GPL : Ada compiler and IDE
+      Win32Ada GPL : Ada bindings to Win32 API
+   If you plan to use Eclipse
+      GNATbench GPL: Ada Development Plug-In for Eclipse
+
+2) The installer automatically adds the "bin" folder of GNAT Ada GPL to the PATH
+
+3) Recommended: AdaGIDE, a simple IDE for Ada
+      http://adagide.martincarlisle.com
+
+
+-----------------------------------------
+How to install radalib for the first time
+-----------------------------------------
+
+0) Pre-requisites:
+      GNAT Ada GPL Edition 2015, or newer
+      Win32Ada binding for the installed version of GNAT Ada GPL
+      AdaGIDE recommended
+      "bin" folder of GNAT Ada GPL in the PATH Environment Variable
+
+1) Select a folder for the installation, e.g.
+      D:\Users\MyUsername\AdaStuff
+
+2) Add the following Environment Variables:
+      RADALIB_ROOT=D:\Users\MyUsername\AdaStuff\radalib
+      ADA_INCLUDE_PATH=%RADALIB_ROOT%\source
+      ADA_OBJECTS_PATH=%RADALIB_ROOT%\compiled
+   To set these Environment Variables in Windows XP:
+      Right-click My Computer -> Properties -> Advanced options -> Environment Variables
+   To set these Environment Variables in Windows 7, 8, 10:
+      Right-click Computer -> Properties -> Advanced system settings -> Advanced -> Environment Variables
+
+3) Download latest radalib to the installation folder:
+      http://deim.urv.cat/~sergio.gomez/radalib/radalib.zip
+
+4) Unzip radalib in the installation folder; the following main folders should appear:
+      D:\Users\MyUsername\AdaStuff\radalib\compiled
+      D:\Users\MyUsername\AdaStuff\radalib\maintenance
+      D:\Users\MyUsername\AdaStuff\radalib\source
+      D:\Users\MyUsername\AdaStuff\radalib\test
+      D:\Users\MyUsername\AdaStuff\radalib\tools
+
+5) Compile radalib by the execution of:
+      D:\Users\MyUsername\AdaStuff\radalib\source\00-compile_all.bat
+
+6) Check if some tests work, e.g.:
+      D:\Users\MyUsername\AdaStuff\radalib\test\Graph_Modularity_Test.bat
+      D:\Users\MyUsername\AdaStuff\radalib\test\Graphs_Properties_Test.bat
+      D:\Users\MyUsername\AdaStuff\radalib\test\Eps_Plots_Test.bat
+
+7) Do not use the radalib folder for other purposes than to hold radalib,
+   since updates are frequent and require removing it before the new version
+   is installed
+
+---------------------
+How to update radalib
+---------------------
+
+1) Check the version of the latest radalib available visiting:
+      http://deim.urv.cat/~sergio.gomez/radalib
+   If the file
+      radalib-yyyymmdd-hhmmss.txt
+   represents a date posterior to your current radalib
+      D:\Users\MyUsername\AdaStuff\radalib\radalib-yyyymmdd-hhmmss.txt
+   update to the new version
+
+2) Go to the installation folder:
+      D:\Users\MyUsername\AdaStuff
+
+3) Remove the old installation folder
+      D:\Users\MyUsername\AdaStuff\radalib
+   Be sure this folder only contains radalib before removing it
+
+4) Download latest radalib to the installation folder:
+      http://deim.urv.cat/~sergio.gomez/radalib/radalib.zip
+
+5) Unzip radalib in the installation folder; the following main folders should appear:
+      D:\Users\MyUsername\AdaStuff\radalib\compiled
+      D:\Users\MyUsername\AdaStuff\radalib\maintenance
+      D:\Users\MyUsername\AdaStuff\radalib\source
+      D:\Users\MyUsername\AdaStuff\radalib\test
+      D:\Users\MyUsername\AdaStuff\radalib\tools
+
+6) Compile radalib by the execution of:
+      D:\Users\MyUsername\AdaStuff\radalib\source\00-compile_all.bat
+
+7) Check if some tests work, e.g.:
+      D:\Users\MyUsername\AdaStuff\radalib\test\Graph_Modularity_Test.bat
+      D:\Users\MyUsername\AdaStuff\radalib\test\Graphs_Properties_Test.bat
+      D:\Users\MyUsername\AdaStuff\radalib\test\Eps_Plots_Test.bat
+
+8) Do not use the radalib folder for other purposes than to hold radalib,
+   since updates are frequent and require removing it before the new version
+   is installed

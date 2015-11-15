@@ -1,0 +1,584 @@
+V "GNAT Lib v2014"
+A -O2
+P SS ZX
+
+RN
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_ALLOCATORS
+RV NO_DISPATCH
+RV NO_DISPATCHING_CALLS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_NESTED_FINALIZATION
+RV NO_RECURSION
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_STREAMS
+RV NO_UNCHECKED_ACCESS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_IMPLEMENTATION_ATTRIBUTES
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLICIT_ALIASING
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U pajek_io%b		pajek_io.adb		b232875a NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.containers%s	a-contai.ads		a-contai.ali
+W ada.containers.ordered_maps%s
+Z ada.containers.red_black_trees%s  a-crbltr.ads  a-crbltr.ali
+Z ada.containers.red_black_trees.generic_keys%s
+Z ada.containers.red_black_trees.generic_operations%s
+W ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.finalization%s	a-finali.adb		a-finali.ali
+Z ada.iterator_interfaces%s
+W ada.streams%s		a-stream.adb		a-stream.ali
+W ada.strings%s		a-string.ads		a-string.ali
+W ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+Z ada.unchecked_deallocation%s
+W arrays_utils_integer%s  arrays_utils_integer.ads  arrays_utils_integer.ali
+W system%s		system.ads		system.ali
+W system.address_image%s  s-addima.adb		s-addima.ali
+W system.finalization_masters%s  s-finmas.adb	s-finmas.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.storage_elements%s  s-stoele.adb	s-stoele.ali
+W system.storage_pools%s  s-stopoo.adb		s-stopoo.ali
+W system.storage_pools.subpools%s  s-stposu.adb	s-stposu.ali
+W system.stream_attributes%s  s-stratt.adb	s-stratt.ali
+W utils%s		utils.adb		utils.ali
+W utils.io%s		utils-io.adb		utils-io.ali
+W utils.io_double%s	utils-io_double.ads	utils-io_double.ali
+W utils.io_float%s	utils-io_float.ads	utils-io_float.ali
+W utils.io_integer%s	utils-io_integer.ads	utils-io_integer.ali
+
+U pajek_io%s		pajek_io.ads		1256e941 EE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W finite_disjoint_lists%s  finite_disjoint_lists.adb  finite_disjoint_lists.ali
+W graphs_double%s	graphs_double.ads	graphs_double.ali
+W graphs_float%s	graphs_float.ads	graphs_float.ali
+W graphs_integer%s	graphs_integer.ads	graphs_integer.ali
+W graphs_simple%s	graphs_simple.ads	graphs_simple.ali
+W graphs_string%s	graphs_string.ads	graphs_string.ali
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W utils%s		utils.adb		utils.ali
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-calend.ads		20140406181358 d86d6c8c ada.calendar%s
+D a-charac.ads		20140406181358 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140406181358 66457d31 ada.characters.latin_1%s
+D a-contai.ads		20140406181356 61e5e089 ada.containers%s
+D a-cohata.ads		20140406181358 04abccc5 ada.containers.hash_tables%s
+D a-cohama.ads		20140406181356 9f97b812 ada.containers.hashed_maps%s
+D a-coorma.ads		20140406181356 f6e6861b ada.containers.ordered_maps%s
+D a-coorma.adb		20140406181354 3c7e7c60 ada.containers.ordered_maps%b
+D a-crbltr.ads		20140406181356 b8a2dc05 ada.containers.red_black_trees%s
+D a-crbtgk.ads		20140406181354 18ae3fab ada.containers.red_black_trees.generic_keys%s
+D a-crbtgk.adb		20140406181356 62191c0e ada.containers.red_black_trees.generic_keys%b
+D a-crbtgo.ads		20140406181358 375f6f61 ada.containers.red_black_trees.generic_operations%s
+D a-crbtgo.adb		20140406181358 885f84ae ada.containers.red_black_trees.generic_operations%b
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-finali.ads		20140406181358 69f99942 ada.finalization%s
+D a-flteio.ads		20140406181358 e18a47a0 ada.float_text_io%s
+D a-inteio.ads		20140406181358 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20140406181358 e4a01f64 ada.io_exceptions%s
+D a-iteint.ads		20140406181354 7c7305e9 ada.iterator_interfaces%s
+D a-lfteio.ads		20140406181354 4969a46f ada.long_float_text_io%s
+D a-llitio.ads		20140406181354 9aecf52b ada.long_long_integer_text_io%s
+D a-numeri.ads		20140406181358 bb51c45a ada.numerics%s
+D a-ngrear.ads		20140406181358 86992c51 ada.numerics.generic_real_arrays%s
+D a-stream.ads		20140406181354 1a984740 ada.streams%s
+D a-string.ads		20140406181358 90ac6797 ada.strings%s
+D a-strmap.ads		20140406181358 e8bb714a ada.strings.maps%s
+D a-strunb.ads		20140406181358 3f91d4c5 ada.strings.unbounded%s
+D a-stunha.ads		20140406181354 115e053b ada.strings.unbounded.hash%s
+D a-tags.ads		20140406181356 dc4d0634 ada.tags%s
+D a-textio.ads		20140406181358 386df5d4 ada.text_io%s
+D a-tiflio.ads		20140406181358 56fbda09 ada.text_io.float_io%s
+D a-tiinio.ads		20140406181358 aa04e5d6 ada.text_io.integer_io%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D a-uncdea.ads		20140406181358 f15a5ed1 ada.unchecked_deallocation%s
+D arrays_double.ads	20150322182902 4fb5de93 arrays_double%s
+D arrays_float.ads	20150322182902 7beec0f0 arrays_float%s
+D arrays_utils.ads	20150322182904 34db23c2 arrays_utils%s
+D arrays_utils_integer.ads  20150322182904 c66b50d7 arrays_utils_integer%s
+D finite_disjoint_lists.ads  20150322182910 68c3f3bc finite_disjoint_lists%s
+D graphs.ads		20150322182912 ebeefa77 graphs%s
+D graphs_double.ads	20150322182912 3ca3532c graphs_double%s
+D graphs_float.ads	20150322182916 7eb88337 graphs_float%s
+D graphs_integer.ads	20150322182918 fd0770ab graphs_integer%s
+D graphs_simple.ads	20150322182922 f6a2aaa2 graphs_simple%s
+D graphs_string.ads	20150322182922 267004d8 graphs_string%s
+D interfac.ads		20140406181358 69adb1b9 interfaces%s
+D i-cstrea.ads		20140406181356 febc86ed interfaces.c_streams%s
+D linked_lists.ads	20150322182924 f903bd62 linked_lists%s
+D pajek_io.ads		20150923142810 62e2b1c9 pajek_io%s
+D pajek_io.adb		20150923143948 6dfb27bd pajek_io%b
+D stacks.ads		20150322182932 6f253f87 stacks%s
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-addima.ads		20140406181356 a1ec9d3a system.address_image%s
+D s-atocou.ads		20140406181358 cd7c94ca system.atomic_counters%s
+D s-atocou.adb		20140406181356 276bb8fc system.atomic_counters%b
+D s-crtl.ads		20140406181356 2c012597 system.crtl%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-ficobl.ads		20140406181354 078245e4 system.file_control_block%s
+D s-finmas.ads		20140406181356 814daec4 system.finalization_masters%s
+D s-finroo.ads		20140406181358 4ff27390 system.finalization_root%s
+D s-maccod.ads		20140406181358 0fbb7bce system.machine_code%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-pooglo.ads		20140406181356 542f33d0 system.pool_global%s
+D s-secsta.ads		20140406181358 86a2856d system.secondary_stack%s
+D s-soflin.ads		20140406181358 aa763b52 system.soft_links%s
+D s-stache.ads		20140406181354 a37c21ec system.stack_checking%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-stoele.ads		20140406181356 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20140406181354 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20140406181356 b16154c2 system.storage_pools%s
+D s-stposu.ads		20140406181354 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20140406181358 aedef97e system.stream_attributes%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+D s-unstyp.ads		20140406181356 510692af system.unsigned_types%s
+D s-wchcon.ads		20140406181358 1b7d22d2 system.wch_con%s
+D utils.ads		20150322182940 4fd4502a utils%s
+D utils-io.ads		20150322182938 502b0d1e utils.io%s
+D utils-io_double.ads	20150322182938 083179cf utils.io_double%s
+D utils-io_float.ads	20150322182940 dc0a453d utils.io_float%s
+D utils-io_integer.ads	20150322182940 e55e3ad0 utils.io_integer%s
+D utils_generics.ads	20150322182940 91194a83 utils_generics%s
+X 1 ada.ads
+16K9*Ada 19e8 50|23r6 23r23 51|22r6 22r23 23r6 23r33 24r6 24r26 25r6 733r30
+X 5 a-contai.ads
+16K13*Containers 24e19 51|25r10 733r34
+X 8 a-coorma.ads
+47k24*Ordered_Maps 377e32 51|25w21 733r45
+53R9 Map<16|43R9> 51|740r8[733]
+147U14 Insert 51|757s9[733]
+194V13 Element{40|30R8} 51|768s43[733]
+200V13 Contains{boolean} 51|756s14[733]
+240R9 Node_Type
+241P9 Node_Access(240R9)
+X 9 a-coorma.adb
+49V13 Color{10|35E9} 13|45i19
+52V13 Left{8|241P9} 13|41i19
+55V13 Parent{8|241P9[51|733]} 13|39i19[51|733]
+58V13 Right{8|241P9} 13|43i19
+61U14 Set_Parent 13|40i19
+64U14 Set_Left 13|42i19
+67U14 Set_Right 13|44i19[51|733]
+70U14 Set_Color 13|46i19
+X 15 a-except.ads
+53K13*Exceptions 360e19 51|24w10 24r30
+103V13*Exception_Information{string} 51|235s11 296s11 357s11 419s11 481s11
+. 778s11
+X 20 a-iteint.ads
+24h9 Forward_Iterator
+32h9 Reversible_Iterator<24R9[8|68]>
+X 26 a-string.ads
+16K13*Strings 35e16 51|22w10 22r27 23r10 23r37
+33n37*Both{33E9} 51|150r22
+X 28 a-strunb.ads
+76K21*Unbounded 489e26 51|23w18 23r45
+86P9*String_Access(string)
+100V13*To_String{string} 51|205s35 206s34 259s35 260s34 320s35 321s34 382s35
+. 383s34 444s35 445s34 571s19
+131V14*"&"{79R9} 51|136s22 148s18
+166V14*"="{boolean} 8|45i19
+178V14*"<"{boolean} 8|44i19
+378V13*Trim{79R9} 51|150s12
+X 31 a-textio.ads
+49K13*Text_IO 471e16 50|23w10 23r27
+52P9*File_Type 51|69r39 118r36 158r36 191r9 245r9 306r9 367r9 429r9 491r9
+. 538r9 586r9 635r9 684r9 736r9 788r9
+53n23*In_File{53E9} 51|197r14 251r14 312r14 374r14 436r14 742r14
+53n32*Out_File{53E9} 51|499r16 545r16 594r16 643r16 692r16 795r16
+64I9*Count<integer>
+68I12*Positive_Count{64I9}
+73I12*Field{integer} 50|109r73 109r109 117r74 117r111 51|634r73 634r109 683r74
+. 683r111
+86U14*Create 51|499s5 545s5 594s5 643s5 692s5 795s5
+92U14*Open 51|197s5 251s5 312s5 374s5 436s5 742s5
+98U14*Close 51|230s5 291s5 352s5 414s5 476s5 530s5 578s5 627s5 676s5 725s5
+. 775s5 802s5
+101U14*Reset 51|111s5 763s5
+165U14*New_Line 51|183s5 503s5 524s11 549s5 572s11 598s5 621s11 647s5 670s11
+. 696s5 719s11 798s5
+168U14*Skip_Line 51|80s5 85s7 93s5 151s5 202s5 210s5 226s9 256s5 264s5 287s9
+. 317s5 325s5 348s9 379s5 387s5 410s9 441s5 449s5 472s9 751s5 759s7 765s5
+. 770s9
+171V13*End_Of_Line{boolean} 51|146s15 216s21 270s21 279s12 331s21 340s12
+. 393s21 402s12 455s21 464s12
+183V13*End_Of_File{boolean} 51|211s15 225s14 265s15 286s14 326s15 347s14
+. 388s15 409s14 450s15 471s14
+192V13*Col{68I12} 51|236s78 297s78 358s78 420s78 482s78 779s78
+195V13*Line{68I12} 51|236s47 297s47 358s47 420s47 482s47 779s47
+205U14*Get 51|130s7 135s9 139s9 147s7
+210U14*Look_Ahead 51|126s5 133s9
+241U14*Put 51|162s5 174s9 176s9 180s7 181s7 501s5 522s11 547s5 568s11 570s11
+. 571s11 596s5 617s11 619s11 645s5 666s11 668s11 694s5 715s11 717s11 796s5
+242U14*Put 51|235s7 296s7 357s7 419s7 481s7 778s7
+259U14*Put_Line 51|509s7 511s7 555s7 557s7 604s7 606s7 653s7 655s7 702s7
+. 704s7 800s7
+263U14*Put_Line 51|236s7 297s7 358s7 420s7 482s7 779s7
+X 32 a-tiflio.ads
+61U14*Put 51|669s11[80|24] 718s11[79|24]
+64i7 Fore{31|73I12} 51|669r29[80|24] 718r29[79|24]
+65i7 Aft{31|73I12} 51|669r40[80|24] 718r40[79|24]
+66i7 Exp{31|73I12} 51|669r52[80|24] 718r52[79|24]
+X 33 a-tiinio.ads
+60U14*Put 51|161s5[81|24] 164s7[81|24] 502s5[81|24] 521s11[81|24] 523s11[81|24]
+. 548s5[81|24] 567s11[81|24] 569s11[81|24] 597s5[81|24] 616s11[81|24] 618s11[81|24]
+. 620s11[81|24] 646s5[81|24] 665s11[81|24] 667s11[81|24] 695s5[81|24] 714s11[81|24]
+. 716s11[81|24] 797s5[81|24]
+63i7 Width{31|73I12} 51|161r16[81|24] 164r18[81|24] 502r16[81|24] 521r25[81|24]
+. 523r23[81|24] 548r16[81|24] 567r25[81|24] 569r23[81|24] 597r16[81|24] 616r25[81|24]
+. 618r23[81|24] 620r29[81|24] 646r16[81|24] 665r25[81|24] 667r23[81|24] 695r16[81|24]
+. 714r25[81|24] 716r23[81|24] 797r16[81|24]
+X 38 arrays_utils.ads
+48V12*Alloc{77|58P8} 51|47s11[39|25]
+X 39 arrays_utils_integer.ads
+25K9*Arrays_Utils_Integer[38|36] 51|31w6 31r32
+X 40 finite_disjoint_lists.ads
+24K9*Finite_Disjoint_Lists 425e26 50|30w6 30r33
+30R8*List 376e13 51|43r8 733r67
+35P8*List_Of_Lists 50|43r36 124r51 131r50 51|39r36 732r51 787r50
+55U13*Initialize 51|753s5
+88V12*Number_Of_Elements{natural} 51|46s10 792s10
+117V12*New_List{30R8} 51|757s24
+168V12*Has_Next_List{boolean} 51|51s11
+186V12*Next_List{30R8} 51|53s12
+200U13*Reset 51|50s5
+207U13*Save 51|49s5
+215U13*Restore 51|61s5
+224V12*Get_Element{27R8} 51|768s12
+230V12*Index_Of{positive} 51|57s12
+244V12*Has_Next_Element{boolean} 51|56s13
+260V12*Next_Element{27R8} 51|57s21
+273U13*Reset 51|55s7
+280U13*Save 51|54s7
+288U13*Restore 51|59s7
+297U13*Move 51|768s7
+X 41 graphs.ads
+35P8*Graph 50|51r60[45|24] 59r60[46|25] 67r61[44|24] 75r59[43|24] 83r60[42|25]
+. 89r59[45|24] 95r59[46|25] 101r60[44|24] 109r58[43|24] 117r59[42|25] 51|190r60[45|24]
+. 244r60[46|25] 305r61[44|24] 366r59[43|24] 428r60[42|25] 490r59[45|24] 537r59[46|25]
+. 585r60[44|24] 634r58[43|24] 683r59[42|25]
+38R8*Vertex
+41R8*Edge 51|494r22[45|24] 541r22[46|25] 589r23[44|24] 638r21[43|24] 687r22[42|25]
+44R8*Edges_List 51|493r23[45|24] 540r23[46|25] 588r24[44|24] 637r22[43|24]
+. 686r23[42|25]
+64U13*Initialize 51|199s5[45|24] 253s5[46|25] 314s5[44|24] 376s5[43|24] 438s5[42|25]
+90V12*Number_Of_Vertices{natural} 51|498s10[45|24] 544s10[46|25] 593s10[44|24]
+. 642s10[43|24] 691s10[42|25]
+97V12*Is_Directed{boolean} 51|508s8[45|24] 520s12[45|24] 554s8[46|25] 566s12[46|25]
+. 603s8[44|24] 615s12[44|24] 652s8[43|24] 664s12[43|24] 701s8[42|25] 713s12[42|25]
+145V12*Get_Vertex{38R8[45|24]} 51|205s16[45|24] 206s15[45|24] 218s30[45|24]
+. 218s52[45|24] 223s28[45|24] 223s50[45|24] 259s16[46|25] 260s15[46|25] 272s30[46|25]
+. 272s52[46|25] 280s30[46|25] 280s52[46|25] 283s30[46|25] 283s52[46|25] 320s16[44|24]
+. 321s15[44|24] 333s30[44|24] 333s52[44|24] 341s30[44|24] 341s52[44|24] 344s30[44|24]
+. 344s52[44|24] 382s16[43|24] 383s15[43|24] 395s30[43|24] 395s52[43|24] 403s30[43|24]
+. 403s52[43|24] 406s30[43|24] 406s52[43|24] 444s16[42|25] 445s15[42|25] 457s30[42|25]
+. 457s52[42|25] 465s30[42|25] 465s52[42|25] 468s30[42|25] 468s52[42|25] 505s39[45|24]
+. 505s67[45|24] 514s24[45|24] 551s39[46|25] 551s67[46|25] 560s24[46|25] 600s39[44|24]
+. 600s67[44|24] 609s24[44|24] 649s39[43|24] 649s67[43|24] 658s24[43|24] 698s39[42|25]
+. 698s67[42|25] 707s24[42|25]
+151V12*Index_Of{positive} 51|519s15[45|24] 565s15[46|25] 614s15[44|24] 663s15[43|24]
+. 712s15[42|25]
+181U13*Add_Edge_Unchecked 51|218s11[45|24] 223s9[45|24] 272s11[46|25] 280s11[46|25]
+. 283s11[46|25] 333s11[44|24] 341s11[44|24] 344s11[44|24] 395s11[43|24] 403s11[43|24]
+. 406s11[43|24] 457s11[42|25] 465s11[42|25] 468s11[42|25]
+190U13*Restore_Consistency 51|232s5[45|24] 293s5[46|25] 354s5[44|24] 416s5[43|24]
+. 478s5[42|25]
+292V12*Edges_From{44R8[45|24]} 51|514s13[45|24] 560s13[46|25] 609s13[44|24]
+. 658s13[43|24] 707s13[42|25]
+311V12*Has_Next{boolean} 51|517s13[45|24] 563s13[46|25] 612s13[44|24] 661s13[43|24]
+. 710s13[42|25]
+332V12*Next{41R8[45|24]} 51|518s14[45|24] 564s14[46|25] 613s14[44|24] 662s14[43|24]
+. 711s14[42|25]
+350U13*Reset 51|516s7[45|24] 562s7[46|25] 611s7[44|24] 660s7[43|24] 709s7[42|25]
+356U13*Save 51|515s7[45|24] 561s7[46|25] 610s7[44|24] 659s7[43|24] 708s7[42|25]
+362U13*Restore 51|527s7[45|24] 575s7[46|25] 624s7[44|24] 673s7[43|24] 722s7[42|25]
+383V12*To{38R8[45|24]} 51|519s38[45|24] 565s38[46|25] 614s39[44|24] 663s37[43|24]
+. 712s38[42|25]
+389V12*Value{28|79R9} 51|571s29[46|25] 620s19[44|24] 669s19[43|24] 718s19[42|25]
+408U13*Set_Name 51|205s7[45|24] 259s7[46|25] 320s7[44|24] 382s7[43|24] 444s7[42|25]
+414V12*Get_Name{string} 51|505s30[45|24] 551s30[46|25] 600s30[44|24] 649s30[43|24]
+. 698s30[42|25]
+420U13*Set_Tag 51|206s7[45|24] 260s7[46|25] 321s7[44|24] 383s7[43|24] 445s7[42|25]
+426V12*Get_Tag{string} 51|505s59[45|24] 551s59[46|25] 600s59[44|24] 649s59[43|24]
+. 698s59[42|25]
+X 42 graphs_double.ads
+25K9*Graphs_Double[41|30] 50|29w6 29r25 83r46 117r45 51|428r46 683r45 686r9
+. 687r8 712r24
+X 43 graphs_float.ads
+24K9*Graphs_Float[41|30] 50|28w6 28r24 75r46 109r45 51|366r46 634r45 637r9
+. 638r8 663r24
+X 44 graphs_integer.ads
+24K9*Graphs_Integer[41|30] 50|27w6 27r26 67r46 101r45 51|305r46 585r45 588r9
+. 589r8 614r24
+X 45 graphs_simple.ads
+24K9*Graphs_Simple[41|30] 50|25w6 25r25 51r46 89r45 51|190r46 490r45 493r9
+. 494r8 519r24
+X 46 graphs_string.ads
+25K9*Graphs_String[41|30] 50|26w6 26r25 59r46 95r45 51|244r46 537r45 540r9
+. 541r8 565r24
+X 50 pajek_io.ads
+32K9*Pajek_IO 133l5 133e13 51|33b14 807l5 807t13
+34X3*Unrecognized_Pajek_Format 51|76r13 87r15 107r13 237r13 298r13 359r13
+. 421r13 483r13 747r13 780r13
+43V12*Partition_Index{77|58P8} 43>28 51|39b12 63l7 63t22 793s11
+43p28 Lol{40|35P8} 51|39b28 46r29 49r10 50r11 51r25 53r22 61r13
+51U13*Get_Graph 51>23 51<38 51|190b13 238l7 238t16
+51a23 Fn{string} 51|190b23 197r23 236r24
+51p38 Gr{41|35P8[45|24]} 51|190b38 199m16 205r27 206r26 218r41 218r63 223r39
+. 223r61 232r25
+59U13*Get_Graph 59>23 59<38 51|244b13 299l7 299t16
+59a23 Fn{string} 51|244b23 251r23 297r24
+59p38 Gr{41|35P8[46|25]} 51|244b38 253m16 259r27 260r26 272r41 272r63 280r41
+. 280r63 283r41 283r63 293r25
+67U13*Get_Graph 67>23 67<38 51|305b13 360l7 360t16
+67a23 Fn{string} 51|305b23 312r23 358r24
+67p38 Gr{41|35P8[44|24]} 51|305b38 314m16 320r27 321r26 333r41 333r63 341r41
+. 341r63 344r41 344r63 354r25
+75U13*Get_Graph 75>23 75<38 51|366b13 422l7 422t16
+75a23 Fn{string} 51|366b23 374r23 420r24
+75p38 Gr{41|35P8[43|24]} 51|366b38 376m16 382r27 383r26 395r41 395r63 403r41
+. 403r63 406r41 406r63 416r25
+83U13*Get_Graph 83>23 83<38 51|428b13 484l7 484t16
+83a23 Fn{string} 51|428b23 436r23 482r24
+83p38 Gr{41|35P8[42|25]} 51|428b38 438m16 444r27 445r26 457r41 457r63 465r41
+. 465r63 468r41 468r63 478r25
+89U13*Put_Graph 89>23 89>38 51|490b13 531l7 531t16
+89a23 Fn{string} 51|490b23 499r26
+89p38 Gr{41|35P8[45|24]} 51|490b38 498r29 505r50 505r78 508r20 514r35 520r24
+95U13*Put_Graph 95>23 95>38 51|537b13 579l7 579t16
+95a23 Fn{string} 51|537b23 545r26
+95p38 Gr{41|35P8[46|25]} 51|537b38 544r29 551r50 551r78 554r20 560r35 566r24
+101U13*Put_Graph 101>23 101>38 51|585b13 628l7 628t16
+101a23 Fn{string} 51|585b23 594r26
+101p38 Gr{41|35P8[44|24]} 51|585b38 593r29 600r50 600r78 603r20 609r35 615r24
+109U13*Put_Graph 109>23 109>38 109>65 109>101 51|634b13 677l7 677t16
+109a23 Fn{string} 51|634b23 643r26
+109p38 Gr{41|35P8[43|24]} 51|634b38 642r29 649r50 649r78 652r20 658r35 664r24
+109i65 Aft{31|73I12} 51|634b65 669r47
+109i101 Exp{31|73I12} 51|634b101 669r59
+117U13*Put_Graph 117>23 117>38 117>66 117>103 51|683b13 726l7 726t16
+117a23 Fn{string} 51|683b23 692r26
+117p38 Gr{41|35P8[42|25]} 51|683b38 691r29 698r50 698r78 701r20 707r35 713r24
+117i66 Aft{31|73I12} 51|683b66 718r47
+117i103 Exp{31|73I12} 51|683b103 718r59
+124U13*Get_Partition 124>27 124<42 51|732b13 781l7 781t20
+124a27 Fn{string} 51|732b27 742r23 779r24
+124p42 Lol{40|35P8} 51|732b42 753m16 757r33 768r24
+131U13*Put_Partition 131>27 131>42 51|787b13 805l7 805t20
+131a27 Fn{string} 51|787b27 795r26
+131p42 Lol{40|35P8} 51|787b42 792r29 793r27
+X 51 pajek_io.adb
+40i5 N{natural} 46m5 47r20
+41p5 Li{77|58P8} 47m5 57r9 62r12
+42i5 Idx{natural} 48m5 52m7 52r14 57r42
+43r5 L{40|30R8} 45r26 53m7 54r12 55r13 56r30 57r34 59r15
+69U13 Get_Graph_Info 69b13 69=28 69<50 69<67 69<90 112l7 112t21 198s5 252s5
+. 313s5 375s5 437s5
+69p28 Ft{31|52P9} 73r19 74r14 79r17 80r15 83r21 84r19 85r17 91r19 92r14 93r15
+. 111m11
+69i50 N{positive} 79m21 82r17
+69b67 Directed{boolean} 95m7 98m7 101m7 104m7
+69b90 Listed{boolean} 96m7 99m7 102m7 105m7
+70p5 W{78|30P11} 74m18 74r18 75r21 78m15 78r15 92m18 92r18 94r21 97r24 100r24
+. 103r24 109m15 109r15
+71i5 X{integer} 84m23 86r15
+82i9 I{integer} 86r10 87r71
+118U13 Get_Vertex_Info 118b13 118>29 118<47 118<53 152l7 152t22 204s7 258s7
+. 319s7 381s7 443s7
+118p29 Ft{31|52P9} 123r19 124r17 125r22 126r16 130r11 133r20 135r13 139r13
+. 142r16 144r22 146r27 147r11 151r15
+118r47 Name{77|38R11} 128m7 131m7 136m9 136r17 142m20
+118r53 Tag{77|38R11} 145m5 148m7 148r14 150m5 150r17
+119i5 X{integer} 124m21
+120e5 C{character} 126m20 129r11 130m15 133m24 134r31 135m17 136r24 139m17
+. 147m15 148r20
+121b5 Eol{boolean} 126m23 127r8 133m27 134r19 138r14
+158U13 Put_Vertex_Info 158b13 158>29 158>47 158>62 158>68 184l7 184t22 505s7
+. 551s7 600s7 649s7 698s7
+158p29 Ft{31|52P9} 161r9 162r9 164r11 174r13 176r13 180r11 181r11 183r14
+158i47 I{integer} 161r13 164r15
+158a62 Name{string} 163r8 167r16 168r21 174r24 176r17
+158a68 Tag{string} 179r8 181r15
+159b5 Has_Space{boolean} 166m7 169m11 173r10
+167i11 K{integer} 168r26
+191p5 Ft{31|52P9} 197m10 197r10 198m20 198r20 201r19 202r15 204r23 209r19
+. 210r15 211r27 213r21 215r28 216r33 217r23 221r21 222r21 225r26 226r19 227r23
+. 230m11 230r11 236r52 236r82
+192i5 N{integer} 198m24 199r20 203r17
+193b5 Directed{boolean} 198m27 199r23
+193b15 Listed{boolean} 198m37 212r10
+194r5 Name{77|38R11} 204m27 205r45
+194r11 Tag{77|38R11} 204m33 206r44
+195i5 From{integer} 213m25 218r45 221m25 223r43
+195i11 To{integer} 217m27 218r67 222m25 223r65
+203i9 I{integer} 205r31 206r30
+234r10 E{15|62R9} 235r33
+245p5 Ft{31|52P9} 251m10 251r10 252m20 252r20 255r19 256r15 258r23 263r19
+. 264r15 265r27 267r21 269r28 270r33 271r23 275r21 276r21 277r26 278r27 279r24
+. 282r20 286r26 287r19 288r23 291m11 291r11 297r52 297r82
+246i5 N{integer} 252m24 253r20 257r17
+247b5 Directed{boolean} 252m27 253r23
+247b15 Listed{boolean} 252m37 266r10
+248r5 Name{77|38R11} 258m27 259r45
+248r11 Tag{77|38R11} 258m33 260r44
+248r16 Value{77|38R11} 282m24 283r72
+249i5 From{integer} 267m25 272r45 275m25 280r45 283r45
+249i11 To{integer} 271m27 272r67 276m25 280r67 283r67
+257i9 I{integer} 259r31 260r30
+295r10 E{15|62R9} 296r33
+306p5 Ft{31|52P9} 312m10 312r10 313m20 313r20 316r19 317r15 319r23 324r19
+. 325r15 326r27 328r21 330r28 331r33 332r23 336r21 337r21 338r26 339r27 340r24
+. 343r23 347r26 348r19 349r23 352m11 352r11 358r52 358r82
+307i5 N{integer} 313m24 314r20 318r17
+308b5 Directed{boolean} 313m27 314r23
+308b15 Listed{boolean} 313m37 327r10
+309r5 Name{77|38R11} 319m27 320r45
+309r11 Tag{77|38R11} 319m33 321r44
+310i5 From{integer} 328m25 333r45 336m25 341r45 344r45
+310i11 To{integer} 332m27 333r67 337m25 341r67 344r67
+310i15 Value{integer} 343m27 344r72
+318i9 I{integer} 320r31 321r30
+356r10 E{15|62R9} 357r33
+367p5 Ft{31|52P9} 374m10 374r10 375m20 375r20 378r19 379r15 381r23 386r19
+. 387r15 388r27 390r21 392r28 393r33 394r23 398r21 399r21 400r26 401r27 402r24
+. 405r21 409r26 410r19 411r23 414m11 414r11 420r52 420r82
+368i5 N{integer} 375m24 376r20 380r17
+369b5 Directed{boolean} 375m27 376r23
+369b15 Listed{boolean} 375m37 389r10
+370r5 Name{77|38R11} 381m27 382r45
+370r11 Tag{77|38R11} 381m33 383r44
+371i5 From{integer} 390m25 395r45 398m25 403r45 406r45
+371i11 To{integer} 394m27 395r67 399m25 403r67 406r67
+372f5 Value{float} 405m25 406r72
+380i9 I{integer} 382r31 383r30
+418r10 E{15|62R9} 419r33
+429p5 Ft{31|52P9} 436m10 436r10 437m20 437r20 440r19 441r15 443r23 448r19
+. 449r15 450r27 452r21 454r28 455r33 456r23 460r21 461r21 462r26 463r27 464r24
+. 467r22 471r26 472r19 473r23 476m11 476r11 482r52 482r82
+430i5 N{integer} 437m24 438r20 442r17
+431b5 Directed{boolean} 437m27 438r23
+431b15 Listed{boolean} 437m37 451r10
+432r5 Name{77|38R11} 443m27 444r45
+432r11 Tag{77|38R11} 443m33 445r44
+433i5 From{integer} 452m25 457r45 460m25 465r45 468r45
+433i11 To{integer} 456m27 457r67 461m25 465r67 468r67
+434f5 Value{77|36F11} 467m26 468r72
+442i9 I{integer} 444r31 445r30
+480r10 E{15|62R9} 481r33
+491p5 Ft{31|52P9} 499m12 499r12 501r9 502r9 503r14 505r23 509r16 511r16 521r15
+. 522r15 523r15 524r20 530m11 530r11
+492i5 N{natural} 498m5 502r13 504r17 513r20
+493r5 El{41|44R8[45|24]} 497r26 514m7 515r12 516r13 517r22 518r19 527r15
+494r5 E{41|41R8[45|24]} 518m9 519r41
+495i5 To{positive} 519m9 520r44 523r19
+504i9 I{integer} 505r27 505r54 505r82
+513i9 From{integer} 514r39 520r36 521r19
+538p5 Ft{31|52P9} 545m12 545r12 547r9 548r9 549r14 551r23 555r16 557r16 567r15
+. 568r15 569r15 570r15 571r15 572r20 578m11 578r11
+539i5 N{natural} 544m5 548r13 550r17 559r20
+540r5 El{41|44R8[46|25]} 560m7 561r12 562r13 563r22 564r19 575r15
+541r5 E{41|41R8[46|25]} 564m9 565r41 571r35
+542i5 To{positive} 565m9 566r44 569r19
+550i9 I{integer} 551r27 551r54 551r82
+559i9 From{integer} 560r39 566r36 567r19
+586p5 Ft{31|52P9} 594m12 594r12 596r9 597r9 598r14 600r23 604r16 606r16 616r15
+. 617r15 618r15 619r15 620r15 621r20 627m11 627r11
+587i5 N{natural} 593m5 597r13 599r17 608r20
+588r5 El{41|44R8[44|24]} 592r26 609m7 610r12 611r13 612r22 613r19 624r15
+589r5 E{41|41R8[44|24]} 613m9 614r42 620r25
+590i5 To{positive} 614m9 615r44 618r19
+599i9 I{integer} 600r27 600r54 600r82
+608i9 From{integer} 609r39 615r36 616r19
+635p5 Ft{31|52P9} 643m12 643r12 645r9 646r9 647r14 649r23 653r16 655r16 665r15
+. 666r15 667r15 668r15 669r15 670r20 676m11 676r11
+636i5 N{natural} 642m5 646r13 648r17 657r20
+637r5 El{41|44R8[43|24]} 641r26 658m7 659r12 660r13 661r22 662r19 673r15
+638r5 E{41|41R8[43|24]} 662m9 663r40 669r25
+639i5 To{positive} 663m9 664r44 667r19
+648i9 I{integer} 649r27 649r54 649r82
+657i9 From{integer} 658r39 664r36 665r19
+684p5 Ft{31|52P9} 692m12 692r12 694r9 695r9 696r14 698r23 702r16 704r16 714r15
+. 715r15 716r15 717r15 718r15 719r20 725m11 725r11
+685i5 N{natural} 691m5 695r13 697r17 706r20
+686r5 El{41|44R8[42|25]} 690r26 707m7 708r12 709r13 710r22 711r19 722r15
+687r5 E{41|41R8[42|25]} 711m9 712r41 718r25
+688i5 To{positive} 712m9 713r44 716r19
+697i9 I{integer} 698r27 698r54 698r82
+706i9 From{integer} 707r39 713r36 714r19
+733K13 List_Maps[8|47] 734r9 768r33
+736p5 Ft{31|52P9} 742m10 742r10 744r19 745r14 750r17 751r15 755r19 759r17
+. 760r21 763m11 763r11 764r19 765r15 767r19 770r19 771r23 775m11 775r11 779r52
+. 779r82
+737p5 W{78|30P11} 745m18 745r18 746r21 749m15 749r15
+738i5 N{natural} 750m21 753r21 754r17 766r17 769r14
+739i5 Idx{integer} 755m23 756r26 757r19 767m23 768r54
+740r5 M{8|53R9[733]} 756r23 757m16 757r16 768r51
+754i9 I{integer}
+766i9 I{integer} 768r29 769r10
+777r10 E{15|62R9} 778r33
+788p5 Ft{31|52P9} 795m12 795r12 796r9 797r9 798r14 800r16 802m11 802r11
+789i5 N{integer} 792m5 797r13 799r17
+790p5 Li{77|58P8} 793m5 800r24 804m10 804r10
+799i9 I{integer} 800r27
+X 77 utils.ads
+34K9*Utils 50|22w6 22r17 51|27r6 27r20 28r6 28r28 29r6 29r26 30r6 30r27 77|1124e10
+36F11*Double{long_float} 51|434r12
+38R11*Ustring{28|79R9} 51|118r62 194r16 248r23 309r16 370r16 432r16
+40r3*Null_Ustring{38R11} 51|128r15 131r15 145r12
+57A8*Integers(integer)<integer>
+58P8*PIntegers(57A8) 50|43r58 51|39r58 41r9 790r9
+83A8*Integerss(integer)<integer><integer>
+84P8*PIntegerss(83A8)
+126e3*NLine{character} 51|236r16 297r16 358r16 420r16 482r16 779r16
+140i3*Default_Float_Aft{31|73I12} 50|109r82 51|634r82
+141i3*Default_Float_Exp{31|73I12} 50|109r118 51|634r118
+143i3*Default_Double_Aft{31|73I12} 50|117r83 51|683r83
+144i3*Default_Double_Exp{31|73I12} 50|117r120 51|683r120
+314V12*Alloc[82|33]{58P8} 38|32i17
+327V12*Alloc[82|44]{84P8} 38|34i17
+342V12*Alloc[82|57]{84P8} 38|33i17
+420U13*Free[82|120] 51|804s5
+823V12*To_Lowercase{string} 51|75s8 94s8 97s11 100s11 103s11 746s8
+876V12*Is_Space{boolean} 51|168s12
+1046V12*I2S=1046:111{string} 51|87s67 236s35 236s66 297s35 297s66 358s35
+. 358s66 420s35 420s66 482s35 482s66 779s35 779s66 800s20
+X 78 utils-io.ads
+24K15*IO 51|27w12 27r26 78|813e13
+30P11*Word_Access{28|86P9} 51|70r8 737r8
+131U13*Line_Spaces_Skip 51|125s5 144s5 215s11 269s11 277s9 330s11 338s9 392s11
+. 400s9 454s11 462s9
+142U13*Line_Comment_Skip 51|278s9 339s9 401s9 463s9
+153U13*Comments_Skip 51|73s5 83s7 91s5 123s5 201s5 209s5 227s9 255s5 263s5
+. 288s9 316s5 324s5 349s9 378s5 386s5 411s9 440s5 448s5 473s9 744s5 760s7
+. 764s5 771s9
+232U13*Get_Word 51|142s7 282s11
+249U13*Get_Word 51|74s5 92s5 745s5
+254U13*Free_Word 51|78s5 109s5 749s5
+269U13*Get_Integer 51|79s5 84s7 124s5 213s9 217s11 221s9 222s9 267s9 271s11
+. 275s9 276s9 328s9 332s11 336s9 337s9 343s11 390s9 394s11 398s9 399s9 452s9
+. 456s11 460s9 461s9 750s5 755s7 767s7
+299U13*Get_Float 51|405s11
+314U13*Get_Double 51|467s11
+X 79 utils-io_double.ads
+24K15*IO_Double[32|46] 51|30w12 30r33
+X 80 utils-io_float.ads
+24K15*IO_Float[32|46] 51|29w12 29r32
+X 81 utils-io_integer.ads
+24K15*IO_Integer[33|46] 51|28w12 28r34
+

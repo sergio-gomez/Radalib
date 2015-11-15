@@ -1,0 +1,138 @@
+==============
+radalib in Mac
+==============
+
+------------------------------------
+How to install the GNAT Ada compiler
+------------------------------------
+
+1) Download the GNAT Ada GPL 2015, or newer, from
+      http://libre.adacore.com
+   Choose at least the following component:
+      GNAT Ada GPL : Ada compiler and IDE
+   If you plan to use Eclipse
+      GNATbench GPL: Ada Development Plug-In for Eclipse
+
+2) You may need "root" permissions to install GNAT (depending on the installation
+   directory)
+
+3) Expand and install the GNAT Ada GPL 2015, or newer:
+      $ tar xvfz gnat-gpl-2015-x86_64-darwin-bin.tar.gz
+      $ cd gnat-gpl-2015-x86_64-darwin-bin
+      $ sudo ./doinstall
+   We will assume that GNAT has been installed in the directory
+      /usr/gnat/
+
+
+-----------------------------------------
+How to install radalib for the first time
+-----------------------------------------
+
+0) Pre-requisites:
+      GNAT GPL Edition 2015, or newer
+
+1) Select a folder for the installation, e.g.
+      /Users/MyUsername/ada
+
+2) Add the following lines to your /Users/MyUsername/.profile or
+   /Users/MyUsername/.bash_profile, using the previously chosen values
+   of the GNAT and radalib installation directories:
+      export PATH=/usr/local/gnat/bin:$PATH
+      export RADALIB_ROOT=/Users/MyUsername/ada/radalib
+      export ADA_INCLUDE_PATH=$RADALIB_ROOT/source
+      export ADA_OBJECTS_PATH=$RADALIB_ROOT/compiled
+
+3) Execute these exports, e.g. by re-running .profile:
+      $ . /Users/MyUsername/.profile
+
+4) Go to the installation folder:
+      $ cd /Users/MyUsername/ada
+
+5) Download latest radalib to the installation folder (with wget or a browser):
+      $ wget http://deim.urv.cat/~sergio.gomez/radalib/radalib.zip
+
+6) Download installation script to the installation folder (with wget or a browser):
+      $ wget http://deim.urv.cat/~sergio.gomez/radalib/radalib-install-mac.sh
+
+7) Run the installation script:
+      $ chmod 755 radalib-install-mac.sh
+      $ ./radalib-install-mac.sh
+
+8) Check if some tests work, e.g.:
+      $ cd radalib/test
+      $ ./graph_modularity_test.sh
+      $ ./graphs_properties_test.sh
+      $ ./eps_plots_test.sh
+
+9) Do not use the radalib directory for other purposes than to hold radalib,
+   since updates are frequent and require removing it before the new version
+   is installed
+
+
+---------------------
+How to update radalib
+---------------------
+
+1) Check the version of the latest radalib available visiting:
+      http://deim.urv.cat/~sergio.gomez/radalib
+   If the file
+      radalib-yyyymmdd-hhmmss.txt
+   represents a date posterior to your current radalib
+      /Users/MyUsername/ada/radalib/radalib-yyyymmdd-hhmmss.txt
+   update to the new version
+
+2) Go to the installation folder:
+      $ cd /Users/MyUsername/ada
+
+3) Remove the old installation:
+      $ rm -r radalib*
+   Be sure this directory only contains radalib before removing it
+
+4) Download latest radalib to the installation folder (with wget or a browser):
+      $ wget http://deim.urv.cat/~sergio.gomez/radalib/radalib.zip
+
+5) Download installation script to the installation folder (with wget or a browser):
+      $ wget http://deim.urv.cat/~sergio.gomez/radalib/radalib-install-mac.sh
+
+6) Run the installation script:
+      $ chmod 755 radalib-install-mac.sh
+      $ ./radalib-install-mac.sh
+
+7) Check if some tests work, e.g.:
+      $ cd radalib/test
+      $ ./graph_modularity_test.sh
+      $ ./graphs_properties_test.sh
+      $ ./eps_plots_test.sh
+
+8) Do not use the radalib directory for other purposes than to hold radalib,
+   since updates are frequent and require removing it before the new version
+   is installed
+
+
+----------------------------------------------
+How to convert Windows to Mac radalib programs
+----------------------------------------------
+
+1) Make a copy of the conversion script radalib-win2mac.sh:
+      $ cd /Users/MyUsername/ada
+      $ cp radalib-win2mac.sh my-win2mac.sh
+
+2) Edit your conversion script:
+      /Users/MyUsername/ada/my-win2mac.sh
+   Remove or comment the lines at the end of this script:
+      convert_dir_recursive  $RADALIB_ROOT/source
+      convert_dir_recursive  $RADALIB_ROOT/test
+      convert_dir_recursive  $RADALIB_ROOT/tools
+   For each folder to be converted, add a line:
+      convert_dir  afolder
+   For each folder and subfolders to be converted, add a line:
+      convert_dir_recursive  afolderwithsubfolders
+
+3) Run the conversion script (changes filenames to lowercase, and *.bat to .sh):
+      $ ./my-win2mac.sh
+
+4) Further editing of the *.sh script files may be nedded if their
+   corresponding *.bat files do not follow the standards in
+      /Users/MyUsername/ada/radalib/test/*.sh
+   and
+      /Users/MyUsername/ada/radalib/tools/*.sh

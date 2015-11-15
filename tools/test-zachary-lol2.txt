@@ -1,0 +1,11 @@
+---------
+Largest known modularity, recovered with Tabu
+Q_Tabu = 0.419790
+---
+Number of elements: 34
+Number of lists: 4
+
+12: 9 10 15 16 19 21 23 27 30 31 33 34
+11: 1 2 3 4 8 12 13 14 18 20 22
+6: 24 25 26 28 29 32
+5: 5 6 7 11 17

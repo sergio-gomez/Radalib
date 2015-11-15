@@ -1,0 +1,8 @@
+# first comment
+3	0.00	1.1	str	0.00
+4	1.1	1	0.00	0.00
+2	str	0.00	0.00	7#comment1
+    	#comment2
+
+1	0.00	0.00	7	zz
+

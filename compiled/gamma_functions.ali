@@ -1,0 +1,143 @@
+V "GNAT Lib v2014"
+A -O2
+P ZX
+
+RN
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_RECURSION
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U gamma_functions%b	gamma_functions.adb	1faeb2ab NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.numerics%s	a-numeri.ads		a-numeri.ali
+W ada.numerics.elementary_functions%s  a-nuelfu.ads  a-nuelfu.ali
+W system.fat_flt%s	s-fatflt.ads		s-fatflt.ali
+
+U gamma_functions%s	gamma_functions.ads	1e40233f EE OO PK
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-numeri.ads		20140406181358 bb51c45a ada.numerics%s
+D a-nuelfu.ads		20140406181356 03e83d1c ada.numerics.elementary_functions%s
+D a-ngelfu.ads		20140406181358 ff061ca9 ada.numerics.generic_elementary_functions%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D gamma_functions.ads	20150322182910 1e40233f gamma_functions%s
+D gamma_functions.adb	20150322182948 fa82175e gamma_functions%b
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-fatflt.ads		20140406181356 11beb392 system.fat_flt%s
+D s-fatgen.ads		20140406181356 9267ca45 system.fat_gen%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+X 1 ada.ads
+16K9*Ada 19e8 8|22r6 22r26 23r6 23r24 24r6 24r45
+X 2 a-except.ads
+53K13*Exceptions 360e19 8|22w10 22r30
+89U14*Raise_Exception 8|41s7 59s7 70s7 87s7 112s7 129s7 154s7 168s7 186s7
+. 200s7 218s7 234s7 239s7 259s7 280s7 285s7 316s7
+X 3 a-numeri.ads
+16K13*Numerics 32e17 8|23w10 23r28 24r10 24r49
+21N4*Pi 8|37r14 37r24
+X 4 a-nuelfu.ads
+18K22*Elementary_Functions[5|39] 8|24w19 24r58
+X 5 a-ngelfu.ads
+47V13*Log{float} 8|62s24[4|18] 67s18[4|18] 255s39[4|18] 312s33[4|18]
+54V13*Exp{float} 8|35s14[4|18] 37s34[4|18] 99s39[4|18] 104s32[4|18] 107s24[4|18]
+. 141s39[4|18] 146s24[4|18] 149s32[4|18] 255s26[4|18] 312s20[4|18]
+57V14*"**"{float} 8|99s28[4|18] 141s28[4|18]
+64V13*Sin{float} 8|37s20[4|18]
+X 7 gamma_functions.ads
+22K9*Gamma_Functions 96E13 108l5 108e20 8|26b14 320l5 320t20
+24X3*Gamma_Error 8|41r23 59r23 70r23 87r23 112r23 129r23 154r23 168r23 186r23
+. 200r23 218r23 234r23 239r23 259r23 280r23 285r23 316r23
+34V12*Gamma{float} 34>18 8|32b12 42l7 42t12 133s14 175s51 207s51
+34f18 A{float} 8|32b18 34r8 35r27 37r29 37r53
+43V12*Ln_Gamma{float} 43>21 8|35s18 37s38 48b12 71l7 71t15 236s15 282s15
+43f21 A{float} 8|48b21 53r26 54r17 58r8
+53V12*Incomplete_Uppercase_Gamma{float} 53>39 53>52 8|77b12 96s16 113l7 113t33
+. 175s16
+53f39 A{float} 8|77b39 93r10 94r38 95r17 98r19 102r17 103r24 106r36
+53f52 X{float} 8|77b52 86r8 88r11 90r11 96r49 99r26 99r44 102r13 103r27 106r39
+63V12*Incomplete_Lowercase_Gamma{float} 63>39 63>52 8|119b12 138s16 155l7
+. 155t33 207s16
+63f39 A{float} 8|119b39 133r20 135r10 136r38 137r17 140r19 144r17 145r24
+. 148r36
+63f52 X{float} 8|119b52 128r8 130r11 132r11 138r49 141r26 141r44 144r13 145r27
+. 148r39
+73V12*Incomplete_Gamma_Ratio_Q{float} 73>37 73>50 8|161b12 187l7 187t31
+73f37 A{float} 8|161b37 174r10 175r43 175r57 176r17 177r24 180r36
+73f50 X{float} 8|161b50 167r8 169r11 171r11 175r46 176r13 177r27 180r39
+83V12*Incomplete_Gamma_Ratio_P{float} 83>37 83>50 8|193b12 219l7 219t31
+83f37 A{float} 8|193b37 206r10 207r43 207r57 208r17 209r24 212r36
+83f50 X{float} 8|193b50 199r8 201r11 203r11 207r46 208r13 209r27 212r39
+96U13 Gamma_P_Series 96>28 96>31 96<44 96<51 8|103s9 145s9 177s9 209s9 225b13
+. 261l7 261t21
+96f28 A{float} 8|225b28 233r8 236r24 247r13 248r20 255r35
+96f31 X{float} 8|225b31 238r8 240r11 243r11 252r22 255r31 255r43
+96f44 Gam_P{float} 8|225b44 237m5 241m7 244m7 255m11
+96f51 Gam_Ln{float} 8|225b51 236m5 255r48
+106U13 Gamma_Q_Continued_Fraction 106>40 106>43 106<56 106<63 8|106s9 148s9
+. 180s9 212s9 267b13 318l7 318t33
+106f40 A{float} 8|267b40 279r8 282r24 293r22 298r39 312r29
+106f43 X{float} 8|267b43 284r8 286r11 289r11 293r12 312r25 312r37
+106f56 Gam_Q{float} 8|267b56 283m5 287m7 290m7 312m11
+106f63 Gam_Ln{float} 8|267b63 282m5 312r42
+X 8 gamma_functions.adb
+49a5 Coef(float) 65r20 67r22
+53f5 X{float} 61r12 62r13 67r38
+54f5 Y{float} 64m7 64r12 65r30
+55f5 Ser{float} 65m7 65r14 67r32
+56f5 Tmp{float} 61m5 62m5 62r28 62r35 67r12
+63i9 J{integer} 65r25
+78N5 Xmax 90r16
+79f5 Gam_Ln{float} 103m37 104r36 106m49 107r28
+80f5 Gam_P{float} 103m30 104r23
+81f5 Gam_Q{float} 106m42 107r16
+82f5 Gam{float} 96m9 99m11 99r19 101r16
+83f5 Atmp{float} 95m9 96r43 98m11 99r31 99r50
+84i5 Steps{integer} 94m9 95r27 97r29
+97i13 I{integer} 98r29
+120N5 Xmax 132r16
+121f5 Gam_Ln{float} 145m37 146r28 148m49 149r36
+122f5 Gam_P{float} 145m30 146r16
+123f5 Gam_Q{float} 148m42 149r23
+124f5 Gam{float} 138m9 141m11 141r19 143r16
+125f5 Atmp{float} 137m9 138r43 140m11 141r31 141r50
+126i5 Steps{integer} 136m9 137r27 139r29
+139i13 I{integer} 140r29
+162N5 Xmax 171r16
+163f5 Gam_Ln{float} 177m37 180m49
+164f5 Gam_P{float} 177m30 178r22
+165f5 Gam_Q{float} 180m42 181r16
+194N5 Xmax 203r16
+195f5 Gam_Ln{float} 209m37 212m49
+196f5 Gam_P{float} 209m30 210r16
+197f5 Gam_Q{float} 212m42 213r22
+226N5 Itmax 250r19
+227N5 Eps 254r24
+228N5 Xmax 243r16
+229f5 Ap{float} 247m7 251m9 251r15 252r26
+230f5 Del{float} 249m7 252m9 252r16 253r22 254r17
+231f5 Sum{float} 248m7 249r14 253m9 253r16 254r35 255r20
+250i11 N{integer}
+268N5 Itmax 297r19
+269N5 Eps 311r32
+270N5 Fpmin 294r18 301r22 302r16 305r22 306r16
+271N5 Xmax 289r16
+272f5 An{float} 298m9 300r14 304r18
+273f5 B{float} 293m7 295r18 299m9 299r14 300r23 304r14
+274f5 C{float} 294m7 304m9 304r23 305r17 306m11 309r20
+275f5 D{float} 295m7 296r12 300m9 300r19 301r17 302m11 308m9 308r20 309r16
+276f5 Del{float} 309m9 310r18 311r18
+277f5 H{float} 296m7 310m9 310r14 312r52
+297i11 I{integer} 298r22 298r34
+

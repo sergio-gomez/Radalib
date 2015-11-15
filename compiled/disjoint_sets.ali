@@ -1,0 +1,252 @@
+V "GNAT Lib v2014"
+A -O2
+P SS ZX
+
+RN
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_ALLOCATORS
+RV NO_DISPATCH
+RV NO_DISPATCHING_CALLS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_IMPLICIT_LOOPS
+RV NO_LOCAL_ALLOCATORS
+RV NO_NESTED_FINALIZATION
+RV NO_RECURSION
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_STREAMS
+RV NO_UNCHECKED_ACCESS
+RV NO_UNCHECKED_DEALLOCATION
+RV NO_DEFAULT_INITIALIZATION
+RV NO_IMPLEMENTATION_ATTRIBUTES
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLICIT_ALIASING
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U disjoint_sets%b	disjoint_sets.adb	95e5dba6 NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.containers%s	a-contai.ads		a-contai.ali
+W ada.containers.ordered_maps%s
+Z ada.containers.red_black_trees%s  a-crbltr.ads  a-crbltr.ali
+Z ada.containers.red_black_trees.generic_keys%s
+Z ada.containers.red_black_trees.generic_operations%s
+W ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.finalization%s	a-finali.adb		a-finali.ali
+Z ada.iterator_interfaces%s
+W ada.streams%s		a-stream.adb		a-stream.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W ada.unchecked_deallocation%s
+W interfaces%s		interfac.ads		interfac.ali
+W system%s		system.ads		system.ali
+W system.address_image%s  s-addima.adb		s-addima.ali
+W system.finalization_masters%s  s-finmas.adb	s-finmas.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W system.storage_elements%s  s-stoele.adb	s-stoele.ali
+W system.storage_pools%s  s-stopoo.adb		s-stopoo.ali
+W system.storage_pools.subpools%s  s-stposu.adb	s-stposu.ali
+W system.stream_attributes%s  s-stratt.adb	s-stratt.ali
+
+U disjoint_sets%s	disjoint_sets.ads	81076642 EE OO PK
+W ada.tags%s		a-tags.adb		a-tags.ali
+W finite_disjoint_lists%s  finite_disjoint_lists.adb  finite_disjoint_lists.ali
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W trees_integer%s	trees_integer.ads	trees_integer.ali
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-contai.ads		20140406181356 61e5e089 ada.containers%s
+D a-coorma.ads		20140406181356 f6e6861b ada.containers.ordered_maps%s
+D a-coorma.adb		20140406181354 3c7e7c60 ada.containers.ordered_maps%b
+D a-crbltr.ads		20140406181356 b8a2dc05 ada.containers.red_black_trees%s
+D a-crbtgk.ads		20140406181354 18ae3fab ada.containers.red_black_trees.generic_keys%s
+D a-crbtgk.adb		20140406181356 62191c0e ada.containers.red_black_trees.generic_keys%b
+D a-crbtgo.ads		20140406181358 375f6f61 ada.containers.red_black_trees.generic_operations%s
+D a-crbtgo.adb		20140406181358 885f84ae ada.containers.red_black_trees.generic_operations%b
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-finali.ads		20140406181358 69f99942 ada.finalization%s
+D a-iteint.ads		20140406181354 7c7305e9 ada.iterator_interfaces%s
+D a-stream.ads		20140406181354 1a984740 ada.streams%s
+D a-tags.ads		20140406181356 dc4d0634 ada.tags%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D a-uncdea.ads		20140406181358 f15a5ed1 ada.unchecked_deallocation%s
+D disjoint_sets.ads	20150322182908 5f9fc51e disjoint_sets%s
+D disjoint_sets.adb	20150322182946 cdc6c672 disjoint_sets%b
+D finite_disjoint_lists.ads  20150322182910 68c3f3bc finite_disjoint_lists%s
+D interfac.ads		20140406181358 69adb1b9 interfaces%s
+D linked_lists.ads	20150322182924 f903bd62 linked_lists%s
+D stacks.ads		20150322182932 6f253f87 stacks%s
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-addima.ads		20140406181356 a1ec9d3a system.address_image%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-finmas.ads		20140406181356 814daec4 system.finalization_masters%s
+D s-finroo.ads		20140406181358 4ff27390 system.finalization_root%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-pooglo.ads		20140406181356 542f33d0 system.pool_global%s
+D s-secsta.ads		20140406181358 86a2856d system.secondary_stack%s
+D s-soflin.ads		20140406181358 aa763b52 system.soft_links%s
+D s-stache.ads		20140406181354 a37c21ec system.stack_checking%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-stoele.ads		20140406181356 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20140406181354 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20140406181356 b16154c2 system.storage_pools%s
+D s-stposu.ads		20140406181354 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20140406181358 aedef97e system.stream_attributes%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+D s-unstyp.ads		20140406181356 510692af system.unsigned_types%s
+D trees.ads		20150322182936 124bc4fc trees%s
+D trees_integer.ads	20150322182938 b65b50e0 trees_integer%s
+X 1 ada.ads
+16K9*Ada 19e8 18|22r6 23r6 31r28 249r30 281r30
+X 2 a-contai.ads
+16K13*Containers 24e19 18|23r10 281r34
+X 3 a-coorma.ads
+47k24*Ordered_Maps 377e32 18|23w21 281r45
+53R9 Map<11|43R9> 18|285r8[281]
+147U14 Insert 18|298s9[281]
+194V13 Element{19|30R8} 18|303s43[281]
+240R9 Node_Type
+241P9 Node_Access(240R9)
+X 4 a-coorma.adb
+49V13 Color{5|35E9} 8|45i19
+52V13 Left{3|241P9[18|281]} 8|41i19[18|281]
+55V13 Parent{3|241P9[18|281]} 8|39i19[18|281]
+58V13 Right{3|241P9[18|281]} 8|43i19[18|281]
+61U14 Set_Parent 8|40i19
+64U14 Set_Left 8|42i19[18|281]
+67U14 Set_Right 8|44i19
+70U14 Set_Color 8|46i19
+X 12 a-iteint.ads
+24h9 Forward_Iterator
+32h9 Reversible_Iterator<24R9[3|68]>
+X 16 a-uncdea.ads
+20u15*Unchecked_Deallocation 18|22w10 31r32 249r34
+X 17 disjoint_sets.ads
+25K9*Disjoint_Sets 173E8 191l5 191e18 18|25b14 309l5 309t18
+28R8*Element 31r24 87r68 93r27 99r34 106r29 113r31 121r33 128r31 137r39 144r29
+. 173c8 176e13 18|114r68 123r12 130r27 139r34 148r29 157r31 178r33 189r31
+. 198r39 211r29 302r25
+31R11*Component{28R8} 113r47 18|157r47 158r8 165r25 179r8 212r13 287r8
+34P8*Disjoint_Set 46r32 53r33 59r34 64r29 71r25 71r46 78r24 87r31 99r50 106r45
+. 154r29 164r36 174r9 189c8 18|31r74 37r32 49r33 64r34 73r29 85r25 85r46
+. 86r15 101r24 114r31 139r50 148r45 244r29 280r36
+36X3*Index_Error 18|121r13
+37X3*Uninitialized_Disjoint_Set_Error 18|52r13 89r13 104r13 117r13 255r13
+. 290r13
+38X3*Incompatible_Elements_Error 18|201r13 216r13
+46U13*Initialize 46<24 46>46 18|37b13 43l7 43t17
+46p24 Ds{34P8} 18|37b24 39m5 40r14 41r7
+46i46 Size{positive} 18|37b46 39r36
+53U13*Reinitialize 53>26 18|49b13 58l7 58t19
+53p26 Ds{34P8} 18|49b26 51r8 55r14 56r7
+59V12*Is_Initialized{boolean} 59>27 18|64b12 67l7 67t21
+59p27 Ds{34P8} 18|64b27 66r12
+64U13*Free 64=18 18|73b13 79l7 79t11
+64p18 Ds{34P8} 18|73b18 75r8 76m15 77m7
+71V12*Clone{34P8} 71>18 18|85b12 95l7 95t12
+71p18 Ds{34P8} 18|85b18 88r8 92r39 93r21
+78V12*Size{natural} 78>17 18|101b12 108l7 108t11
+78p17 Ds{34P8} 18|101b17 103r8 107r12
+87V12*Get_Element{28R8} 87>24 87>45 18|114b12 124l7 124t18
+87p24 Ds{34P8} 18|114b24 116r8 120r17 123r27
+87i45 P{positive} 18|114b45 120r8 123r40
+93V12*Index_Of{positive} 93>21 18|130b12 133l7 133t15
+93r21 E{28R8} 18|130b21 132r12
+99V12*Disjoint_Set_Of{34P8} 99>28 18|139b12 142l7 142t22
+99r28 E{28R8} 18|139b28 141r12
+106V12*Belongs_To{boolean} 106>23 106>38 18|148b12 151l7 151t17
+106r23 E{28R8} 18|148b23 150r12
+106p38 Ds{34P8} 18|148b38 150r19
+113V12*Component_Of{31R11} 113>25 18|157b12 165s12 172l7 172t19 181s10 204s12
+. 204s31 220s13 221s13 302s12
+113r25 E{28R8} 18|157b25 161r21 161r26 162r23 163r14 165r36 167r9 167r14
+. 168r9 168r36 168r62 168r67
+121V12*Component_Size{natural} 121>27 18|178b12 183l7 183t21
+121r27 E{28R8} 18|178b27 181r23 182r12
+128V12*Subtree_Size{natural} 128>25 18|189b12 192l7 192t19
+128r25 E{28R8} 18|189b25 191r12 191r17
+137V12*Share_Component{boolean} 137>28 137>32 18|198b12 205l7 205t22
+137r28 E1{28R8} 18|198b28 200r8 204r25
+137r32 E2{28R8} 18|198b32 200r17 204r44
+144U13*Join 144>18 144>22 18|211b13 238l7 238t11
+144r18 E1{28R8} 18|211b18 215r8 219r8 220r26 223r18 226r11 227r58 230r11
+. 230r35 233r11 233r35 234r11 234r35
+144r22 E2{28R8} 18|211b22 215r17 219r14 221r26 224r18 227r11 227r35 229r11
+. 230r58 232r11 233r58
+154V12*To_Forest{41|41P11[42|24]} 154>22 18|244b12 274l7 274t16
+154p22 Ds{34P8} 18|244b22 254r8 258r21 264r14 265r10 268r22
+164V12*To_List_Of_Lists{19|35P8} 164>29 18|280b12 307l7 307t23
+164p29 Ds{34P8} 18|280b29 289r8 293r10 296r14 297r10 301r14 302r40
+174p5*Ds{34P8} 18|123m21 141r14 150r14 161r23 165r38 167r11 168r11 168r38
+. 168r64 182r14 191r14 200r11 200r20 215r11 215r20 223r21 224r21 226r14 227r14
+. 227r38 227r61 229r14 230r14 230r38 230r61 232r14 233r14 233r38 233r61 234r14
+. 234r38 302m34
+175i5*Index{positive} 18|123m31 132r14 161r28 162r25 166r28 167r16 167r35
+. 168r69 182r19 191r19 223r27 224r27 226r20 226r40 227r20 227r44 227r67 229r20
+. 229r40 230r20 230r44 230r67 232r20 232r40 233r20 233r44 233r67 234r20 234r44
+. 302m44 303r56
+182R8 Disjoint_Set_Rec 186e13 188r57
+183i5*Parent{positive} 18|41m17 56m17 161r35 167m23 226m27 229m27 232m27
+. 265r16 268r28 297r16
+184i5*Rank{natural} 18|41m30 56m30 223r34 224r34 234m27 234r51
+185i5*Size{positive} 18|41m41 56m41 168m28 168r55 168r76 182r26 191r26 227m27
+. 227r51 227r74 230m27 230r51 230r74 233m27 233r51 233r74
+188A8 Disjoint_Set_Recs(182R8)<integer> 189r31 18|31r55 39r15 92r21
+X 18 disjoint_sets.adb
+31U13 Dispose[16|20] 76s7
+40i9 I{integer} 41r10 41r27
+55i9 I{integer} 56r10 56r27
+86p5 Ds_Clone{17|34P8} 92m5 93r5 94r12
+158r5 C{17|31R11} 165m7 166r26 167r33 170r14
+159i5 Parent_Index{positive} 161m5 162r8 165r42 166r10 168r14 168r41
+179r5 C{17|31R11} 181m5 182r17
+212r5 C1{17|31R11} 220m7 222r10 223r24 226r17 227r64 229r37 230r17 230r41
+. 232r37 233r17 233r41 234r17 234r41
+212r9 C2{17|31R11} 221m7 222r16 224r24 226r37 227r17 227r41 229r17 230r64
+. 232r17 233r64
+213i5 Rank1{natural} 223m9 225r12 228r15
+213i12 Rank2{natural} 224m9 225r20 228r23
+246A10 Nodes(41|31P8[42|24])<integer> 247r27 249r57 258r15
+247P10 PNodes(246A10) 249r64 251r9
+249U15 Dispose[16|20] 272s5
+251p5 Nd{247P10} 258m5 259r14 260r7 266r18 268r19 268r37 272m13 272r13
+252p5 Fr{41|41P11[42|24]} 262m16 262r16 266r25 273r12
+259i9 I{integer} 260r10 260r25
+264i9 I{integer} 265r13 265r25 266r21 268r25 268r40
+281K13 List_Maps[3|47] 282r9 303r33
+284p5 Lol{19|35P8} 294m16 294r16 298r31 303r24 306r12
+285r5 M{3|53R9[281]} 298m16 298r16 303r51
+286i5 N{natural} 293m5 294r21
+287r5 C{17|31R11} 302m7 303r54
+296i9 I{integer} 297r13 297r25 298r19
+301i9 I{integer} 302r53 303r29
+X 19 finite_disjoint_lists.ads
+24K9*Finite_Disjoint_Lists 17|23w6 23r33 19|425e26
+30R8*List 18|281r67 19|376e13
+35P8*List_Of_Lists 17|164r57 18|280r57 284r10
+38n41*Unassigned_Initialization{38E8} 18|294r24
+55U13*Initialize 18|294s5
+117V12*New_List{30R8} 18|298s22
+224V12*Get_Element{27R8} 18|303s12
+297U13*Move 18|303s7
+X 21 linked_lists.ads
+29P8*Linked_List
+45U13*Initialize 18|262s5[41|35[42|24]]
+70U13*Add_Last 18|266s9[41|35[42|24]]
+X 41 trees.ads
+30R8*Node_Rec
+31P8*Node(30R8[42|24]) 18|246r47[42|24]
+35K11*Nodes_Lists[21|26] 18|245r9[42|24]
+39P11*List_Of_Trees{21|29P8[35[42|24]]}
+41P11*Forest{39P11[42|24]} 17|154r50[42|24] 18|244r50[42|24] 252r9[42|24]
+62V12*New_Node{31P8[42|24]} 18|260s16[42|24]
+246U13*Add_Child 18|268s9[42|24]
+X 42 trees_integer.ads
+24K9*Trees_Integer[41|27] 17|22w6 22r25
+

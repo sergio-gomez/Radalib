@@ -1,0 +1,317 @@
+V "GNAT Lib v2014"
+A -O2
+P SS ZX
+
+RN
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_ALLOCATORS
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_EXCEPTIONS
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_RECURSION
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U finite_disjoint_lists.algorithms%b  finite_disjoint_lists-algorithms.adb  4515ee2b OO PK
+Z ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+Z ada.unchecked_deallocation%s
+W arrays_utils_integer%s  arrays_utils_integer.ads  arrays_utils_integer.ali
+W finite_disjoint_lists%s  finite_disjoint_lists.adb  finite_disjoint_lists.ali
+W interfaces%s		interfac.ads		interfac.ali
+W linked_lists%s	linked_lists.adb	linked_lists.ali  AD
+W stacks%s		stacks.adb		stacks.ali  AD
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+W utils%s		utils.adb		utils.ali
+
+U finite_disjoint_lists.algorithms%s  finite_disjoint_lists-algorithms.ads  cccb7b36 BN EE OO PK
+W ada.tags%s		a-tags.adb		a-tags.ali
+W finite_disjoint_lists%s  finite_disjoint_lists.adb  finite_disjoint_lists.ali
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-calend.ads		20140406181358 d86d6c8c ada.calendar%s
+D a-charac.ads		20140406181358 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140406181358 66457d31 ada.characters.latin_1%s
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-finali.ads		20140406181358 69f99942 ada.finalization%s
+D a-flteio.ads		20140406181358 e18a47a0 ada.float_text_io%s
+D a-inteio.ads		20140406181358 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20140406181358 e4a01f64 ada.io_exceptions%s
+D a-lfteio.ads		20140406181354 4969a46f ada.long_float_text_io%s
+D a-llitio.ads		20140406181354 9aecf52b ada.long_long_integer_text_io%s
+D a-numeri.ads		20140406181358 bb51c45a ada.numerics%s
+D a-ngrear.ads		20140406181358 86992c51 ada.numerics.generic_real_arrays%s
+D a-stream.ads		20140406181354 1a984740 ada.streams%s
+D a-string.ads		20140406181358 90ac6797 ada.strings%s
+D a-strmap.ads		20140406181358 e8bb714a ada.strings.maps%s
+D a-strunb.ads		20140406181358 3f91d4c5 ada.strings.unbounded%s
+D a-tags.ads		20140406181356 dc4d0634 ada.tags%s
+D a-textio.ads		20140406181358 386df5d4 ada.text_io%s
+D a-tiflio.ads		20140406181358 56fbda09 ada.text_io.float_io%s
+D a-tiinio.ads		20140406181358 aa04e5d6 ada.text_io.integer_io%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D a-uncdea.ads		20140406181358 f15a5ed1 ada.unchecked_deallocation%s
+D arrays_double.ads	20150322182902 4fb5de93 arrays_double%s
+D arrays_float.ads	20150322182902 7beec0f0 arrays_float%s
+D arrays_utils.ads	20150322182904 34db23c2 arrays_utils%s
+D arrays_utils_integer.ads  20150322182904 c66b50d7 arrays_utils_integer%s
+D finite_disjoint_lists.ads  20150322182910 68c3f3bc finite_disjoint_lists%s
+D finite_disjoint_lists-algorithms.ads  20150322182910 a408888a finite_disjoint_lists.algorithms%s
+D finite_disjoint_lists-algorithms.adb  20150322182946 91a1db3e finite_disjoint_lists.algorithms%b
+D interfac.ads		20140406181358 69adb1b9 interfaces%s
+D i-cstrea.ads		20140406181356 febc86ed interfaces.c_streams%s
+D linked_lists.ads	20150322182924 f903bd62 linked_lists%s
+D linked_lists.adb	20150322182950 a3ad63f8 linked_lists%b
+D stacks.ads		20150322182932 6f253f87 stacks%s
+D stacks.adb		20150322182954 fc6a8cb0 stacks%b
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-atocou.ads		20140406181358 cd7c94ca system.atomic_counters%s
+D s-atocou.adb		20140406181356 276bb8fc system.atomic_counters%b
+D s-crtl.ads		20140406181356 2c012597 system.crtl%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-ficobl.ads		20140406181354 078245e4 system.file_control_block%s
+D s-finmas.ads		20140406181356 814daec4 system.finalization_masters%s
+D s-finroo.ads		20140406181358 4ff27390 system.finalization_root%s
+D s-maccod.ads		20140406181358 0fbb7bce system.machine_code%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-pooglo.ads		20140406181356 542f33d0 system.pool_global%s
+D s-secsta.ads		20140406181358 86a2856d system.secondary_stack%s
+D s-soflin.ads		20140406181358 aa763b52 system.soft_links%s
+D s-stache.ads		20140406181354 a37c21ec system.stack_checking%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-stoele.ads		20140406181356 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20140406181354 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20140406181356 b16154c2 system.storage_pools%s
+D s-stposu.ads		20140406181354 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20140406181358 aedef97e system.stream_attributes%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+D s-unstyp.ads		20140406181356 510692af system.unsigned_types%s
+D s-wchcon.ads		20140406181358 1b7d22d2 system.wch_con%s
+D utils.ads		20150322182940 4fd4502a utils%s
+D utils_generics.ads	20150322182940 91194a83 utils_generics%s
+X 26 arrays_utils.ads
+312U13*Sort 30|220s5[27|25]
+X 27 arrays_utils_integer.ads
+25K9*Arrays_Utils_Integer[26|36] 30|23w6 23r32
+X 28 finite_disjoint_lists.ads
+24K9*Finite_Disjoint_Lists 425e26 29|22r9 150r5 30|26r14 442r5
+27R8*Element 358e13 30|64r8 172r8 241r10 339r10 394r10
+30R8*List 376e13 29|28r47 35r29 79r34 95r34 113r34 131r34 30|61r29 63r8 97r8
+. 119r8 171r8 242r10 337r36 355r14 392r36 411r14
+35P8*List_Of_Lists 29|27r58 43r32 50r34 62r46 62r68 65r36 120r62 128r54 139r58
+. 148r50 30|96r32 117r34 166r46 166r68 167r13 240r32 267r10 291r10 314r10
+. 335r62 380r54 390r58 436r50
+38n41*Unassigned_Initialization{38E8} 30|187r27
+41X3*Uninitialized_List_Of_Lists_Error 30|100r13 124r13 177r13 359r13 415r13
+42X3*Not_A_List_Error 30|67r13
+45X3*Incompatible_Lists_Of_Lists_Error 30|180r13
+55U13*Initialize 30|187s5 270s5 293s5 316s5
+73U13*Free 30|272s5 295s5 318s5
+88V12*Number_Of_Elements{natural} 30|250s16 259s14
+103V12*Has_Unassigned{boolean} 30|182s8 182s32
+110V12*Unassigned_List{30R8} 30|110s15 369s10 425s10
+117V12*New_List{30R8} 30|71s12 223s14 257s12 367s10 368s10 423s10 424s10
+125V12*Get_Id{natural} 30|194s13 209s13
+147U13*Remove 30|88s7 264s7 371s5 372s5 427s5 428s5
+168V12*Has_Next_List{boolean} 30|105s11 132s13 192s11 207s11 247s13 364s11
+. 420s11
+186V12*Next_List{30R8} 30|106s12 133s14 193s12 208s12 248s14
+194U13*Next_List 30|365s7 421s7
+200U13*Reset 30|104s5 131s7 156s7 191s5 206s5 246s7 363s5 419s5
+207U13*Save 30|103s5 130s7 190s5 205s5 245s7 362s5 418s5
+215U13*Restore 30|109s5 137s7 203s5 218s5 256s7 373s5 429s5
+224V12*Get_Element{27R8} 30|82s14 225s12 244s12
+230V12*Index_Of{positive} 30|76s18 199s14 214s14
+237V12*Number_Of_Elements{natural} 30|70s8 341s12 396s13 397s13
+244V12*Has_Next_Element{boolean} 30|74s13 197s13 212s13
+260V12*Next_Element{27R8} 30|75s14 198s14 213s14 346s14 402s14
+273U13*Reset 30|73s7 86s7 196s7 211s7 345s9 401s9
+280U13*Save 30|195s7 210s7
+297U13*Move 30|77s9 83s9 226s7 249s9 258s7 347s9 349s9 351s9 403s9 405s9
+. 407s9
+345N3 Void 30|140r16 146r20 153r32
+373p5*Lol{35P8} 30|66r10 71r23 82r28 85r15
+374i5*Id{natural} 30|66r37
+375i5*Index{natural} 30|66r22 85r27 134r28 134r50
+381i5*Num{natural} 30|127r17 134r43
+382i5*First{natural} 30|147m20
+383i5*Last{natural} 30|154m16
+385p5*Saved{35|27P8[378]} 30|85r42 155r22
+389i5*Id{natural} 30|66r29
+390r5*Control{380R8} 30|85r34 134r35
+391i5*Prev{natural} 30|145m22
+392i5*Next{natural} 30|149m28 153m24
+395A8 List_Recs(388R8)<integer>
+396P8 PList_Recs(395A8)
+406i26*Size{positive} 30|179r13 179r26 186r15
+408p5*Lists{396P8} 30|66r14 85r19 134r20 145r13 149r15 153r11
+410r5*Used{380R8} 30|127r12 147m15 154m11 155r17
+X 29 finite_disjoint_lists-algorithms.ads
+22K31*Algorithms 28|24k9 29|150l27 150e37 30|26b36 442l27 442t37
+24X3*Unassigned_Elements_Error 30|183r13
+27P8*List_Of_Lists_Handler 27>50 76r77 30|279r77
+27p50 Lol{28|35P8}
+28P8*List_Handler 28>41 92r74 110r92 128r81 148r99 30|302r74 325r92 380r81
+. 436r99
+28r41 L{28|30R8}
+35U13*Sort_List 35>23 30|61b13 90l7 90t16 107s7 110s5
+35r23 L{28|30R8} 30|61b23 66r8 66r20 66r35 70r27 71r21 73r13 74r30 75r27
+. 82r26 83r17 85r13 85r25 86r13
+43U13*Sort_Lists 43>24 30|96b13 111l7 111t17
+43p24 Lol{28|35P8} 30|96b24 99r8 103r10 104r11 105r25 106r22 109r13 110r31
+50U13*Sort_By_Size 50>26 30|117b13 160l7 160t19
+50p26 Lol{28|35P8} 30|117b26 123r8 127r8 130r12 131r13 132r27 133r24 134r16
+. 137r15 145r9 147r11 149r11 153r7 154r7 155r13 156r13
+62V12*Maximal_Refinement{28|35P8} 62>31 62>37 30|166b12 232l7 232t25
+62p31 Lol1{28|35P8} 30|166b31 176r8 179r8 182r23 186r10 190r10 191r11 192r25
+. 193r22 203r13
+62p37 Lol2{28|35P8} 30|166b37 176r23 179r21 182r47 205r10 206r11 207r25 208r22
+. 218r13
+65U20 Handler 65>28 30|253s11 262s9
+65p28 Lol{28|35P8}
+70u13*Generic_All_Partitions_Traversal 70>46 30|238b13 273l7 273t39 280r32
+70i46 Num_Elements{positive} 30|238b46 270r21
+76U13*All_Partitions_Traversal 76>38 76>65 30|279b13 283l7 283t31
+76i38 Num_Elements{positive} 30|279b38 282r15
+76p65 Handler{27P8} 30|279b65 280r65
+79U20 Handler 79>28 30|290r73
+79r28 L{28|30R8}
+85u13*Generic_All_Subsets_Traversal 85>43 30|289b13 296l7 296t36 303r32
+85i43 Num_Elements{positive} 30|289b43 293r21
+92U13*All_Subsets_Traversal 92>35 92>62 30|302b13 306l7 306t28
+92i35 Num_Elements{positive} 30|302b35 305r15
+92p62 Handler{28P8} 30|302b62 303r62
+95U20 Handler 95>28 30|313r69
+95r28 L{28|30R8}
+102u13*Generic_Subsets_Traversal 102>39 102>66 30|312b13 319l7 319t32 326r32
+102i39 Num_Elements{positive} 30|312b39 316r21
+102i66 Max_Size{natural} 30|312b66 317r20
+110U13*Subsets_Traversal 110>31 110>58 110>80 30|325b13 329l7 329t24
+110i31 Num_Elements{positive} 30|325b31 328r15
+110i58 Max_Size{natural} 30|325b58 328r29
+110p80 Handler{28P8} 30|325b80 326r58
+113U20 Handler 113>28 30|343s9
+113r28 L{28|30R8}
+120u13*Generic_All_Unassigned_Subsets_Traversal 120>54 30|290r32 335b13 374l7
+. 374t47 381r32
+120p54 Lol{28|35P8} 30|335b54 358r8 362r10 363r11 364r25 365r17 367r19 368r19
+. 369r26 373r13
+128U13*All_Unassigned_Subsets_Traversal 128>46 128>69 30|380b13 384l7 384t39
+128p46 Lol{28|35P8} 30|380b46 383r15
+128p69 Handler{28P8} 30|380b69 381r73
+131U20 Handler 131>28 30|399s9
+131r28 L{28|30R8}
+139u13*Generic_Unassigned_Subsets_Traversal 139>50 139>73 30|313r32 390b13
+. 430l7 430t43 437r32
+139p50 Lol{28|35P8} 30|390b50 414r8 418r10 419r11 420r25 421r17 423r19 424r19
+. 425r26 429r13
+139i73 Max_Size{natural} 30|390b73 398r25
+148U13*Unassigned_Subsets_Traversal 148>42 148>65 148>87 30|436b13 440l7
+. 440t35
+148p42 Lol{28|35P8} 30|436b42 439r15
+148i65 Max_Size{natural} 30|436b65 439r20
+148p87 Handler{28P8} 30|436b87 437r69
+X 30 finite_disjoint_lists-algorithms.adb
+29K11 Int_Linked_Lists[33|26] 30r7 62r9
+32V12 Lt{boolean} 32>15 32>21 33r17 35b12 38l7 38t9 79r16
+32i15 Left{integer} 35b15 37r12
+32i21 Right{integer} 35b21 37r19
+41R8 Size_Rec 44e13 46r49 49r31 52r31 120r9
+42i5*Size{natural} 54r17 54r30
+43i5*Index{natural} 144r17
+46K11 Size_Linked_Lists[33|26] 47r7 118r9
+49V12 Gt{boolean} 49>15 49>21 50r17 52b12 55l7 55t9 138r16
+49r15 Left{41R8} 52b15 54r12
+49r21 Right{41R8} 52b21 54r24
+62p5 Ll{33|29P8[29]} 72m18 72r18 76r31 79r12 80r13 81r22 82r38 87m12 87r12
+63r5 S{28|30R8} 71m7 77r17 88r14
+64r5 E{28|27R8} 75m9 76r27 77r14 82m9 83r14
+97r5 L{28|30R8} 106m7 107r17
+118p5 Ll{33|29P8[46]} 128m18 128r18 135r22 138r12 141r13 142r22 143r20 158m12
+. 158r12
+119r5 L{28|30R8} 133m9 134r26 134r48
+120r5 Sr{41R8} 134m9 135r18 143m9 144r14
+121i5 I{natural} 144m9 145r19 147r29 149r36 151r18
+121i8 Iprev{natural} 140m7 145r30 146r12 149r21 151m9 153r17 154r24
+167p5 Lol_Mr{28|35P8} 187m16 187r16 223r23 225r24 231r12
+168p5 Comms{60|110P8} 188m5 200r9 215r9 220r10 222r24 222r40 228m10 228r10
+169p5 Index{60|58P8} 220m17 220r17 225r32 229m10 229r10
+170i5 N{positive} 186m5 187r24 188r35 221r17
+171r5 L{28|30R8} 193m7 194r20 195r12 196r13 197r30 198r27 208m7 209r20 210r12
+. 211r13 212r30 213r27 223m9 226r15
+172r5 E{28|27R8} 198m9 199r23 213m9 214r23 225m7 226r12
+173i5 I{positive} 199m9 200r15 214m9 215r15
+174i5 Id{natural} 194m7 200r24 209m7 215r24
+221i9 J{integer} 222r10 222r30 222r46 225r38
+240U15 Add_Next 240b15 240>24 240>47 251s11 260s9 265l9 265t17 271s5
+240p24 Lol{28|35P8} 244r24 245r12 246r13 247r27 248r24 250r35 251r20 253r19
+. 256r15 257r21 259r33 260r18 262r17
+240i47 I{positive} 244r29 250r12 251r25 259r10 260r23
+241r7 E{28|27R8} 244m7 249r14 258r12
+242r7 L{28|30R8} 248m9 249r17 257m7 258r15 264r14
+267p5 Lol{28|35P8} 270m16 270r16 271r14 272m10 272r10
+280U15 Traversal[29|70] 238b13 282s5
+290U15 Traversal[29|120] 294s5 335b13[303]
+291p5 Lol{28|35P8} 293m16 293r16 294r15 295m10 295r10
+303U15 Traversal[29|85] 289b13 305s5
+313U15 Traversal[29|139] 317s5 390b13[326]
+314p5 Lol{28|35P8} 316m16 316r16 317r15 318m10 318r10
+326U15 Traversal[29|102] 312b13 328s5
+337U15 Add_Next 337b15 337>24 337>27 337>30 348s9 350s9 353l9 353t17 370s5
+337r24 L{28|30R8} 343r17 347r17 348r18 350r18
+337r27 X{28|30R8} 348r21 349r17 350r21
+337r30 U{28|30R8} 341r31 345r15 346r27 348r24 350r24 351r17
+338i7 N{natural} 341m7 342r10
+339r7 E{28|27R8} 346m9 347r14 349r14 351r14
+355r5 L{28|30R8} 367m5 370r14 371r12
+355r8 X{28|30R8} 368m5 370r17 372r12
+355r11 U{28|30R8} 369m5 370r20
+381U15 Traversal[29|120] 335b13 383s5
+392U15 Add_Next 392b15 392>24 392>27 392>30 404s9 406s9 409l9 409t17 426s5
+392r24 L{28|30R8} 397r32 399r17 403r17 404r18 406r18
+392r27 X{28|30R8} 404r21 405r17 406r21
+392r30 U{28|30R8} 396r32 401r15 402r27 404r24 406r24 407r17
+393i7 Nu{natural} 396m7 398r10
+393i11 Nl{natural} 397m7 398r20
+394r7 E{28|27R8} 402m9 403r14 405r14 407r14
+411r5 L{28|30R8} 423m5 426r14 427r12
+411r8 X{28|30R8} 424m5 426r17 428r12
+411r11 U{28|30R8} 425m5 426r20
+437U15 Traversal[29|139] 390b13 439s5
+X 33 linked_lists.ads
+26k9*Linked_Lists 30|24w6 29r35 46r36 33|441e17
+29P8*Linked_List 30|62r26[29] 118r27[46]
+45U13*Initialize 30|72s7[29] 128s7[46]
+56U13*Free 30|87s7[29] 158s7[46]
+70U13*Add_Last 30|76s9[29] 135s9[46]
+229V12*Has_Next{boolean} 30|81s13[29] 142s13[46]
+245V12*Next{integer} 30|82s33[29] 143s15[46]
+276U13*Reset 30|80s7[29] 141s7[46]
+361U13*Sort 30|79s7[29] 138s7[46]
+X 35 stacks.ads
+27P8*Stack
+97U13*Clear 30|85s7[28|378] 155s7[28|378]
+X 60 utils.ads
+34K9*Utils 30|22w6 22r17 60|1124e10
+57A8*Integers(integer)<integer>
+58P8*PIntegers(57A8) 30|169r12
+83A8*Integerss(integer)<integer><integer>
+84P8*PIntegerss(83A8)
+109A8*PsIntegers(58P8)<integer>
+110P8*PPsIntegers(109A8) 30|168r12
+314V12*Alloc[61|33]{58P8} 26|32i17
+327V12*Alloc[61|44]{84P8} 26|34i17
+342V12*Alloc[61|57]{84P8} 26|33i17
+383V12*Alloc_Rectangular[61|85]{110P8} 30|188s14
+420U13*Free[61|120] 30|229s5
+442U13*Free[61|140] 30|228s5
+

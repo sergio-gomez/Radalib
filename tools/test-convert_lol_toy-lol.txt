@@ -1,0 +1,11 @@
+---------
+Before the partition you may use as many lines as you want to save information
+We often use these lines to save the modularity value of the partition
+---
+Number of elements: 9
+Number of lists: 4
+
+2: 1 4
+3: 2 3 8
+1: 5
+3: 6 7 9

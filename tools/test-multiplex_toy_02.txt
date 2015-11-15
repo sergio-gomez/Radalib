@@ -1,0 +1,11 @@
+# layer node1 node2 weight
+type2 CC DD 2.0
+type2 CC EE 2.0
+type2 DD EE 2.0
+type1 AA BB 1.0
+type1 AA CC 1.0
+type1 BB CC 1.0
+type6 AA EE 6.0
+type5 BB EE 5.0
+type4 AA DD 4.0
+type3 BB DD 3.0

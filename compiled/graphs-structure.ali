@@ -1,0 +1,190 @@
+V "GNAT Lib v2014"
+A -O2
+P SS ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_EXCEPTIONS
+RV NO_LOCAL_ALLOCATORS
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_DEALLOCATION
+RV NO_DEFAULT_INITIALIZATION
+RV SPARK_05
+
+U graphs.structure%b	graphs-structure.adb	1ac84b85 NE OO PK GE
+W ada%s			ada.ads			ada.ali
+W ada.unchecked_deallocation%s
+W graphs%s		graphs.adb		graphs.ali
+
+U graphs.structure%s	graphs-structure.ads	9cfc91f7 BN EE NE OO PK GE
+W graphs%s		graphs.adb		graphs.ali
+W utils%s		utils.adb		utils.ali
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-calend.ads		20140406181358 d86d6c8c ada.calendar%s
+D a-charac.ads		20140406181358 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140406181358 66457d31 ada.characters.latin_1%s
+D a-contai.ads		20140406181356 61e5e089 ada.containers%s
+D a-cohata.ads		20140406181358 04abccc5 ada.containers.hash_tables%s
+D a-cohama.ads		20140406181356 9f97b812 ada.containers.hashed_maps%s
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-finali.ads		20140406181358 69f99942 ada.finalization%s
+D a-flteio.ads		20140406181358 e18a47a0 ada.float_text_io%s
+D a-inteio.ads		20140406181358 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20140406181358 e4a01f64 ada.io_exceptions%s
+D a-iteint.ads		20140406181354 7c7305e9 ada.iterator_interfaces%s
+D a-lfteio.ads		20140406181354 4969a46f ada.long_float_text_io%s
+D a-llitio.ads		20140406181354 9aecf52b ada.long_long_integer_text_io%s
+D a-numeri.ads		20140406181358 bb51c45a ada.numerics%s
+D a-ngrear.ads		20140406181358 86992c51 ada.numerics.generic_real_arrays%s
+D a-stream.ads		20140406181354 1a984740 ada.streams%s
+D a-string.ads		20140406181358 90ac6797 ada.strings%s
+D a-strmap.ads		20140406181358 e8bb714a ada.strings.maps%s
+D a-strunb.ads		20140406181358 3f91d4c5 ada.strings.unbounded%s
+D a-stunha.ads		20140406181354 115e053b ada.strings.unbounded.hash%s
+D a-tags.ads		20140406181356 dc4d0634 ada.tags%s
+D a-textio.ads		20140406181358 386df5d4 ada.text_io%s
+D a-tiflio.ads		20140406181358 56fbda09 ada.text_io.float_io%s
+D a-tiinio.ads		20140406181358 aa04e5d6 ada.text_io.integer_io%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D a-uncdea.ads		20140406181358 f15a5ed1 ada.unchecked_deallocation%s
+D arrays_double.ads	20150322182902 4fb5de93 arrays_double%s
+D arrays_float.ads	20150322182902 7beec0f0 arrays_float%s
+D graphs.ads		20150322182912 ebeefa77 graphs%s
+D graphs-structure.ads	20150322182912 38c63baa graphs.structure%s
+D graphs-structure.adb	20150322182948 d3542efe graphs.structure%b
+D interfac.ads		20140406181358 69adb1b9 interfaces%s
+D i-cstrea.ads		20140406181356 febc86ed interfaces.c_streams%s
+D linked_lists.ads	20150322182924 f903bd62 linked_lists%s
+D stacks.ads		20150322182932 6f253f87 stacks%s
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-atocou.ads		20140406181358 cd7c94ca system.atomic_counters%s
+D s-atocou.adb		20140406181356 276bb8fc system.atomic_counters%b
+D s-crtl.ads		20140406181356 2c012597 system.crtl%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-ficobl.ads		20140406181354 078245e4 system.file_control_block%s
+D s-finmas.ads		20140406181356 814daec4 system.finalization_masters%s
+D s-finroo.ads		20140406181358 4ff27390 system.finalization_root%s
+D s-maccod.ads		20140406181358 0fbb7bce system.machine_code%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-pooglo.ads		20140406181356 542f33d0 system.pool_global%s
+D s-secsta.ads		20140406181358 86a2856d system.secondary_stack%s
+D s-soflin.ads		20140406181358 aa763b52 system.soft_links%s
+D s-stache.ads		20140406181354 a37c21ec system.stack_checking%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-stoele.ads		20140406181356 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20140406181354 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20140406181356 b16154c2 system.storage_pools%s
+D s-stposu.ads		20140406181354 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20140406181358 aedef97e system.stream_attributes%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+D s-unstyp.ads		20140406181356 510692af system.unsigned_types%s
+D s-wchcon.ads		20140406181358 1b7d22d2 system.wch_con%s
+D utils.ads		20150322182940 4fd4502a utils%s
+D utils_generics.ads	20150322182940 91194a83 utils_generics%s
+X 1 ada.ads
+16K9*Ada 19e8 33|22r6 30r28 36r28
+X 13 a-iteint.ads
+24h9 Forward_Iterator
+X 28 a-uncdea.ads
+20u15*Unchecked_Deallocation 33|22w10 30r32 36r32
+X 31 graphs.ads
+28+8 Edge_Value 32|25r15 26r69 34r12
+30k9*Graphs 560e11 32|29r9 82r5 33|24r14 219r5
+35P8*Graph 32|54r36 61r34 68r35 75r66 33|42r36 71r34 102r35 159r66 160r9
+38R8*Vertex 534e13 33|163r13
+41R8*Edge 545e13 33|74r8 106r8
+44R8*Edges_List 558e13 33|44r9 73r9 104r9
+49X3*Uninitialized_Graph_Error 33|48r13 78r13 110r13 166r13
+64U13*Initialize 33|176s5
+145V12*Get_Vertex{38R8} 33|54s24 84s24 116s24 132s24 179s13 184s19
+151V12*Index_Of{positive} 33|58s14 89s14 124s16 140s18
+160U13*Add_Edge 33|185s13
+292V12*Edges_From{44R8} 33|54s13 84s13 116s13
+299V12*Edges_To{44R8} 33|132s15
+305V12*Number_Of_Edges{natural} 33|117s13 133s15
+311V12*Has_Next{boolean} 33|57s13 87s13
+332V12*Next{41R8} 33|58s26 88s14 123s16 139s18
+350U13*Reset 33|56s7 86s7 121s9 137s11
+356U13*Save 33|55s7 85s7 120s9 136s11
+362U13*Restore 33|61s7 92s7 127s9 143s11
+377V12*From{38R8} 33|140s27
+383V12*To{38R8} 33|58s23 89s23 124s25
+389V12*Value{28+8} 33|90s21 125s51 141s51
+519i18 Size{positive} 33|51r23 51r35 53r20 81r23 81r35 83r20 113r38 115r20
+. 131r22 147r22
+521b5 Directed{boolean} 33|130r11
+X 32 graphs-structure.ads
+25*3 Zero_Value{31|28+8} 33|82r37
+26A8 Edge_Valuess(31|28+8)<integer><integer> 27r32
+27P8 PEdge_Valuess(26A8) 28r72 61r48 33|71r48 72r9
+28V17 Alloc{27P8} 28>23 28>31 28>38 28>46 33|81s11
+28i23 First1{integer}
+28i31 Last1{integer}
+28i38 First2{integer}
+28i46 Last2{integer}
+29k16 Structure 31|30k9 32|25z3 26z8 27z8 28z17 82l12 82e21 33|24b21 219l12
+. 219t21
+32R8*Public_Edge 35e13 37r51
+33i5 Index{positive} 33|125m30 141m30 182r31
+34*5 Value{31|28+8} 33|125m42 141m42 185r45
+37A8*Public_Edges(32R8)<integer> 38r32 33|30r55 119r28 135r28
+38P8*PPublic_Edges(37A8) 41r11 42r9 33|30r69
+40R8*Public_Vertex 43e13 45r54
+41p5 From{38P8} 33|119m16 125r17 125r18 148r29 171r17 180r17 181r25 182r22
+. 182r23 185r36 185r37 202r19 203r21 204m28 207r21 208m28
+42p5 To{38P8} 33|135m18 141r19 141r20 148m16 171r32 202r33 210r21 211m28
+45A8*Public_Vertices(40R8)<integer> 46r31 33|36r55 113r16
+46P8*Public_Graph(45A8) 68r49 75r45 80r30 33|36r72 102r49 103r10 159r45 198r30
+54V12*Adjacency_Matrix{61|84P8} 54>29 33|42b12 65l7 65t23
+54p29 Gr{31|35P8} 33|42b29 47r8 51r20 51r32 53r17 54r35
+61V12*Weights_Matrix{27P8} 61>27 33|71b12 96l7 96t21
+61p27 Gr{31|35P8} 33|71b27 77r8 81r20 81r32 83r17 84r35
+68V12*Graph_Structure{46P8} 68>28 33|102b12 153l7 153t22
+68p28 Gr{31|35P8} 33|102b28 109r8 113r35 115r17 116r35 130r8 131r19 132r35
+. 147r19
+75V12*Graph_Structure_To_Graph{31|35P8} 75>37 33|159b12 192l7 192t31
+75p37 Pgr{46P8} 33|159b37 165r8 170r14 171r10 171r25 176r20 178r14 180r10
+. 181r18 182r16 185r30
+80U13*Free 80=18 33|198b13 217l7 217t11
+80p18 Pgr{46P8} 33|198b18 200r8 201r16 202r12 202r26 203r14 204r21 207r14
+. 208r21 210r14 211r21 215m15
+X 33 graphs-structure.adb
+30U13 Dispose[28|20] 204s13 208s13 211s13
+36U13 Dispose[28|20] 215s7
+43p5 Am{61|84P8} 51m5 52r5 59r9 64r12
+44r5 El{31|44R8} 54m7 55r12 56r13 57r22 58r31 61r15
+45i5 J{positive} 58m9 59r15
+53i9 I{integer} 54r39 59r12
+72*5 Wm{32|27P8} 81m5 82r5 90r9 95r12
+73r5 El{31|44R8} 84m7 85r12 86r13 87r22 88r19 92r15
+74r5 E{31|41R8} 88m9 89r26 90r27
+75i5 J{positive} 89m9 90r15
+83i9 I{integer} 84r39 90r12
+103p5 Pgr{32|46P8} 113m5 114r5 119r9 125r11 135r11 141r13 148r9 148r22 152r12
+104r5 El{31|44R8} 116m7 117r29 120r14 121r15 123r21 127r17 132m9 133r31 136r16
+. 137r17 139r23 143r19
+105i5 Ne{natural} 117m7 118r10 119r44 122r21 133m9 134r12 135r44 138r23
+106r5 E{31|41R8} 123m11 124r28 125r57 139m13 140r32 141r57
+107i5 I{positive} 140m13 141r39
+107i8 J{positive} 124m11 125r39
+115i9 I{integer} 116r39 119r13 125r15
+122i13 K{integer} 125r23
+131i11 J{integer} 132r39 135r15 141r17
+138i15 K{integer} 141r23
+147i11 J{integer} 148r13 148r26
+160p5 Gr{31|35P8} 176m16 176r16 179r24 184r30 191r12
+161b5 Is_Dir{boolean} 169m5 172m9 176r32 183r14
+162i5 J{positive} 182m11 183r34 184r34
+163r5 Vf{31|38R8} 179m7 185r22
+163r9 Vt{31|38R8} 184m13 185r26
+170i9 I{integer} 171r14 171r29
+178i9 I{integer} 179r28 180r14 181r22 182r20 183r29 185r34
+181i13 K{integer} 182r28 185r42
+201i11 I{integer} 202r16 202r30 203r18 204r25 207r18 208r25 210r18 211r25
+X 61 utils.ads
+34K9*Utils 32|22w6 22r17 61|1124e10
+83A8*Integerss(integer)<integer><integer>
+84P8*PIntegerss(83A8) 32|54r50 33|42r50 43r9
+342V12*Alloc[62|57]{84P8} 33|51s11
+

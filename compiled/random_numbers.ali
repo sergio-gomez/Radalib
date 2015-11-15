@@ -1,0 +1,134 @@
+V "GNAT Lib v2014"
+A -O2
+P SS ZX
+
+RN
+RV NO_FLOATING_POINT
+RV SPARK_05
+
+U random_numbers%b	random_numbers.adb	175f0f25 NE OO PK
+W ada.tags%s		a-tags.adb		a-tags.ali
+
+U random_numbers%s	random_numbers.ads	575d2751 EE NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.numerics%s	a-numeri.ads		a-numeri.ali
+W ada.numerics.float_random%s  a-nuflra.adb	a-nuflra.ali
+W utils%s		utils.adb		utils.ali
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-calend.ads		20140406181358 d86d6c8c ada.calendar%s
+D a-charac.ads		20140406181358 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140406181358 66457d31 ada.characters.latin_1%s
+D a-except.ads		20140406181356 43d57f8c ada.exceptions%s
+D a-finali.ads		20140406181358 69f99942 ada.finalization%s
+D a-flteio.ads		20140406181358 e18a47a0 ada.float_text_io%s
+D a-inteio.ads		20140406181358 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20140406181358 e4a01f64 ada.io_exceptions%s
+D a-lfteio.ads		20140406181354 4969a46f ada.long_float_text_io%s
+D a-llitio.ads		20140406181354 9aecf52b ada.long_long_integer_text_io%s
+D a-numeri.ads		20140406181358 bb51c45a ada.numerics%s
+D a-nuflra.ads		20140406181358 49c50e0b ada.numerics.float_random%s
+D a-ngrear.ads		20140406181358 86992c51 ada.numerics.generic_real_arrays%s
+D a-stream.ads		20140406181354 1a984740 ada.streams%s
+D a-string.ads		20140406181358 90ac6797 ada.strings%s
+D a-strmap.ads		20140406181358 e8bb714a ada.strings.maps%s
+D a-strunb.ads		20140406181358 3f91d4c5 ada.strings.unbounded%s
+D a-tags.ads		20140406181356 dc4d0634 ada.tags%s
+D a-textio.ads		20140406181358 386df5d4 ada.text_io%s
+D a-tiflio.ads		20140406181358 56fbda09 ada.text_io.float_io%s
+D a-tiinio.ads		20140406181358 aa04e5d6 ada.text_io.integer_io%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D arrays_double.ads	20150322182902 4fb5de93 arrays_double%s
+D arrays_float.ads	20150322182902 7beec0f0 arrays_float%s
+D interfac.ads		20140406181358 69adb1b9 interfaces%s
+D i-cstrea.ads		20140406181356 febc86ed interfaces.c_streams%s
+D random_numbers.ads	20150322182932 514c7970 random_numbers%s
+D random_numbers.adb	20150322182954 46137655 random_numbers%b
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-atocou.ads		20140406181358 cd7c94ca system.atomic_counters%s
+D s-atocou.adb		20140406181356 276bb8fc system.atomic_counters%b
+D s-crtl.ads		20140406181356 2c012597 system.crtl%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-ficobl.ads		20140406181354 078245e4 system.file_control_block%s
+D s-finmas.ads		20140406181356 814daec4 system.finalization_masters%s
+D s-finroo.ads		20140406181358 4ff27390 system.finalization_root%s
+D s-maccod.ads		20140406181358 0fbb7bce system.machine_code%s
+D s-parame.ads		20140406181358 06da98b2 system.parameters%s
+D s-pooglo.ads		20140406181356 542f33d0 system.pool_global%s
+D s-rannum.ads		20140406181354 5eb33f0a system.random_numbers%s
+D s-secsta.ads		20140406181358 86a2856d system.secondary_stack%s
+D s-soflin.ads		20140406181358 aa763b52 system.soft_links%s
+D s-stache.ads		20140406181354 a37c21ec system.stack_checking%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D s-stoele.ads		20140406181356 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20140406181354 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20140406181356 b16154c2 system.storage_pools%s
+D s-stposu.ads		20140406181354 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20140406181358 aedef97e system.stream_attributes%s
+D s-traent.ads		20140406181354 b5116092 system.traceback_entries%s
+D s-unstyp.ads		20140406181356 510692af system.unsigned_types%s
+D s-wchcon.ads		20140406181358 1b7d22d2 system.wch_con%s
+D utils.ads		20150322182940 4fd4502a utils%s
+D utils_generics.ads	20150322182940 91194a83 utils_generics%s
+X 1 ada.ads
+16K9*Ada 19e8 28|22r6 22r37
+X 12 a-numeri.ads
+16K13*Numerics 32e17 28|22r10 22r41
+X 13 a-nuflra.ads
+41K22*Float_Random 72e30 28|22w19 22r50
+45R9*Generator<41|58R9> 28|30r33 38r33 46r33 53r35 61r34 71r34 72r34 29|28r33
+. 37r33 60r35 75r34 96r34 122r34
+47F12*Uniformly_Distributed{float} 28|30r51
+49V13*Random{47F12}<41|66p13> 28|30r81
+X 14 a-ngrear.ads
+43A9*Real_Vector(float)<integer>
+X 28 random_numbers.ads
+25K9*Random_Numbers 75l5 75e19 29|22b14 144l5 144t19
+27F11*Probability{float} 53r52 61r66 29|60r52 75r66
+30V12*Random_Uniform=30:81{13|47F12} 29|30s19 41s25 46s23 67s14 84s12 106s20
+. 132s20
+30r27 G{13|45R9}
+38V12*Random_Uniform{float} 38>27 38>44 38>50 29|28b12 31l7 31t21
+38r27 G{13|45R9} 29|28b27 30r34
+38f44 From{float} 29|28b44 30r12 30r45
+38f50 To{float} 29|28b50 30r40
+46V12*Random_Uniform{integer} 46>27 46>44 46>50 29|37b12 54l7 54t21 104s14
+. 130s14
+46r27 G{13|45R9} 29|37b27 41r40 46r38
+46i44 From{integer} 29|37b44 40r8 41r12 41r56 45r11 46r49 47r14 48r14 51r14
+46i50 To{integer} 29|37b50 40r15 41r51 42r14 43r14 45r18 46r12 46r56
+53V12*Random_Bernoulli{boolean} 53>29 53>46 29|60b12 69l7 69t23
+53r29 G{13|45R9} 29|60b29 67r29
+53f46 P{27F11} 29|60b46 62r8 64r11 67r34
+61V12*Random_Binomial{natural} 61>28 61>45 61>60 29|75b12 90l7 90t22
+61r28 G{13|45R9} 29|75b28 84r27
+61i45 N{natural} 29|75b45 79r14 83r19
+61f60 P{27F11} 29|75b60 78r8 80r11 84r32
+71V12*Random_Weighted{integer} 71>28 71>45 29|96b12 116l7 116t22
+71r28 G{13|45R9} 29|96b28 104r29 106r35
+71a45 Weights{54|64A11} 29|96b45 100r14 101r24 104r32 104r47 108r16 109r30
+. 115r12
+72V12*Random_Weighted{integer} 72>28 72>45 29|122b12 142l7 142t22
+72r28 G{13|45R9} 29|122b28 130r29 132r35
+72p45 Weights{54|65P8} 29|122b45 126r14 127r24 130r32 130r47 134r16 135r30
+. 141r12
+X 29 random_numbers.adb
+38i5 R{integer} 41m7 42r10 43m9 46m7 47r10 48m9 53r12
+76i5 Num{natural} 85m11 85r18 88r14
+83i11 I{integer}
+97f5 Total{float} 99m5 101m7 101r16 103r8 106r12
+97f12 Partial{float} 107m7 109m9 109r20 110r17
+97f21 X{float} 106m7 110r12
+100i9 I{integer} 101r32
+108i11 I{integer} 109r38 111r18
+123f5 Total{float} 125m5 127m7 127r16 129r8 132r12
+123f12 Partial{float} 133m7 135m9 135r20 136r17
+123f21 X{float} 132m7 136r12
+126i9 I{integer} 127r32
+134i11 I{integer} 135r38 137r18
+X 54 utils.ads
+34K9*Utils 28|23w6 23r17 54|1124e10
+64A11*Floats{14|43A9[25|24]}<integer> 28|71r57 29|96r57
+65P8*PFloats(64A11) 28|72r57 29|122r57
+207V12*Floor{integer} 29|41s19 46s17
+

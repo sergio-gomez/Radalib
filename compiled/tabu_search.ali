@@ -1,0 +1,131 @@
+V "GNAT Lib v2014"
+A -O2
+P ZX
+
+RN
+RV NO_DEFAULT_INITIALIZATION
+RV SPARK_05
+
+U tabu_search%b		tabu_search.adb		4e41e953 NE OO PK GE
+
+U tabu_search%s		tabu_search.ads		72741dea BN EE NE OO PK GE
+W ada%s			ada.ads			ada.ali
+W ada.numerics%s	a-numeri.ads		a-numeri.ali
+W ada.numerics.float_random%s  a-nuflra.adb	a-nuflra.ali
+
+D ada.ads		20140406181354 3ffc8e18 ada%s
+D a-numeri.ads		20140406181358 bb51c45a ada.numerics%s
+D a-nuflra.ads		20140406181358 49c50e0b ada.numerics.float_random%s
+D a-unccon.ads		20140406181358 f9eb8f06 ada.unchecked_conversion%s
+D interfac.ads		20140406181358 69adb1b9 interfaces%s
+D system.ads		20140406181358 5fc8ae56 system%s
+D s-exctab.ads		20140406181354 54135002 system.exception_table%s
+D s-rannum.ads		20140406181354 5eb33f0a system.random_numbers%s
+D s-stalib.ads		20140406181354 fa0a3617 system.standard_library%s
+D tabu_search.ads	20150322182936 3bb113e1 tabu_search%s
+D tabu_search.adb	20150322182954 75f0fab2 tabu_search%b
+X 1 ada.ads
+16K9*Ada 19e8 10|22r6 22r39
+X 2 a-numeri.ads
+16K13*Numerics 32e17 10|22r10 22r43
+X 3 a-nuflra.ads
+41K22*Float_Random 72e30 10|22w19 22r52
+45R9*Generator<8|58R9> 10|70r23 114r23 129r23 11|52r23 86r23 151r16
+51U14*Reset<8|95p14> 11|154s7
+X 10 tabu_search.ads
+28i4 Number_Of_Repetitions{positive} 11|156r22
+32+9 Problem 39r23 52r23 56r23 63r23 67r23 74r23 101r23 112r23 118r23 122r23
+. 126r23 11|29r23 49r23 84r23 130r23 147r23
+33+9 Solution 43r23 44r23 47r23 48r23 53r23 57r23 60r23 68r23 71r23 102r23
+. 103r23 113r23 115r23 127r23 128r23 132r23 11|50r23 51r23 55r23 58r16 85r23
+. 87r23 89r16 95r16 148r23 149r23 152r16
+34+9 Tabu_Moves 79r23 82r23 87r23 91r23 119r23 123r23 130r23 11|30r23 53r23
+. 90r16 131r23
+38V18 Maximum_Of_Nonimprovements{natural} 39>7 11|101s18
+39*7 pro{32+9}
+42U19 Copy_Solution 43>7 44<7 11|62s7 72s16 97s7 98s7 111s13 114s16 155s7
+. 160s13
+43*7 sol_ori{33+9}
+44*7 sol_cop{33+9}
+46V18 Better_Solution{boolean} 47>7 48>7 11|65s13 69s35 112s16 158s28
+47*7 sol1{33+9}
+48*7 sol2{33+9}
+51U19 Improvement_Action 52>7 53>7 11|115s16
+52*7 pro{32+9}
+53*7 sol{33+9}
+55U19 Repetition_Action 56>7 57>7 11|163s10
+56*7 pro{32+9}
+57*7 sol{33+9}
+59U19 Deallocate_Solution 60=7 11|71s16 75s10 110s13 113s16 119s10 122s7
+. 159s13 162s10
+60*7 sol{33+9}
+62V18 Number_Of_Moves{positive} 63>7 11|35s17 61s17 100s48 135s17
+63*7 pro{32+9}
+66U19 Solution_Neighbourhood 67>7 68>7 69>7 70=7 71<7 11|64s10
+67*7 pro{32+9}
+68*7 sol_ori{33+9}
+69i7 nm{positive}
+70r7 gen{3|45R9}
+71*7 sol_ngh{33+9}
+73V18 Tabu_Tenure{natural} 74>7 11|100s30
+74*7 pro{32+9}
+77U19 Allocate_Tabu_Moves 78>7 79<7 11|136s7
+78i7 nb_mov{positive}
+79*7 tab_mov{34+9}
+81U19 Deallocate_Tabu_Moves 82=7 11|121s7
+82*7 tab_mov{34+9}
+84U19 Set_Tabu_Move 85>7 86>7 87=7 11|39s13 66s13 109s13 138s10
+85i7 val{natural}
+86i7 nm{positive}
+87*7 tab_mov{34+9}
+89V18 Tabu_Move{natural} 90>7 91>7 11|37s17 68s13
+90i7 nm{positive}
+91*7 tab_mov{34+9}
+96k9*Tabu_Search 28z4 32z9 33z9 34z9 38z18 42z19 46z18 51z19 55z19 59z19
+. 62z18 66z19 73z18 77z19 81z19 84z19 89z18 111E14 136l5 136e16 11|22b14
+. 169l5 169t16
+100U14*Optimise 101>7 102>7 103<7 11|146b14 165l8 165t16
+101*7 pro{32+9} 11|147b7 157r29 163r28
+102*7 sol_ini{33+9} 11|148b7 155r21 157r34
+103*7 sol_bst{33+9} 11|149b7 155m30 158r53 159m33 160m36 163r33
+111U14 Execute_Repetition 112>7 113>7 114=7 115<7 11|83b14 123l8 123t26 157s10
+112*7 pro{32+9} 11|84b7 99r29 100r42 100r64 101r45 104r32 106r30 115r35
+113*7 sol_ini{33+9} 11|85b7 97r21
+114r7 gen{3|45R9} 11|86b7 104m55
+115*7 sol_bst{33+9} 11|87b7 97m30 98r21 104r37 112r41 113m36 114m39 115r40
+117U14 Initialise_Tabu_Moves 118>7 119<7 11|99s7 129b14 140l8 140t29
+118*7 pro{32+9} 11|130b7 135r33
+119*7 tab_mov{34+9} 11|131b7 136m35 138m31
+121U14 Decrease_Tabu_Moves 122>7 123=7 11|28b14 42l8 42t27 106s10
+122*7 pro{32+9} 11|29b7 35r33
+123*7 tab_mov{34+9} 11|30b7 37r31 39m38
+125U14 Examine_Neighbourhood 126>7 127>7 128>7 129=7 130=7 131<7 132<7 11|48b14
+. 77l8 77t29 104s10
+126*7 pro{32+9} 11|49b7 61r33 64r33
+127*7 sol_bst{33+9} 11|50b7 65r38
+128*7 sol_ori{33+9} 11|51b7 62r21 64r38
+129r7 gen{3|45R9} 11|52b7 64m51
+130*7 tab_mov{34+9} 11|53b7 66m34 68r27
+131i7 nm_bst{natural} 11|54b7 60m7 69r16 70m16
+132*7 sol_ngh{33+9} 11|55b7 62m30 69r60 71m36 72m39
+X 11 tabu_search.adb
+32i7 nb_mov{positive} 35m7 36r22
+33i7 val{natural} 37m10 38r13 39r27
+36i11 nm{integer} 37r27 39r34
+57i7 nb_mov{positive} 61m7 63r22
+58*7 sol_cur{10|33+9} 64m56 65r29 69r51 72r30 75m30 75r30
+63i11 nm{integer} 64r47 66r30 68r23 70r26
+89*7 sol_ori{10|33+9} 98m30 104r46 110m33 110r33 111m36 122m27 122r27
+90*7 tab_mov{10|34+9} 99m34 104m60 104r60 106m35 106r35 109m44 109r44 121m29
+. 121r29
+91i7 tab_ten{natural} 100m7 109r27
+92i7 max_ite{natural} 101m7 103r23
+93i7 nb_ite{natural} 102m7 103r13 107m10 107r20 116m16
+94i7 nm_bst{natural} 104m69 108r13 109r36
+95*7 sol_ngh{10|33+9} 105m16 111r27 112r32 114r30 119m30 119r30
+133i7 nb_mov{positive} 135m7 136r27 137r22
+137i11 nm{integer} 138r27
+151r7 gen{3|45R9} 154r13 157m43 157r43
+152*7 sol_rep{10|33+9} 157m48 158r44 160r27 162m30 162r30
+156i11 nr{integer} 158r13
+
