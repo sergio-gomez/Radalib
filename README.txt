@@ -13,7 +13,7 @@
 Description
 -----------
 
-Radalib, Ada library for the analysis of Complex Networks and more.
+Radalib, Ada library and tools for the analysis of Complex Networks and more.
 
 Radalib is a library we have continuously been updating for our research within the
 Alephsys research group, led by Alex Arenas, at Universitat Rovira i Virgili (URV),
@@ -249,18 +249,21 @@ The tools in Radalib are:
 
 - Network_Properties
     Calculate many properties of a network, including connectedness, degrees, strengths,
-    clustering coefficients, assortativities, path lengths, efficiencies, diameters, entropies
-    and betweenness. Handles all kinds of networks, even weighted, directed and signed.
+    clustering coefficients, assortativities, path lengths, efficiencies, diameters,
+    entropies and betweenness. Handles all kinds of networks, even weighted, directed
+    and signed.
 
 - Reformat_Partitions
-    Reformat partitions in Pajek and Lol formats changing nodes' indices by nodes' names.
+    Reformat partitions in Pajek and Lol formats changing nodes' indices by nodes'
+    names.
 
 - Size_Reduction
     Elimination of simple and triangular 'hairs' of a network to speed-up modularity
     optimization.
 
 - Size_Reduction_Lol_Expand
-    Convert a partition of a sized reduced network into a partition of the original network.
+    Convert a partition of a sized reduced network into a partition of the original
+    network.
 
 - Sort_Nodes
     Sort nodes of a network randomly or according to degree.
@@ -279,23 +282,24 @@ License
 Radalib, Copyright (c) 2015 by
 Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 
-This library is free software; you can redistribute it and/or modify it under the terms of the
-GNU Lesser General Public License version 2.1 as published by the Free Software Foundation.
+This library is free software; you can redistribute it and/or modify it under the terms
+of the GNU Lesser General Public License version 2.1 as published by the Free Software
+Foundation.
 
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Lesser General Public License for more details.
+This library is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
-You should have received a copy of the GNU Lesser General Public License along with this
-library (see LICENSE.txt); if not, see http://www.gnu.org/licenses/
+You should have received a copy of the GNU Lesser General Public License along with
+this library (see LICENSE.txt); if not, see http://www.gnu.org/licenses/
 
 
 ----------------
 Acknowledgements
 ----------------
 
-We thank Javier Borge-Holthoefer for his important contributions to Radalib, Clara Granell
-and Pau Erola for their influence in its development, Albert Sole-Ribalta for discovering
-and helping to solve some bugs, and Alex Arenas for leading the Alephsys research group at
-Universitat Rovira i Virgili (URV), Tarragona, in which all this software has become useful
-for our research.
+We thank Javier Borge-Holthoefer for his important contributions to Radalib, Clara
+Granell and Pau Erola for their influence in its development, Albert Sole-Ribalta for
+discovering and helping to solve some bugs, and Alex Arenas for leading the Alephsys
+research group at Universitat Rovira i Virgili (URV), Tarragona, in which all this
+software has become useful for our research.
