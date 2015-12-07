@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 13/08/2005
--- @revision 26/10/2014
+-- @revision 07/12/2015
 -- @brief Implementation of Graphs algorithms
 
 with Utils; use Utils;
@@ -214,35 +214,33 @@ package body Graphs.Algorithms is
     N := Number_Of_Vertices(Gr);
     Initialize(Lol, N);
 
-    case Ct is
-      when Weak_Components =>
-        U := Unassigned_List(Lol);
-        while Number_Of_Elements(U) > 0 loop
-          Reset(U);
-          L := New_List(Lol);
-          Depth_First_Traversal(Index_Of(Get_Element(U)), U, L);
-          if Number_Of_Elements(L) = 0 then
-            Remove(L);
-          end if;
-        end loop;
-
-      when Strong_Components =>
-        Unmark(Gr);
-        Initialize(S);
-        Index := Alloc(1, N);
-        Lowlink := Alloc(1, N);
-        Index.all := (others => Unvisited);
-        Ind := 1;
-        for I in 1..N loop
-          if Index(I) = Unvisited then
-            Tarjan(Get_Vertex(Gr, I), S, Index, Lowlink, Ind);
-          end if;
-        end loop;
-        Free(Index);
-        Free(Lowlink);
-        Free(S);
-        Unmark(Gr);
-    end case;
+    if Gr.Directed and Ct = Strong_Components then
+      Unmark(Gr);
+      Initialize(S);
+      Index := Alloc(1, N);
+      Lowlink := Alloc(1, N);
+      Index.all := (others => Unvisited);
+      Ind := 1;
+      for I in 1..N loop
+        if Index(I) = Unvisited then
+          Tarjan(Get_Vertex(Gr, I), S, Index, Lowlink, Ind);
+        end if;
+      end loop;
+      Free(Index);
+      Free(Lowlink);
+      Free(S);
+      Unmark(Gr);
+    else
+      U := Unassigned_List(Lol);
+      while Number_Of_Elements(U) > 0 loop
+        Reset(U);
+        L := New_List(Lol);
+        Depth_First_Traversal(Index_Of(Get_Element(U)), U, L);
+        if Number_Of_Elements(L) = 0 then
+          Remove(L);
+        end if;
+      end loop;
+    end if;
 
     Sort_Lists(Lol);
     Sort_By_Size(Lol);

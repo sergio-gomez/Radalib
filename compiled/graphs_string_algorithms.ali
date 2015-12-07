@@ -94,8 +94,8 @@ D arrays_float.ads	20150322182902 7beec0f0 arrays_float%s
 D finite_disjoint_lists.ads  20150322182910 68c3f3bc finite_disjoint_lists%s
 D finite_disjoint_lists-algorithms.ads  20150322182910 a408888a finite_disjoint_lists.algorithms%s
 D graphs.ads		20150322182912 ebeefa77 graphs%s
-D graphs-algorithms.ads	20150322182910 d9b03449 graphs.algorithms%s
-D graphs-algorithms.adb	20150322182948 faa9560e graphs.algorithms%b
+D graphs-algorithms.ads	20151207125102 d9b03449 graphs.algorithms%s
+D graphs-algorithms.adb	20151207125106 dbc3a00f graphs.algorithms%b
 D graphs_string.ads	20150322182922 267004d8 graphs_string%s
 D graphs_string_algorithms.ads  20150322182924 19a52ca2 graphs_string_algorithms%s
 D graphs_string_algorithms.ads  20150322182924 19a52ca2 graphs_string_algorithms%b

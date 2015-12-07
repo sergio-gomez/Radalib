@@ -61,7 +61,7 @@ D arrays_double.ads	20150322182902 4fb5de93 arrays_double%s
 D arrays_float.ads	20150322182902 7beec0f0 arrays_float%s
 D finite_disjoint_lists.ads  20150322182910 68c3f3bc finite_disjoint_lists%s
 D graphs.ads		20150322182912 ebeefa77 graphs%s
-D graphs-algorithms.ads	20150322182910 d9b03449 graphs.algorithms%s
+D graphs-algorithms.ads	20151207125102 d9b03449 graphs.algorithms%s
 D graphs-modularities.ads  20150923142430 482870ea graphs.modularities%s
 D graphs-properties.ads	20150322182912 80b457cc graphs.properties%s
 D graphs_double.ads	20150322182912 3ca3532c graphs_double%s

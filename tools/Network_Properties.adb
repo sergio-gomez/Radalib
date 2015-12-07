@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 23/05/2011
--- @revision 19/09/2015
+-- @revision 07/12/2015
 -- @brief Properties of a Network
 
 with Ada.Command_Line; use Ada.Command_Line;

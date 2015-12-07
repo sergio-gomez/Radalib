@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 13/08/2005
--- @revision 26/10/2014
+-- @revision 07/12/2015
 -- @brief Implementation of Graphs algorithms
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
