@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 19/03/2010
--- @revision 19/09/2015
+-- @revision 26/02/2016
 -- @brief Obtain Links Information
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -34,13 +34,12 @@ procedure Links_Info is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2015 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2016 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
     Put_Line("===================================================================");
-    Put_Line("== Obtain Links Information                                      ==");
-    Put_Line("== See README.txt                                                ==");
+    Put_Line("== Obtain degrees and strengths of nodes attached to each link   ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;
@@ -81,7 +80,7 @@ procedure Links_Info is
       end if;
       Selected_Links := Alloc(1, Num_Random_Links);
       I_Random := 1;
-      for I in Selected_Links'range loop
+      for I in Selected_Links'Range loop
         while not This_Link(I_Random) loop
           I_Random :=  I_Random + 1;
         end loop;

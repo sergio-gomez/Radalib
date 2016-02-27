@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 06/04/2012
--- @revision 23/09/2015
+-- @revision 01/02/2016
 -- @brief Input and Output of Dendrograms
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -31,9 +31,9 @@ package Dendrograms.IO is
 
   package Trees_IO_Dendro is new Trees_Dendrograms.IO(To_S, Get_Node_Info);
 
-  -- Purpose : Put Dendrogram to Current Output or File in Text or Newick formats
+  -- Purpose : Put Dendrogram to Current Output or File in Text, Newick or JSON formats
   -- Note    : Names of Nodes must not contain these characters (no check is made):
-  -- Note    :   ' '   ','   ';'   ':'   '|'   '['    ']'   '('   ')'
+  -- Note    :   ' '   ','   ';'   ':'   '|'   '['    ']'   '('   ')'   '{'   '}'
   --
   -- T       : The Dendrogram
   -- Precision: The Precision
@@ -44,7 +44,7 @@ package Dendrograms.IO is
   procedure Put_Dendrogram(Ft: in File_Type; T: in Dendrogram; Precision: in Natural; Format: in Tree_Format := Default_Tree_Format) renames Trees_IO_Dendro.Put_Tree;
   procedure Put_Dendrogram(Fn: in String; T: in Dendrogram; Precision: in Natural; Mode: in File_Mode := Out_File; Format: in Tree_Format := Default_Tree_Format) renames Trees_IO_Dendro.Put_Tree;
 
-  -- Purpose : Get Dendrogram from Current Input or File in Text or Newick formats
+  -- Purpose : Get Dendrogram from Current Input or File in Text, Newick or JSON formats
   --
   -- T       : The Dendrogram
   -- raises  : Tree_IO_Error
@@ -81,7 +81,9 @@ private
 
   procedure Complete_Information_Text(T: in Dendrogram);
   procedure Complete_Information_Newick(T: in Dendrogram);
+  procedure Complete_Information_Json(T: in Dendrogram);
 
   procedure Set_Id(T: in Dendrogram);
   procedure Set_Num_Leaves(T: in Dendrogram);
+  procedure Set_Heights(T: in Dendrogram);
 end Dendrograms.IO;

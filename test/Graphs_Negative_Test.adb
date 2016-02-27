@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -76,7 +76,7 @@ procedure Graphs_Negative_Test is
     S: constant array(1..3) of String(1..3) := ("(a)", "(+)", "(-)");
   begin
     if Three_Lines then
-      for T in Pd'range loop
+      for T in Pd'Range loop
         Put("   " & S(T));
         for I in Ptot'Range loop
           if Show_Index then
@@ -95,7 +95,7 @@ procedure Graphs_Negative_Test is
         else
           Put("  ");
         end if;
-        for T in Pd'range loop
+        for T in Pd'Range loop
           Put(S(T) & " " & D2S(Pd(T)(I), Aft => Aft, Exp => 0) & "   ");
         end loop;
         New_Line;

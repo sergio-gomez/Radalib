@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 13/10/2014
--- @revision 22/09/2015
+-- @revision 26/02/2016
 -- @brief Aggregate the Layers of a Multiplex
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -39,13 +39,12 @@ procedure Multiplex_Aggregate is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2015 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2016 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
     Put_Line("===================================================================");
     Put_Line("== Aggregate the Layers of a Multiplex                           ==");
-    Put_Line("== See README.txt                                                ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;
@@ -137,7 +136,6 @@ begin
     Put_Line("   decimal_digits   :  number of decimal digits for float and double weights");
     Put_Line("                         ignored for Integer weights");
     Put_Line("                         default => " & I2S(Aft));
-    New_Line;
     return;
   end if;
 

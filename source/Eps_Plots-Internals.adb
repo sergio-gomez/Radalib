@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -123,9 +123,9 @@ package body Eps_Plots.Internals is
     Dx := Plot.Side.X + Plot.Separation.X;
     Dy := Plot.Side.Y + Plot.Separation.Y;
     Y := Plot.Margin.Y + Plot.Plot_Ll_Margin.Y;
-    for I in reverse Plot.Figure'range(1) loop
+    for I in reverse Plot.Figure'Range(1) loop
       X := Plot.Margin.X + Plot.Plot_Ll_Margin.X;
-      for J in Plot.Figure'range(2) loop
+      for J in Plot.Figure'Range(2) loop
         Plot.Figure(I, J).Ll := (X, Y);
         Plot.Figure(I, J).Ur := (X + Plot.Side.X, Y + Plot.Side.Y);
         X := X + Dx;

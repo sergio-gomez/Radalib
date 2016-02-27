@@ -3,7 +3,7 @@
 
 function convert_wd()
 {
-	# Ada files to lowercase names
+	# Ada files and Windows scripts to lowercase names
   for i in *.ad[bs] *.bat ; do
     FN=`echo $i | tr A-Z a-z | grep -v "[*]"`
     if [ "$FN" != "" ] ; then
@@ -25,7 +25,6 @@ function convert_wd()
       grep -v "echo off" $i | \
         grep -v "^set ADA_" | \
         grep -v "pause" | \
-        sed "s,\r$,,g" | \
         sed "s,^del /q,rm -f,g" | \
         sed "s,^del,rm -f,g" | \
         sed "s. -largs -Wl,--stack=500000000..g" | \
@@ -34,16 +33,15 @@ function convert_wd()
         sed "s,$PROG_ORI,$PROG_LC,g" | \
         sed "s,^$PROG_LC,./$PROG_LC,g" | \
         sed "s,\\\\,/,g" | \
-        sed "s,adb,adb -o $PROG_LC.exe,g" > $FN
+        sed "s,adb,adb -o $PROG_LC.exe,g" | \
+        tr -d '\r' > $FN
       chmod 755 $FN
       rm -f $i
     fi
   done
 
-  # Execution permission for all *.sh files
-  for i in *.sh; do
-    chmod 755 $i
-  done
+  # execution permission for all *.sh files
+  chmod 755 *.sh
 }
 
 function convert_recursive()
@@ -100,6 +98,8 @@ fi
 convert_dir_recursive  $RADALIB_ROOT/source
 convert_dir_recursive  $RADALIB_ROOT/test
 convert_dir_recursive  $RADALIB_ROOT/tools
+chmod 755 $RADALIB_ROOT/compiled/*.sh
+chmod 755 $RADALIB_ROOT/maintenance/*.sh
 
 # convert other folders and/or subfolders
 #convert_dir            afolder

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 11/05/2005
--- @revision 10/08/2014
+-- @revision 19/02/2016
 -- @brief Several Utils
 
 with Ada.Strings; use Ada.Strings;
@@ -1082,7 +1082,7 @@ package body Utils is
 
   function Is_In_Characters(C: in Character; L: Characters) return Boolean is
   begin
-    for I in L'range loop
+    for I in L'Range loop
       if C = L(I) then
         return True;
       end if;
@@ -1096,7 +1096,7 @@ package body Utils is
 
   function Is_In_Characters(C: in Character; L: PCharacters) return Boolean is
   begin
-    for I in L'range loop
+    for I in L'Range loop
       if C = L(I) then
         return True;
       end if;
@@ -1131,6 +1131,24 @@ package body Utils is
     return Is_In_Characters(C, Separators);
   end Is_Separator;
 
+  -------------------
+  -- Is_Open_Quote --
+  -------------------
+
+  function Is_Open_Quote(C: in Character) return Boolean is
+  begin
+    return Is_In_Characters(C, Quotes_Open);
+  end Is_Open_Quote;
+
+  --------------------
+  -- Is_Close_Quote --
+  --------------------
+
+  function Is_Close_Quote(C: in Character) return Boolean is
+  begin
+    return Is_In_Characters(C, Quotes_Close);
+  end Is_Close_Quote;
+
   ----------------
   -- Get_Spaces --
   ----------------
@@ -1157,6 +1175,24 @@ package body Utils is
   begin
     return Separators.all;
   end Get_Separators;
+
+  ---------------------
+  -- Get_Quotes_Open --
+  ---------------------
+
+  function Get_Quotes_Open return Characters is
+  begin
+    return Quotes_Open.all;
+  end Get_Quotes_Open;
+
+  ----------------------
+  -- Get_Quotes_Close --
+  ----------------------
+
+  function Get_Quotes_Close return Characters is
+  begin
+    return Quotes_Close.all;
+  end Get_Quotes_Close;
 
   ----------------
   -- Set_Spaces --
@@ -1190,6 +1226,23 @@ package body Utils is
     Separators := new Characters(L'Range);
     Separators.all := L;
   end Set_Separators;
+
+  ----------------
+  -- Set_Quotes --
+  ----------------
+
+  procedure Set_Quotes(L_Open: in Characters := Standard_Quotes_Open; L_Close: in Characters := Standard_Quotes_Close) is
+  begin
+    if L_Open'First /= L_Close'First or L_Open'Length /= L_Close'Length then
+      raise Quotes_Error with "Incompatible open and close quote characters";
+    end if;
+    Free(Quotes_Open);
+    Free(Quotes_Close);
+    Quotes_Open  := new Characters(L_Open'Range);
+    Quotes_Close := new Characters(L_Close'Range);
+    Quotes_Open.all  := L_Open;
+    Quotes_Close.all := L_Close;
+  end Set_Quotes;
 
   ---------------
   -- Add_Space --
@@ -1239,6 +1292,25 @@ package body Utils is
     end if;
   end Add_Separator;
 
+  ----------------
+  -- Add_Quotes --
+  ----------------
+
+  procedure Add_Quotes(C_Open, C_Close: in Character) is
+    L: PCharacters;
+  begin
+    L := Quotes_Open;
+    Quotes_Open := Alloc(L'First, L'Last + 1);
+    Quotes_Open(L'Range) := L.all;
+    Quotes_Open(L'Last + 1) := C_Open;
+    Free(L);
+    L := Quotes_Close;
+    Quotes_Close := Alloc(L'First, L'Last + 1);
+    Quotes_Close(L'Range) := L.all;
+    Quotes_Close(L'Last + 1) := C_Close;
+    Free(L);
+  end Add_Quotes;
+
   ---------
   -- "+" --
   ---------
@@ -1256,19 +1328,6 @@ package body Utils is
   begin
     return Character'Max(Left, Right);
   end "*";
-
-  ---------
-  -- "+" --
-  ---------
-
-  function "+"(Left, Right: in Ustring) return Ustring is
-  begin
-    if Left >= Right then
-      return Left;
-    else
-      return Right;
-    end if;
-  end "+";
 
   ---------
   -- "*" --
@@ -1306,6 +1365,24 @@ package body Utils is
       T := F + S'Length - 1;
       B(F..T) := S;
     end loop;
+    return B;
+  end "**";
+
+  ----------
+  -- "**" --
+  ----------
+
+  function "**"(U: in Ustring; Power: in Natural) return Ustring is
+    B: Ustring;
+  begin
+    if Power = 0 then
+      B := Null_Ustring;
+    else
+      B := U;
+      for I in 2..Power loop
+        B := B & U;
+      end loop;
+    end if;
     return B;
   end "**";
 
@@ -1438,12 +1515,16 @@ package body Utils is
 
 begin
 
-  Spaces     := new Characters(Standard_Spaces'Range);
-  Comments   := new Characters(Standard_Comments'Range);
-  Separators := new Characters(Standard_Separators'Range);
+  Spaces       := new Characters(Standard_Spaces'Range);
+  Comments     := new Characters(Standard_Comments'Range);
+  Separators   := new Characters(Standard_Separators'Range);
+  Quotes_Open  := new Characters(Standard_Quotes_Open'Range);
+  Quotes_Close := new Characters(Standard_Quotes_Close'Range);
 
-  Spaces.all     := Standard_Spaces;
-  Comments.all   := Standard_Comments;
-  Separators.all := Standard_Separators;
+  Spaces.all       := Standard_Spaces;
+  Comments.all     := Standard_Comments;
+  Separators.all   := Standard_Separators;
+  Quotes_Open.all  := Standard_Quotes_Open;
+  Quotes_Close.all := Standard_Quotes_Close;
 
 end Utils;

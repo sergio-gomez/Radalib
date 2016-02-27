@@ -1,0 +1,26 @@
+{
+ "name": "", "height": 12.0, "margin": 0.0, "length": 0.0,
+ "children": [
+  {
+   "name": "", "height": 4.0, "margin": 0.0, "length": 8.0,
+   "children": [
+    {"name": "v1", "height": 0.0, "margin": 0.0, "length": 4.0, "size": 1},
+    {"name": "v2", "height": 0.0, "margin": 0.0, "length": 4.0, "size": 1}
+   ]
+  },
+  {
+   "name": "tied", "height": 6.5, "margin": 3.5, "length": 5.5,
+   "children": [
+    {"name": "v3", "height": 0.0, "margin": 0.0, "length": 6.5, "size": 1},
+    {
+     "name": "", "height": 4.0, "margin": 0.0, "length": 2.5,
+     "children": [
+      {"name": "v4", "height": 0.0, "margin": 0.0, "length": 4.0, "size": 1},
+      {"name": "v5", "height": 0.0, "margin": 0.0, "length": 4.0, "size": 1}
+     ]
+    },
+    {"name": "v6", "height": 0.0, "margin": 0.0, "length": 6.5, "size": 1}
+   ]
+  }
+ ]
+}

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 23/02/2012
--- @revision 03/06/2013
+-- @revision 17/01/2016
 -- @brief Tree data structure
 
 with Linked_Lists;
@@ -42,7 +42,7 @@ package Trees is
 
   type Node_Handler is access procedure(Nod: in Node);
 
-  type Tree_Format is (Text_Tree, Newick_Tree);
+  type Tree_Format is (Text_Tree, Newick_Tree, Json_Tree);
   Default_Tree_Format: constant Tree_Format := Text_Tree;
 
   Empty_Tree_Error: exception;

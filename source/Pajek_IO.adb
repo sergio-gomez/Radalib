@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -91,16 +91,16 @@ package body Pajek_IO is
     Comments_Skip(Ft);
     Get_Word(Ft, W);
     Skip_Line(Ft);
-    if To_Lowercase(W.All) = "*arcs" then
+    if To_Lowercase(W.all) = "*arcs" then
       Directed := True;
       Listed := False;
-    elsif To_Lowercase(W.All) = "*edges" then
+    elsif To_Lowercase(W.all) = "*edges" then
       Directed := False;
       Listed := False;
-    elsif To_Lowercase(W.All) = "*arcslist" then
+    elsif To_Lowercase(W.all) = "*arcslist" then
       Directed := True;
       Listed := True;
-    elsif To_Lowercase(W.All) = "*edgeslist" then
+    elsif To_Lowercase(W.all) = "*edgeslist" then
       Directed := False;
       Listed := True;
     else
@@ -743,7 +743,7 @@ package body Pajek_IO is
 
     Comments_Skip(Ft);
     Get_Word(Ft, W);
-    if To_Lowercase(W.All) /= "*vertices" then
+    if To_Lowercase(W.all) /= "*vertices" then
       raise Unrecognized_Pajek_Format with "Pajek partition files need first a '*Vertices' section";
     end if;
     Free_Word(W);

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 08/05/2013
--- @revision 23/09/2015
+-- @revision 18/01/2016
 -- @brief Input and Output of Data in List or Matrix form
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -36,7 +36,7 @@ package Data_IO is
 
   Data_IO_Error: exception;
 
-  -- Purpose : Get Data from a File in List of Matrix form
+  -- Purpose : Get Data from a File in List or Matrix form
   -- Note    : In list form, no symmetrization is performed, and repeated elements are overwritten
   -- Note    : In matrix form, the names may appear in first row, first column, both, or none of them
   -- Note    : The No_Value parameter should preferably be a value not in the Data File
@@ -50,7 +50,7 @@ package Data_IO is
   -- raises  : Data_IO_Error
   procedure Generic_Get_Data(Fn: in String; Data: out PItemss; Col_Name, Row_Name: out PUstrings; No_Value: in Item := No_Item; Form: in Data_Form := Auto);
 
-  -- Purpose : Get Data from a File in List of Matrix form
+  -- Purpose : Get Data from a File in List or Matrix form
   -- Note    : In list form, no symmetrization is performed, and repeated elements are overwritten
   -- Note    : In matrix form, the names may appear in first row, first column, both, or none of them
   -- Note    : The No_Value parameter should preferably be a value not in the Data File

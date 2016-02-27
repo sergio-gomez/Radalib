@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/06/2011
--- @revision 19/09/2015
+-- @revision 26/02/2016
 -- @brief Extract Subgraphs from a Graph
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -35,13 +35,12 @@ procedure Extract_Subgraphs is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2015 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2016 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
     Put_Line("===================================================================");
     Put_Line("== Extract subgraphs from a graph                                ==");
-    Put_Line("== See README.txt                                                ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;

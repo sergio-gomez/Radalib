@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 05/04/2012
--- @revision 23/09/2015
+-- @revision 01/02/2016
 -- @brief Input and Output of Trees
 
 with Ada.Exceptions; use Ada.Exceptions;
@@ -106,6 +106,36 @@ package body Trees.IO is
       end if;
     end Put_Node_Newick;
 
+    procedure Put_Node_Json(Nod: in Node; Indent: in out Natural) is
+      Ch: List_Of_Nodes;
+      Nch: Natural;
+    begin
+      Ch := Nod.Children;
+      Nch := Size(Ch);
+      if Nch = 0 then
+        Put(Right_Justify("", Indent));
+        Put("{" & To_S(Nod.Value, Param, Format => Json_Tree) & ", ""size"": 1}");
+      else
+        Put_Line(Right_Justify("", Indent) & "{");
+        Put_Line(Right_Justify("", Indent) & " " & To_S(Nod.Value, Param, Format => Json_Tree) & ",");
+        Put_Line(Right_Justify("", Indent) & " ""children"": [");
+        Indent := Indent + 2;
+        Save(Ch);
+        Reset(Ch);
+        while Has_Next(Ch) loop
+          Put_Node_Json(Next(Ch), Indent);
+          if Has_Next(Ch) then
+            Put(",");
+          end if;
+          New_Line;
+        end loop;
+        Restore(Ch);
+        Indent := Indent - 2;
+        Put_Line(Right_Justify("", Indent) & " ]");
+        Put(Right_Justify("", Indent) & "}");
+      end if;
+    end Put_Node_Json;
+
     Ft: File_Type;
     Ft_Prev: File_Access;
     Indent: Natural := 0;
@@ -130,6 +160,9 @@ package body Trees.IO is
       when Newick_Tree =>
         Put_Node_Newick(T);
         Put_Line(";");
+      when Json_Tree =>
+        Put_Node_Json(T, Indent);
+        New_Line;
     end case;
 
     if Fn /= "" then
@@ -185,7 +218,7 @@ package body Trees.IO is
           Line_Spaces_Skip;
           Get(Val, Format => Text_Tree);
         else
-          raise Tree_IO_Error;
+          raise Tree_IO_Error with "Lines require an initial '+' or '*'";
         end if;
         if not End_Of_File then
           Skip_Line;
@@ -222,7 +255,7 @@ package body Trees.IO is
         while C /= ')' loop
           Look_Ahead(C, Eol);
           if Eol then
-            raise Tree_IO_Error;
+            raise Tree_IO_Error with "Input ended prematurely";
           elsif C = ',' then
             Add_Child(Nod);
           elsif C /= '(' then
@@ -233,7 +266,7 @@ package body Trees.IO is
           end if;
           Look_Ahead(C, Eol);
           if Eol then
-            raise Tree_IO_Error;
+            raise Tree_IO_Error with "Input ended prematurely";
           elsif C = ',' then
             Get(C);
           end if;
@@ -241,7 +274,7 @@ package body Trees.IO is
         Get(C);
         Look_Ahead(C, Eol);
         if Eol then
-          raise Tree_IO_Error;
+          raise Tree_IO_Error with "Input ended prematurely";
         elsif C /= ')' and C /= ',' and C /= ';' then
           Get(Val, Format => Newick_Tree);
           Set_Value(Nod, Val);
@@ -249,16 +282,84 @@ package body Trees.IO is
       end if;
     end Get_Node_Newick;
 
+    procedure Get_Node_Json(St: in out Subtree) is
+      C: Character;
+      Eol: Boolean;
+      Val: Node_Value;
+      Nod: Node;
+      Us: Ustring;
+    begin
+      Comments_Skip;
+      Look_Ahead(C, Eol);
+      if Eol then
+        raise Tree_IO_Error;
+      elsif C = '{' then
+        Get(C);
+        Comments_Skip;
+        Get(Val, Format => Json_Tree);
+        if St = null then
+          St := New_Tree(Val);
+          Nod := St;
+        else
+          Nod := Add_Child(St, Val);
+        end if;
+        loop
+          Comments_Skip;
+          Look_Ahead(C, Eol);
+          if Eol then
+            raise Tree_IO_Error with "Input ended prematurely";
+          end if;
+          Get(C);
+          if C = ',' then
+            Comments_Skip;
+            Get_Quoted_Word(Us);
+            Comments_Skip;
+            if not Separator_Skip(':', Strict => True) then
+              raise Tree_IO_Error with "Missing ':' after field named '" & U2S(Us) & "'";
+            end if;
+            if U2S(To_Lowercase(Us)) = "children" then
+              Comments_Skip;
+              if not Separator_Skip('[', Strict => True) then
+                raise Tree_IO_Error with "Missing '[' after 'children' field";
+              end if;
+              loop
+                Get_Node_Json(Nod);
+                Comments_Skip;
+                Look_Ahead(C, Eol);
+                if Eol then
+                  raise Tree_IO_Error with "Input ended prematurely";
+                end if;
+                Get(C);
+                if C = ']' then
+                  exit;
+                elsif C /= ',' then
+                  raise Tree_IO_Error with "Missing ',' or ']' after reading a child";
+                end if;
+              end loop;
+            else
+              Get_Word(Us);
+            end if;
+          elsif C = '}' then
+            exit;
+          else
+            raise Tree_IO_Error with "Missing ',' or '}' after reading node value";
+          end if;
+        end loop;
+      end if;
+    end Get_Node_Json;
+
     Ft: File_Type;
     Ft_Prev: File_Access;
     C: Character;
     Eol: Boolean;
     Separators_Old   : constant Characters := Get_Separators;
     Separators_Text  : constant Characters(1..1) := (1 => ' ');
-    Separators_Newick: constant Characters := ('(', ')', ',',';');
+    Separators_Newick: constant Characters := ('(', ')', ',', ';');
+    Separators_Json  : constant Characters := ('{', '}', '[', ']', ',', ':');
     Comments_Old     : constant Characters := Get_Comments;
     Comments_Text    : constant Characters(1..1) := (1 => '#');
     Comments_Newick  : constant Characters(1..1) := (1 => '#');
+    Comments_Json    : constant Characters(1..1) := (1 => '#');
   begin
     if Fn /= "" then
       Open(Ft, In_File, Fn);
@@ -284,8 +385,14 @@ package body Trees.IO is
           Get_Node_Newick(T);
           Set_Comments(Comments_Old);
           Set_Separators(Separators_Old);
+        when '{' =>
+          Set_Separators(Separators_Json);
+          Set_Comments(Comments_Json);
+          Get_Node_Json(T);
+          Set_Comments(Comments_Old);
+          Set_Separators(Separators_Old);
         when others =>
-          raise Tree_IO_Error with "Trees start with '*', '+' or '('";
+          raise Tree_IO_Error with "Trees start with '*' or '+' in Text format, '(' in Newick format or '{' in JSON format";
       end case;
     end if;
 

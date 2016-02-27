@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 06/04/2012
--- @revision 23/09/2015
+-- @revision 01/02/2016
 -- @brief Input and Output of Dendrograms
 
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
@@ -32,15 +32,10 @@ package body Dendrograms.IO is
 
   function To_S(Nod_Inf: in Node_Info; Precision: in Natural; Format: in Tree_Format) return String is
 
-    function Trans_Text(U: in Ustring) return Ustring is
+    function Trans(U: in Ustring) return Ustring is
     begin
-      return S2U(Translate(U2S(U), " ,;:|[]()", "_____{}{}"));
-    end Trans_Text;
-
-    function Trans_Newick(U: in Ustring) return Ustring is
-    begin
-      return S2U(Translate(U2S(U), " ,;:|[]()", "_____{}{}"));
-    end Trans_Newick;
+      return S2U(Translate(U2S(U), " ,;:|[](){}", "_____<><><>"));
+    end Trans;
 
     Name, Us: Ustring;
     Position, Height, Width, Length, Margin: Double;
@@ -52,16 +47,21 @@ package body Dendrograms.IO is
     case Format is
       when Text_Tree =>
         if Is_Leaf then
-          Us := Trans_Text(Name);
+          Us := Trans(Name);
         else
           Us := S2U("[" & D2Se0(Height, Aft => Precision) & ", " & D2Se0(Height + Margin, Aft => Precision) & "]");
           Us := Us & S2U("  " & I2S(Num_Leaves));
           if Name /= Null_Ustring then
-            Us := Us & S2U("  ") & Trans_Text(Name);
+            Us := Us & S2U("  ") & Trans(Name);
           end if;
         end if;
       when Newick_Tree =>
-        Us := Trans_Newick(Name) & S2U(":" & D2Se0(abs Length, Aft => Precision));
+        Us := Trans(Name) & S2U(":" & D2Se0(abs Length, Aft => Precision));
+      when Json_Tree =>
+        Us := """name"": """ & Trans(Name) & """"
+              & ", ""height"": " & D2Se0(abs Height, Aft => Precision)
+              & ", ""margin"": " & D2Se0(abs Margin, Aft => Precision)
+              & ", ""length"": " & D2Se0(abs Length, Aft => Precision);
     end case;
     return U2S(Us);
   end To_S;
@@ -71,11 +71,12 @@ package body Dendrograms.IO is
   -------------------
 
   procedure Get_Node_Info(Nod_Inf: out Node_Info; Format: in Tree_Format) is
-    Us, Name: Ustring;
+    Us, Key, Value: Ustring;
+    Name: Ustring;
     Height, Length, Margin: Double;
     Num_Leaves: Natural;
     C: Character;
-    Eol: Boolean;
+    Eol, Has_Name, Has_Length: Boolean;
     D: Double;
   begin
     Nod_Inf := Void_Node_Info;
@@ -129,6 +130,28 @@ package body Dendrograms.IO is
             Set_Length(Nod_Inf, Length);
           end if;
         end if;
+      when Json_Tree =>
+        Has_Name := False;
+        Has_Length := False;
+        loop
+          Get_Pair(Key, Value, ':');
+          if U2S(To_Lowercase(Key)) = "name" then
+            Set_Name(Nod_Inf, Value);
+            Has_Name := True;
+          elsif U2S(To_Lowercase(Key)) = "height" then
+            Set_Height(Nod_Inf, U2D(Value));
+          elsif U2S(To_Lowercase(Key)) = "margin" then
+            Set_Margin(Nod_Inf, U2D(Value));
+          elsif U2S(To_Lowercase(Key)) = "length" then
+            Set_Length(Nod_Inf, U2D(Value));
+            Has_Length := True;
+          end if;
+          exit when Has_Name and Has_Length;  -- Height and Margin must be between Name and Length
+          Comments_Skip;
+          if not Separator_Skip(',', Strict => True) then
+            raise Trees_IO_Dendro.Tree_IO_Error with "Name field not found";
+          end if;
+        end loop;
     end case;
   end Get_Node_Info;
 
@@ -180,8 +203,10 @@ package body Dendrograms.IO is
           Format := Text_Tree;
         when '(' =>
           Format := Newick_Tree;
+        when '{' =>
+          Format := Json_Tree;
         when others =>
-          raise Trees_IO_Dendro.Tree_IO_Error with "Trees start with '*', '+' or '('";
+          raise Trees_IO_Dendro.Tree_IO_Error with "Trees start with '*' or '+' in Text format, or '(' in Newick format";
       end case;
     end if;
 
@@ -199,6 +224,8 @@ package body Dendrograms.IO is
         Complete_Information_Text(T);
       when Newick_Tree =>
         Complete_Information_Newick(T);
+      when Json_Tree =>
+        Complete_Information_Json(T);
     end case;
     Set_Positions_And_Widths(T);
 
@@ -425,34 +452,52 @@ package body Dendrograms.IO is
   ---------------------------------
 
   procedure Complete_Information_Newick(T: in Dendrogram) is
-
-    procedure Update_Node_Info(Nod: in Node) is
-      Parent_Inf, Nod_Inf: Node_Info;
-      Lnp, Hp, Hn: Double;
-    begin
-      -- Set as Height the distance to Root
-      Nod_Inf := Value(Nod);
-      if Is_Root(Nod) then
-        Hn := 0.0;
-        Set_Height(Nod_Inf, Hn);
-      else
-        Parent_Inf := Value(Get_Parent(Nod));
-        Hp := Get_Height(Parent_Inf);
-        Lnp := Get_Length(Nod_Inf);
-        Hn := Hp - Lnp;
-        Set_Height(Nod_Inf, Hn);
-      end if;
-      Set_Leaf(Nod_Inf, Is_Leaf(Nod));
-      Set_Value(Nod, Nod_Inf);
-    end Update_Node_Info;
-
-    procedure Update_Nodes is new Generic_Depth_First_Preorder_Traversal(Update_Node_Info);
-
   begin
-    Update_Nodes(T);
+    Set_Heights(T);
     Set_Id(T);
     Set_Num_Leaves(T);
   end Complete_Information_Newick;
+
+  ------------------------------------------
+  -- Complete_Information_Json --
+  ------------------------------------------
+
+  procedure Complete_Information_Json(T: in Dendrogram) is
+
+    use Nodes_Lists;
+
+    function Has_Heights(T: in Dendrogram) return Boolean is
+      Ln: List_Of_Nodes;
+      Hr: Double;
+      Has: Boolean;
+    begin
+      Has := False;
+      Hr := Get_Height(Value(T));
+      if Hr /= Get_Height(Void_Node_Info) then
+        Has := True;
+      else
+        Get_Leaves(T, Ln);
+        Save(Ln);
+        Reset(Ln);
+        while Has_Next(Ln) loop
+          if Get_Height(Value(Next(Ln))) /= Hr then
+            Has := True;
+            exit;
+          end if;
+        end loop;
+        Restore(Ln);
+        Free(Ln);
+      end if;
+      return Has;
+    end Has_Heights;
+
+  begin
+    if not Has_Heights(T) then
+      Set_Heights(T);
+    end if;
+    Set_Id(T);
+    Set_Num_Leaves(T);
+  end Complete_Information_Json;
 
   ------------
   -- Set_Id --
@@ -508,6 +553,7 @@ package body Dendrograms.IO is
       else
         Num_Leaves := 0;
       end if;
+      Set_Leaf(Nod_Inf, Is_Leaf(Nod));
       Set_Num_Leaves(Nod_Inf, Num_Leaves);
       Set_Value(Nod, Nod_Inf);
     end Reset_Node_Num_Leaves;
@@ -533,5 +579,36 @@ package body Dendrograms.IO is
     Reset_Nodes(T);
     Update_Nodes(T);
   end Set_Num_Leaves;
+
+  -----------------
+  -- Set_Heights --
+  -----------------
+
+  procedure Set_Heights(T: in Dendrogram) is
+
+    procedure Update_Node_Info(Nod: in Node) is
+      Parent_Inf, Nod_Inf: Node_Info;
+      Lnp, Hp, Hn: Double;
+    begin
+      -- Set as Height the distance to Root
+      Nod_Inf := Value(Nod);
+      if Is_Root(Nod) then
+        Hn := 0.0;
+        Set_Height(Nod_Inf, Hn);
+      else
+        Parent_Inf := Value(Get_Parent(Nod));
+        Hp := Get_Height(Parent_Inf);
+        Lnp := Get_Length(Nod_Inf);
+        Hn := Hp - Lnp;
+        Set_Height(Nod_Inf, Hn);
+      end if;
+      Set_Value(Nod, Nod_Inf);
+    end Update_Node_Info;
+
+    procedure Update_Nodes is new Generic_Depth_First_Preorder_Traversal(Update_Node_Info);
+
+  begin
+    Update_Nodes(T);
+  end Set_Heights;
 
 end Dendrograms.IO;

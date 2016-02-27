@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -292,7 +292,7 @@ procedure Statistics_Test is
     Put_Line("      Simple Linear Regression X = a Y + b :  a = " & F2S(A, Aft => Aft, Exp => 0) & "   b = " & F2S(B, Aft => Aft, Exp => 0));
     -- Weighted (all equal)
     Wh.all := (others => 2.0);
-    Put("    Weighted: "); Put(Wh.All);
+    Put("    Weighted: "); Put(Wh.all);
     Put_Line("      Covariance : " & F2S(Covariance(P1, P2, Wh), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Pearson)  : " & F2S(Correlation(P1, P2, Wh), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Spearman) : " & F2S(Spearman_Correlation(P1, P2, Wh), Aft => Aft, Exp => 0));
@@ -305,7 +305,7 @@ procedure Statistics_Test is
     -- Weighted (not equal)
     Wh.all := (others => 2.0);
     Wh(Wh'First) := 1.0;
-    Put("    Weighted: "); Put(Wh.All);
+    Put("    Weighted: "); Put(Wh.all);
     Put_Line("      Covariance : " & F2S(Covariance(P1, P2, Wh), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Pearson)  : " & F2S(Correlation(P1, P2, Wh), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Spearman) : " & F2S(Spearman_Correlation(P1, P2, Wh), Aft => Aft, Exp => 0));

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -380,7 +380,7 @@ package body Arrays_Utils is
   procedure Swap(A: in out Items; P1, P2: in Integer) is
     Tmp: Item;
   begin
-    if P1 not in A'range or P2 not in A'range then
+    if P1 not in A'Range or P2 not in A'Range then
       raise Array_Index_Error;
     end if;
     Tmp := A(P1);
@@ -398,7 +398,7 @@ package body Arrays_Utils is
     if A = null then
       raise Uninitialized_Array_Error;
     end if;
-    if P1 not in A'range or P2 not in A'range then
+    if P1 not in A'Range or P2 not in A'Range then
       raise Array_Index_Error;
     end if;
     Tmp := A(P1);

@@ -1,12 +1,25 @@
 ===================================================================
-== Radalib 20151207-135508                                       ==
+== Radalib 20160227-144606                                       ==
 ==                                                               ==
-== Copyright (c) 2015 by                                         ==
+== Copyright (c) 2016 by                                         ==
 ==   Sergio Gomez             (sergio.gomez@urv.cat)             ==
 ==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==
 ==                                                               ==
 == See LICENSE.txt                                               ==
 ===================================================================
+
+
+--------
+Contents
+--------
+
+- Description
+- Structure
+- Compilation
+- Radalib library
+- Radalib tools
+- License
+- Acknowledgements
 
 
 -----------
@@ -85,6 +98,13 @@ Their contents are:
 - radalib\maintenance
     Scripts to simplify the upgrade and installation of Radalib in the different
     platforms.
+
+
+The size of radalib at version radalib-20160202-112148 is:
+
+Code   :   249 Ada files
+Files  :   658 files
+Source : 60348 lines of Ada code
 
 
 -----------
@@ -279,7 +299,7 @@ The tools in Radalib are:
 License
 -------
 
-Radalib, Copyright (c) 2015 by
+Radalib, Copyright (c) 2016 by
 Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 
 This library is free software; you can redistribute it and/or modify it under the terms

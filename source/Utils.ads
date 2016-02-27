@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 11/05/2005
--- @revision 18/12/2014
+-- @revision 19/02/2016
 -- @brief Several Utils
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -32,6 +32,8 @@ with Arrays_Float;
 with Arrays_Double;
 
 package Utils is
+
+  -- Basic types
 
   subtype Double is Long_Float;
   subtype Longint is Long_Long_Integer;
@@ -122,26 +124,31 @@ package Utils is
   type PPsUstrings is access PsUstrings;
 
 
+  -- Constants
+
   HTab  : constant Character := HT;
   NLine : constant Character := LF;
 
-  Standard_Spaces     : constant Characters := (' ', HT, VT, FF, LF, CR);
-  Standard_Comments   : constant Characters := ('#', ''');
-  Standard_Separators : constant Characters := (',', ';', ':', '|');
-
   Default_Round_Decimals: constant Natural := 0;
 
-  Default_String_Width: constant Natural := 0;
-
-  Default_Integer_Width: constant Field := 0;
-
-  Default_Longint_Width: constant Field := 0;
+  Default_String_Width : constant Natural := 0;
+  Default_Integer_Width: constant Field   := 0;
+  Default_Longint_Width: constant Field   := 0;
 
   Default_Float_Aft: constant Field := Ada.Float_Text_IO.Default_Aft;
   Default_Float_Exp: constant Field := Ada.Float_Text_IO.Default_Exp;
 
   Default_Double_Aft: constant Field := Ada.Long_Float_Text_IO.Default_Aft;
   Default_Double_Exp: constant Field := Ada.Long_Float_Text_IO.Default_Exp;
+
+  Standard_Spaces      : constant Characters(1..6) := (' ', HT, VT, FF, LF, CR);
+  Standard_Comments    : constant Characters(1..1) := (1 => '#');
+  Standard_Separators  : constant Characters(1..4) := (',', ';', ':', '|');
+  Standard_Quotes_Open : constant Characters(1..1) := (1 => '"');
+  Standard_Quotes_Close: constant Characters(1..1) := (1 => '"');
+
+  Key_Value_Pair_Error: exception;
+  Quotes_Error: exception;
 
 
   -- Purpose : Obtain a Type Id from its Name
@@ -890,6 +897,20 @@ package Utils is
   function Is_Separator(C: in Character) return Boolean;
   pragma Inline(Is_Separator);
 
+  -- Purpose : Check if a Character is an Open Quote Character
+  --
+  -- C       : The Character
+  -- return  : True if Character is an Open Quote Character
+  function Is_Open_Quote(C: in Character) return Boolean;
+  pragma Inline(Is_Open_Quote);
+
+  -- Purpose : Check if a Character is a Close Quote Character
+  --
+  -- C       : The Character
+  -- return  : True if Character is a Close Quote Character
+  function Is_Close_Quote(C: in Character) return Boolean;
+  pragma Inline(Is_Close_Quote);
+
   -- Purpose : Obtain the Space Characters
   --
   -- return  : The Space Characters
@@ -904,6 +925,16 @@ package Utils is
   --
   -- return  : The Separator Characters
   function Get_Separators return Characters;
+
+  -- Purpose : Obtain the Open Quote Characters
+  --
+  -- return  : The Open Quote Characters
+  function Get_Quotes_Open return Characters;
+
+  -- Purpose : Obtain the Close Quote Characters
+  --
+  -- return  : The Close Quote Characters
+  function Get_Quotes_Close return Characters;
 
   -- Purpose : Set the Space Characters
   --
@@ -920,6 +951,13 @@ package Utils is
   -- L       : The Separator Characters
   procedure Set_Separators(L: in Characters := Standard_Separators);
 
+  -- Purpose : Set the Quote Characters
+  --
+  -- L_Open  : The Open Quote Characters
+  -- L_Close : The Close Quote Characters
+  -- raises  : Quotes_Error
+  procedure Set_Quotes(L_Open: in Characters := Standard_Quotes_Open; L_Close: in Characters := Standard_Quotes_Close);
+
   -- Purpose : Add a Space Character
   --
   -- C       : The Space Character
@@ -934,6 +972,12 @@ package Utils is
   --
   -- C       : The Separator Character
   procedure Add_Separator(C: in Character);
+
+  -- Purpose : Add Quote Characters
+  --
+  -- C_Open  : The Open Quote Character
+  -- C_Close : The Close Quote Character
+  procedure Add_Quotes(C_Open, C_Close: in Character);
 
   -- Purpose : Dummy function for the addition of two Characters
   --
@@ -951,19 +995,11 @@ package Utils is
   function "*"(Left, Right: in Character) return Character;
   pragma Inline("*");
 
-  -- Purpose : Dummy function for the addition of two Unbounded Strings
+  -- Purpose : Longest of two Unbounded Strings
   --
   -- Left    : The Left Unbounded String
   -- Right   : The Right Unbounded String
-  -- return  : The largest Unbounded String
-  function "+"(Left, Right: in Ustring) return Ustring;
-  pragma Inline("+");
-
-  -- Purpose : Dummy function for the product of two Unbounded Strings
-  --
-  -- Left    : The Left Unbounded String
-  -- Right   : The Right Unbounded String
-  -- return  : The largest Unbounded String
+  -- return  : The longest Unbounded String
   function "*"(Left, Right: in Ustring) return Ustring;
   pragma Inline("*");
 
@@ -981,6 +1017,13 @@ package Utils is
   -- Power   : The Power
   -- return  : The Power of the String
   function "**"(S: in String; Power: in Natural) return String;
+
+  -- Purpose : Power of an Unbounded String
+  --
+  -- U       : The Unbounded String
+  -- Power   : The Power
+  -- return  : The Power of the Unbounded String
+  function "**"(U: in Ustring; Power: in Natural) return Ustring;
 
   function "+"(Left: in Integer; Right: in Float) return Float;
   pragma Inline("+");
@@ -1011,6 +1054,21 @@ package Utils is
   pragma Inline("*");
   function "/"(Left: in Double; Right: in Integer) return Double;
   pragma Inline("/");
+
+  function Concat(Left, Right: in Unbounded_String) return Unbounded_String renames Ada.Strings.Unbounded."&";
+  function Concat(Left: in Unbounded_String; Right: in String) return Unbounded_String renames Ada.Strings.Unbounded."&";
+  function Concat(Left: in String; Right: in Unbounded_String) return Unbounded_String renames Ada.Strings.Unbounded."&";
+  function Concat(Left: in Unbounded_String; Right: in Character) return Unbounded_String renames Ada.Strings.Unbounded."&";
+  function Concat(Left : in Character; Right : in Unbounded_String) return Unbounded_String renames Ada.Strings.Unbounded."&";
+  function Equal(Left, Right: in Unbounded_String) return Boolean renames Ada.Strings.Unbounded."=";
+  function Equal(Left: in Unbounded_String; Right: in String) return Boolean renames Ada.Strings.Unbounded."=";
+  function Equal(Left: in String; Right: in Unbounded_String) return Boolean renames Ada.Strings.Unbounded."=";
+
+  function "+"(Left, Right: in Unbounded_String) return Unbounded_String renames Concat;
+  function "+"(Left: in Unbounded_String; Right: in String) return Unbounded_String renames Concat;
+  function "+"(Left: in String; Right: in Unbounded_String) return Unbounded_String renames Concat;
+  function "+"(Left: in Unbounded_String; Right: in Character) return Unbounded_String renames Concat;
+  function "+"(Left : in Character; Right : in Unbounded_String) return Unbounded_String renames Concat;
 
   function S2U(S: in String) return Unbounded_String renames To_Unbounded_String;
   function U2S(U: in Unbounded_String) return String renames To_String;
@@ -1117,8 +1175,10 @@ package Utils is
 
 private
 
-  Spaces     : PCharacters;
-  Comments   : PCharacters;
-  Separators : PCharacters;
+  Spaces       : PCharacters;
+  Comments     : PCharacters;
+  Separators   : PCharacters;
+  Quotes_Open  : PCharacters;
+  Quotes_Close : PCharacters;
 
 end Utils;

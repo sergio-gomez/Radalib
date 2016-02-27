@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -175,7 +175,7 @@ package body Graphs.Structure is
     end loop;
     Initialize(Gr, Pgr'Length, Is_Dir);
 
-    for I in Pgr'range loop
+    for I in Pgr'Range loop
       Vf := Get_Vertex(Gr, I);
       if Pgr(I).From /= null then
         for K in Pgr(I).From'Range loop
@@ -198,7 +198,7 @@ package body Graphs.Structure is
   procedure Free(Pgr: in out Public_Graph) is
   begin
     if Pgr /= null then
-      for I in Pgr'range loop
+      for I in Pgr'Range loop
         if Pgr(I).From = Pgr(I).To then
           if Pgr(I).From /= null then
             Dispose(Pgr(I).From);

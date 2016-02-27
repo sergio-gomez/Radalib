@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -71,7 +71,7 @@ package body Graphs.Algorithms is
 
     if Gr.Directed then
       Gr.Directed := False;
-      for F in Gr.Vertices'range loop
+      for F in Gr.Vertices'Range loop
         Llt := Gr.Vertices(F).To;
         Llf := Gr.Vertices(F).From;
         Save(Llt);

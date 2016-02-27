@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 10/05/2013
--- @revision 13/04/2015
+-- @revision 01/02/2016
 -- @brief Test of Dendrograms packages
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -38,6 +38,7 @@ procedure Dendrograms_Test is
   Fn_Text1 : constant String := "dendrograms_test-text_1.txt";
   Fn_Text2 : constant String := "dendrograms_test-text_2.txt";
   Fn_Newick: constant String := "dendrograms_test-newick.txt";
+  Fn_Json  : constant String := "dendrograms_test-json.txt";
   Fn_Dist  : constant String := "dendrograms_test-dist.txt";
 
   -- Show Data
@@ -180,6 +181,11 @@ procedure Dendrograms_Test is
 
 begin
 
+  Get_Dendrogram(Fn_Text1, Dendro);
+  Put_Dendrogram(Fn_Newick, Dendro, Precision => 1, Format => Newick_Tree);
+  Put_Dendrogram(Fn_Json, Dendro, Precision => 1, Format => Json_Tree);
+  Free(Dendro);
+
   -- Dendrogram in Text Form
   Put_Line("---------------------------");
   Put_Line("Get Dendrogram in Text form");
@@ -191,6 +197,8 @@ begin
   Put_Dendrogram(Dendro, Precision => 1, Format => Text_Tree);
   New_Line;
   Put_Dendrogram(Dendro, Precision => 1, Format => Newick_Tree);
+  New_Line;
+  Put_Dendrogram(Dendro, Precision => 1, Format => Json_Tree);
   New_Line;
   Print_Dendrogram_Structure(Dendro);          -- implemented here using Dendrograms.Structure
   New_Line;
@@ -221,6 +229,8 @@ begin
   New_Line;
   Put_Dendrogram(Dendro, Precision => 1, Format => Newick_Tree);
   New_Line;
+  Put_Dendrogram(Dendro, Precision => 1, Format => Json_Tree);
+  New_Line;
   Put_Dendrogram_Structure(Dendro, Aft => 2);
   New_Line;
   Um := Get_Ultrametric_Matrix(Dendro);
@@ -241,6 +251,31 @@ begin
   Put_Dendrogram(Dendro, Precision => 1, Format => Text_Tree);
   New_Line;
   Put_Dendrogram(Dendro, Precision => 1, Format => Newick_Tree);
+  New_Line;
+  Put_Dendrogram(Dendro, Precision => 1, Format => Json_Tree);
+  New_Line;
+  Put_Dendrogram_Structure(Dendro, Aft => 2);
+  New_Line;
+  Um := Get_Ultrametric_Matrix(Dendro);
+  Put_Data(Um, null, null, No_Value, Aft => 1);
+  New_Line;
+
+  Free(Um);
+  Free(Dendro);
+
+  -- Dendrogram in JSON Form
+  Put_Line("---------------------------");
+  Put_Line("Get Dendrogram in JSON form");
+  Put_Line("---------------------------");
+  New_Line;
+
+  Get_Dendrogram(Fn_Json, Dendro);
+
+  Put_Dendrogram(Dendro, Precision => 1, Format => Text_Tree);
+  New_Line;
+  Put_Dendrogram(Dendro, Precision => 1, Format => Newick_Tree);
+  New_Line;
+  Put_Dendrogram(Dendro, Precision => 1, Format => Json_Tree);
   New_Line;
   Put_Dendrogram_Structure(Dendro, Aft => 2);
   New_Line;

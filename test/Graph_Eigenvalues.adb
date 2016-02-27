@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -76,7 +76,7 @@ begin
     Restore(El);
   end loop;
 
-  Eig.All := Eigenvalues(Wh.All);
+  Eig.all := Eigenvalues(Wh.all);
   Sort(Eig);
   Put_Line("  Maximum eigenvalue: " & F2S(Eig(Eig'Last), Aft => 6));
   Put_Line("  Minimum eigenvalue: " & F2S(Eig(Eig'First), Aft => 6));

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/05/2005
--- @revision 26/10/2014
+-- @revision 31/10/2014
 -- @brief Test of Utils package
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -28,6 +28,7 @@ with Utils.IO_Integer; use Utils.IO_Integer;
 with Utils.IO_Float; use Utils.IO_Float;
 
 procedure Utils_Test is
+  Separators_Json: constant Characters := ('{', '}', '[', ']', ',', ':');
   Fn: constant String := "utils_test.txt";
   Fn_In: String := "..\test\utils_test.txt";
   Ft: File_Type;
@@ -35,6 +36,7 @@ procedure Utils_Test is
   I: Integer;
   X: Float;
   D: Double;
+  Us, Key, Value: Ustring;
 begin
   Fn_In := Argument(1);
   Put_Line("Current Date and Time:  " & To_String(Clock));
@@ -217,13 +219,48 @@ begin
         Put(" ");
         Put(I, Width => 0);
       end if;
-      if Separator_Skip(Ft) then
-        Put(To_Uppercase(" Si"));
+      if Separator_Skip(Ft, Sep => ':', Strict => True) then
+        Put(" OK");
       else
-        Put(To_Lowercase(" No"));
+        Put(" Wrong_Separator");
+        Separator_Skip(Ft, Sep => ':', Strict => False);
       end if;
     end loop;
     Skip_Line(Ft);
+    New_Line(2);
+
+    while not End_Of_Line(Ft) loop
+      Separator_Skip(Ft);
+      if not End_Of_Line(Ft) then
+        Get_Word(Ft, Us);
+        Put_Line(U2S(Us));
+      end if;
+    end loop;
+    Skip_Line(Ft);
+    New_Line;
+
+    Add_Quotes('<', '>');
+    Add_Quotes(''', ''');
+    while not End_Of_Line(Ft) loop
+      Separator_Skip(Ft);
+      if not End_Of_Line(Ft) then
+        Get_Quoted_Word(Ft, Us);
+        Put_Line(U2S(Us));
+      end if;
+    end loop;
+    Skip_Line(Ft);
+    New_Line;
+
+    Set_Separators(Separators_Json);
+    Comments_Skip(Ft);
+    if Separator_Skip(Ft, '{', Strict => True) then
+      loop
+        Get_Pair(Ft, Key, Value, Sep => ':');
+        Put_Line(U2S(Key) & ": " & U2S(Value));
+        exit when not Separator_Skip(Ft, ',', Strict => True);
+      end loop;
+    end if;
+    Separator_Skip(Ft, '}', Strict => True);
     New_Line;
 
     while not End_Of_File(Ft) loop
@@ -231,14 +268,14 @@ begin
       Line_Comment_Skip(Ft);
       if not End_Of_Line(Ft) then
         Get_Word(Ft, W);
-        Put(W.All);
+        Put(W.all);
         Free_Word(W);
       end if;
       while not End_Of_Line(Ft) loop
         Separator_Skip(Ft);
         Get_Word(Ft, W);
         if W.all'Length > 0 then
-          Put(" " & W.All);
+          Put(" " & W.all);
         end if;
         Free_Word(W);
         Line_Spaces_Skip(Ft);

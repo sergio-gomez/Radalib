@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -35,8 +35,8 @@ package body Friends_Of_Friends_Utils is
   begin
     Data := new Data_Array(1..Num_Data);
     Open(F, In_File, Fn);
-    for I in Data'range loop
-      for J in Data(I)'range loop
+    for I in Data'Range loop
+      for J in Data(I)'Range loop
         Get(F, Data(I)(J));
       end loop;
       Skip_Line(F);
@@ -47,7 +47,7 @@ package body Friends_Of_Friends_Utils is
   function Euclidean_Friends(D1, D2: in Data_Item) return Boolean is
     Dist2: Float := 0.0;
   begin
-    for J in Data_Item'range loop
+    for J in Data_Item'Range loop
       Dist2 := Dist2 + (D1(J) - D2(J))**2;
     end loop;
     return Dist2 < Friends_Cut**2;

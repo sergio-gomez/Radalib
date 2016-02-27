@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -152,7 +152,7 @@ package body Graphs.Properties is
     end if;
 
     Ne := 0;
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Ne := Ne + Natural(Degree_From(Vertex'(Gr, I), Ls));
     end loop;
     return Num(Ne);
@@ -170,7 +170,7 @@ package body Graphs.Properties is
     end if;
 
     Nsl := 0;
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       if Has_Self_Loop(Vertex'(Gr, I), Ls) then
         Nsl := Nsl + 1;
       end if;
@@ -269,7 +269,7 @@ package body Graphs.Properties is
     end if;
 
     Total := 0;
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Total := Total + Natural(Degree_From(Vertex'(Gr, I), Ls));
     end loop;
     return Num(Total);
@@ -569,7 +569,7 @@ package body Graphs.Properties is
     end if;
 
     Total := 0.0;
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Total := Total + Strength_From(Vertex'(Gr, I), Ls);
     end loop;
     return Total;
@@ -684,7 +684,7 @@ package body Graphs.Properties is
     end if;
 
     Total := 0.0;
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Total := Total + Self_Loop(Vertex'(Gr, I), Ls);
     end loop;
     return Total;
@@ -880,7 +880,7 @@ package body Graphs.Properties is
     if (not Weighted) and Normalized then
       H.all := (others => 1.0);
     else
-      for I in Gr.Vertices'range loop
+      for I in Gr.Vertices'Range loop
         H(I) := Entropy(Vertex'(Gr, I), Ld, Weighted, Normalized);
       end loop;
     end if;
@@ -906,7 +906,7 @@ package body Graphs.Properties is
     end if;
 
     Sum := 0.0;
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Sum := Sum + Entropy(Vertex'(Gr, I), Ld, Weighted, Normalized);
     end loop;
     return Sum / Num(Gr.Size);
@@ -1184,7 +1184,7 @@ package body Graphs.Properties is
     end if;
 
     Apl := Alloc(1, Gr.Size);
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Apl(I) := Average_Path_Length(Vertex'(Gr, I), Weighted, Ld);
     end loop;
     return Apl;
@@ -1208,7 +1208,7 @@ package body Graphs.Properties is
       return 0.0;
     end if;
     Sum := 0.0;
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Sum := Sum + Average_Path_Length(Vertex'(Gr, I), Weighted);
     end loop;
     return Sum / Num(Gr.Size);
@@ -1248,7 +1248,7 @@ package body Graphs.Properties is
     end if;
 
     Mpl := Alloc(1, Gr.Size);
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Mpl(I) := Maximum_Path_Length(Vertex'(Gr, I), Weighted, Ld);
     end loop;
     return Mpl;
@@ -1269,7 +1269,7 @@ package body Graphs.Properties is
     end if;
 
     Diam := 0.0;
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Max := Maximum_Path_Length(Vertex'(Gr, I), Weighted);
       if Max > Diam then
         Diam := Max;
@@ -1319,7 +1319,7 @@ package body Graphs.Properties is
     end if;
 
     Eff := Alloc(1, Gr.Size);
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Eff(I) := Efficiency(Vertex'(Gr, I), Weighted, Ld);
     end loop;
     return Eff;
@@ -1343,7 +1343,7 @@ package body Graphs.Properties is
       return 1.0;
     end if;
     Sum := 0.0;
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Sum := Sum + Efficiency(Vertex'(Gr, I), Weighted);
     end loop;
     return Sum / Num(Gr.Size);
@@ -1546,7 +1546,7 @@ package body Graphs.Properties is
     end if;
 
     Cc := Alloc(1, Gr.Size);
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Cc(I) := Clustering_Coefficient(Vertex'(Gr, I), Weighted, Ls);
     end loop;
     return Cc;
@@ -1564,7 +1564,7 @@ package body Graphs.Properties is
     end if;
 
     Sum := 0.0;
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Sum := Sum + Clustering_Coefficient(Vertex'(Gr, I), Weighted, Ls);
     end loop;
     return Sum / Num(Gr.Size);

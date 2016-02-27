@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/05/2008
--- @revision 19/09/2015
+-- @revision 26/02/2016
 -- @brief Modularity optimization by combination of different heuristics
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -39,7 +39,7 @@ procedure Communities_Detection is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2015 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2016 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
@@ -57,7 +57,6 @@ procedure Communities_Detection is
     Put_Line("==   - spectral optimization (s)                                 ==");
     Put_Line("==   - fast algorithm (f)                                        ==");
     Put_Line("==   - fine-tuning by reposition (r) or bootstrapping (b)        ==");
-    Put_Line("== See README.txt                                                ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;

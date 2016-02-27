@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -95,7 +95,7 @@ begin
 
   M := Alloc(1, D1, 1, D2, 0.0);
   for I in M'Range(1) loop
-    for J in M'range(2) loop
+    for J in M'Range(2) loop
       if I /= J then
         M(I, J) := Float(I + J);
       end if;
@@ -111,7 +111,7 @@ begin
   Put(V.all);
   New_Line;
 
-  Put(Slice(M.All, 2, D1));
+  Put(Slice(M.all, 2, D1));
   New_Line;
 
   W := Alloc(2, D1);
@@ -128,7 +128,7 @@ begin
   Put(W.all, Aft => 1);
   New_Line;
 
-  W.all := Eigenvalues(Q.All);
+  W.all := Eigenvalues(Q.all);
 --  Sort(W.all);
   Put(W.all, Aft => 5);
   New_Line;
@@ -233,7 +233,7 @@ begin
 
   Put_Line("Sorting an irregular matrix");
   P := Alloc(10, 30);
-  for I in P'range loop
+  for I in P'Range loop
     P(I) := Alloc(1, 3 + Random_Uniform(G, 0, 2));
     for J in P(I)'Range loop
       P(I)(J) := Float(Random_Uniform(G, 0, 4));
@@ -247,7 +247,7 @@ begin
 
   Put_Line("Sorting a triangular matrix");
   P := Alloc_Upper(1, 9);
-  for I in P'range loop
+  for I in P'Range loop
     for J in P(I)'Range loop
       P(I)(J) := Float(Random_Uniform(G, 0, 4));
     end loop;
@@ -289,7 +289,7 @@ begin
         V(I) := Random(G);
       end loop;
       Sort(V);
-      if not Sorted(V.All) then
+      if not Sorted(V.all) then
         Put_Line("  Error found!");
         New_Line;
         return;

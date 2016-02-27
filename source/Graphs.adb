@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -98,7 +98,7 @@ package body Graphs is
     end if;
 
     Gr_Clone := new Graph_Rec(Gr.Size);
-    Gr_Clone.All := Gr.All;
+    Gr_Clone.all := Gr.all;
     Gr_Clone.Names_Map := Empty_Map;
     for I in Gr.Vertices'Range loop
       Gr_Clone.Vertices(I).From := Clone(Gr.Vertices(I).From);
@@ -150,7 +150,7 @@ package body Graphs is
 
     if not Gr.Directed then
       Gr.Directed := True;
-      for F in Gr.Vertices'range loop
+      for F in Gr.Vertices'Range loop
         Gr.Vertices(F).From := Clone(Gr.Vertices(F).To);
       end loop;
     end if;
@@ -171,7 +171,7 @@ package body Graphs is
 
     if Gr.Directed then
       Gr.Directed := False;
-      for F in Gr.Vertices'range loop
+      for F in Gr.Vertices'Range loop
         Llt := Gr.Vertices(F).To;
         Llf := Gr.Vertices(F).From;
         Save(Llt);
@@ -224,7 +224,7 @@ package body Graphs is
 
     Symmetric := True;
     if Gr.Directed then
-      for F in Gr.Vertices'range loop
+      for F in Gr.Vertices'Range loop
         Llf := Gr.Vertices(F).To;
         Save(Llf);
         Reset(Llf);
@@ -272,7 +272,7 @@ package body Graphs is
     end if;
 
     Weighted := False;
-    for F in Gr.Vertices'range loop
+    for F in Gr.Vertices'Range loop
       Llf := Gr.Vertices(F).To;
       Save(Llf);
       Reset(Llf);
@@ -302,7 +302,7 @@ package body Graphs is
       raise Uninitialized_Graph_Error;
     end if;
 
-    for F in Gr.Vertices'range loop
+    for F in Gr.Vertices'Range loop
       Llf := Gr.Vertices(F).To;
       Save(Llf);
       Reset(Llf);
@@ -316,7 +316,7 @@ package body Graphs is
     end loop;
 
     if Gr.Directed then
-      for T in Gr.Vertices'range loop
+      for T in Gr.Vertices'Range loop
         Llt := Gr.Vertices(T).From;
         Save(Llt);
         Reset(Llt);
@@ -678,7 +678,7 @@ package body Graphs is
       raise Uninitialized_Graph_Error;
     end if;
 
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       if Has_Self_Loop(Vertex'(Gr, I)) then
         Num := Num + 1;
       end if;
@@ -1067,7 +1067,7 @@ package body Graphs is
       raise Uninitialized_Graph_Error;
     end if;
 
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Gr.Vertices(I).Marked := True;
     end loop;
   end Mark;
@@ -1082,7 +1082,7 @@ package body Graphs is
       raise Uninitialized_Graph_Error;
     end if;
 
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       Gr.Vertices(I).Marked := False;
     end loop;
   end Unmark;
@@ -1102,7 +1102,7 @@ package body Graphs is
     else
       Clear(Gr.Names_Map);
     end if;
-    for I in Gr.Vertices'range loop
+    for I in Gr.Vertices'Range loop
       if Contains(Gr.Names_Map, Gr.Vertices(I).Name) then
         Clear(Gr.Names_Map);
         raise Non_Unique_Names_Error;

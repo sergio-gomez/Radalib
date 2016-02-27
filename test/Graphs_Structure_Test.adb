@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -100,7 +100,7 @@ procedure Graphs_Structure_Test is
 
   procedure Put(Pgr: in Public_Graph) is
   begin
-    for F in Pgr'range loop
+    for F in Pgr'Range loop
       Put(F, Width => 2); Put(" -> ");
       if Pgr(F).From = null then
         Put_Line("(0)");
@@ -126,7 +126,7 @@ procedure Graphs_Structure_Test is
       end if;
     end loop;
     Put_Line("---");
-    for F in Pgr'range loop
+    for F in Pgr'Range loop
       Put(F, Width => 2); Put(" -> ");
       if Pgr(F).From = null then
         Put_Line("(0)");

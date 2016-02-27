@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -35,7 +35,7 @@ begin
   Wh := Alloc(1, N, 0.0);
   Put_Line("  OK");
 
-  Wh.All := (others => (others => 1.0));
+  Wh.all := (others => (others => 1.0));
 
   Put_Line("Tranposing the matrix, using the stack to hold the matrix as parameter");
   Wh.all := Transpose(Wh.all);

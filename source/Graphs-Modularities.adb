@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -192,7 +192,7 @@ package body Graphs.Modularities is
       raise Uninitialized_Modularity_Info_Error;
     end if;
 
-    for I in Mi.From'range loop
+    for I in Mi.From'Range loop
       Vf := Get_Vertex(Mi.Gr, I);
       Mi.From(I).K := Degree_From(Vf);
       Mi.From(I).W := Strength_From(Vf);
@@ -225,7 +225,7 @@ package body Graphs.Modularities is
       end if;
     end loop;
     if Mi.Directed then
-      for J in Mi.To'range loop
+      for J in Mi.To'Range loop
         Vt := Get_Vertex(Mi.Gr, J);
         Mi.To(J).K := Degree_To(Vt);
         Mi.To(J).W := Strength_To(Vt);
@@ -266,7 +266,7 @@ package body Graphs.Modularities is
     Tula := 0.0;
     Tsl := 0.0;
     Tsln := 0;
-    for I in Mi.From'range loop
+    for I in Mi.From'Range loop
       Ki := Mi.From(I).K;
       Wi := Mi.From(I).W;
       Tk := Tk + Ki;
@@ -277,7 +277,7 @@ package body Graphs.Modularities is
       if Mi.From(I).Has_Self_Loop or Mi.Resistance /= No_Resistance then
         Tsln := Tsln + 1;
       end if;
-      for J in Mi.To'range loop
+      for J in Mi.To'Range loop
         Kj := Mi.To(J).K;
         Wj := Mi.To(J).W;
         if Ki + Kj > 0 then
@@ -591,7 +591,7 @@ package body Graphs.Modularities is
     end if;
 
     Modularity := 0.0;
-    for I in Mi.Lower_Q'range loop
+    for I in Mi.Lower_Q'Range loop
       Modularity := Modularity + Mi.Lower_Q(I).Total;
     end loop;
     return Modularity;
@@ -610,7 +610,7 @@ package body Graphs.Modularities is
 
     Modularity.Reward := 0.0;
     Modularity.Penalty := 0.0;
-    for I in Mi.Lower_Q'range loop
+    for I in Mi.Lower_Q'Range loop
       Modularity.Reward := Modularity.Reward + Mi.Lower_Q(I).Reward;
       Modularity.Penalty := Modularity.Penalty + Mi.Lower_Q(I).Penalty;
     end loop;

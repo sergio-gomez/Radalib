@@ -6,7 +6,7 @@ radalib in Mac
 How to install the GNAT Ada compiler
 ------------------------------------
 
-1) Download the GNAT Ada GPL 2015, or newer, from
+1) Download GNAT Ada GPL 2015, or newer, from
       http://libre.adacore.com
    Choose at least the following component:
       GNAT Ada GPL : Ada compiler and IDE
@@ -21,7 +21,7 @@ How to install the GNAT Ada compiler
       $ cd gnat-gpl-2015-x86_64-darwin-bin
       $ sudo ./doinstall
    We will assume that GNAT has been installed in the directory
-      /usr/gnat/
+      /usr/local/gnat/
 
 
 -----------------------------------------
@@ -34,8 +34,8 @@ How to install radalib for the first time
 1) Select a folder for the installation, e.g.
       /Users/MyUsername/ada
 
-2) Add the following lines to your /Users/MyUsername/.profile or
-   /Users/MyUsername/.bash_profile, using the previously chosen values
+2) Add the following lines to your /Users/MyUsername/.bash_profile or
+   /Users/MyUsername/.profile, using the previously chosen values
    of the GNAT and radalib installation directories:
       export PATH=/usr/local/gnat/bin:$PATH
       export RADALIB_ROOT=/Users/MyUsername/ada/radalib
@@ -43,7 +43,7 @@ How to install radalib for the first time
       export ADA_OBJECTS_PATH=$RADALIB_ROOT/compiled
 
 3) Execute these exports, e.g. by re-running .profile:
-      $ . /Users/MyUsername/.profile
+      $ . /Users/MyUsername/.bash_profile
 
 4) Go to the installation folder:
       $ cd /Users/MyUsername/ada

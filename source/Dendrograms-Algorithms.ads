@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 11/05/2013
--- @revision 09/03/2015
+-- @revision 19/02/2016
 -- @brief Dendrograms Algorithms
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
@@ -24,6 +24,9 @@ with Statistics_Double; use Statistics_Double;
 with Utils; use Utils;
 
 package Dendrograms.Algorithms is
+
+  No_Internal_Node_Name: constant Ustring := S2U("None");
+  Internal_Node_Name_Prefix: Ustring := S2U("Cluster_");
 
   -- Types
   type Dendrogram_Type is (Binary_Dendrogram,
@@ -433,6 +436,6 @@ private
   -- Pt      : The Proximity Type
   -- Ct      : The Clustering Type
   -- Precision:The number of Significant Digits for the calculations
-  procedure Join_Clusters(Lol: in List_Of_Lists; Clus, Clus_Prev: in PClusters; Total_Clus: in out Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural);
+  procedure Join_Clusters(Lol: in List_Of_Lists; Clus, Clus_Prev: in PClusters; Total_Clus: in out Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural; Internal_Names: in Boolean);
 
 end Dendrograms.Algorithms;

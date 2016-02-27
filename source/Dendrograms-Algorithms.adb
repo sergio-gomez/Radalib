@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 11/05/2013
--- @revision 09/03/2015
+-- @revision 19/02/2016
 -- @brief Dendrograms Algorithms
 
 with Ada.Unchecked_Deallocation;
@@ -182,6 +182,7 @@ package body Dendrograms.Algorithms is
     Name: Ustring;
     Total_Clus, Num_Clus: Positive;
     Lol: List_Of_Lists;
+    Internal_Names: Boolean;
 
   begin
     Check_Data(Data, Names);
@@ -228,13 +229,14 @@ package body Dendrograms.Algorithms is
     end loop;
 
     -- Agglomerative Hierarchical Clustering
+    Internal_Names := not Equal(Capitalize(Internal_Node_Name_Prefix), No_Internal_Node_Name);
     while Num_Clus > 1 loop
       Clus_Prev.all := Clus.all;
 
       Find_Joining_Clusters(Clus, Num_Clus, Prox, Pt, Precision, Lol);
       Num_Clus := Number_Of_Lists(Lol);
 
-      Join_Clusters(Lol, Clus, Clus_Prev, Total_Clus, Prox, Pt, Ct, Precision);
+      Join_Clusters(Lol, Clus, Clus_Prev, Total_Clus, Prox, Pt, Ct, Precision, Internal_Names);
       Free(Lol);
     end loop;
 
@@ -274,7 +276,7 @@ package body Dendrograms.Algorithms is
 
   procedure Generic_Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural) is
 
-    procedure Recursive_Clustering(Clus: in PClusters; Num_Clus, Total_Clus: in Positive; Prox: in PPsDoubles) is
+    procedure Recursive_Clustering(Clus: in PClusters; Num_Clus, Total_Clus: in Positive; Prox: in PPsDoubles; Internal_Names: in Boolean) is
       T: Dendrogram;
       Clus_New: PClusters;
       Num_Cl, Total_Cl: Positive;
@@ -297,9 +299,9 @@ package body Dendrograms.Algorithms is
           Clus_New.all := Clus.all;
           Num_Cl   := Number_Of_Lists(Lol);
           Total_Cl := Total_Clus;
-          Join_Clusters(Lol, Clus_New, Clus, Total_Cl, Prox, Pt, Ct, Precision);
+          Join_Clusters(Lol, Clus_New, Clus, Total_Cl, Prox, Pt, Ct, Precision, Internal_Names);
 
-          Recursive_Clustering(Clus_New, Num_Cl, Total_Cl, Prox);
+          Recursive_Clustering(Clus_New, Num_Cl, Total_Cl, Prox, Internal_Names);
           Free(Clus_New);
         end loop;
 
@@ -317,6 +319,7 @@ package body Dendrograms.Algorithms is
     Nod_Inf: Node_Info;
     Name: Ustring;
     Total_Clus, Num_Clus: Natural;
+    Internal_Names: Boolean;
 
   begin
     Check_Data(Data, Names);
@@ -362,7 +365,8 @@ package body Dendrograms.Algorithms is
     end loop;
 
     -- Agglomerative Hierarchical Clustering
-    Recursive_Clustering(Clus, Num_Clus, Total_Clus, Prox);
+    Internal_Names := not Equal(Capitalize(Internal_Node_Name_Prefix), No_Internal_Node_Name);
+    Recursive_Clustering(Clus, Num_Clus, Total_Clus, Prox, Internal_Names);
 
     -- Finalize
     Free(Clus(1).St);
@@ -1219,13 +1223,14 @@ package body Dendrograms.Algorithms is
   -- Join_Clusters --
   -------------------
 
-  procedure Join_Clusters(Lol: in List_Of_Lists; Clus, Clus_Prev: in PClusters; Total_Clus: in out Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural) is
+  procedure Join_Clusters(Lol: in List_Of_Lists; Clus, Clus_Prev: in PClusters; Total_Clus: in out Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural; Internal_Names: in Boolean) is
     Nod: Node;
     Nod_Inf: Node_Info;
     C, Ci, Cj: Natural;
     L, Li, Lj: List;
     E: Element;
     D: Double;
+    Name: Ustring;
   begin
     pragma Warnings(Off, L);
 
@@ -1257,7 +1262,12 @@ package body Dendrograms.Algorithms is
           Add_Tree(Parent => Clus(C).St, Child => Clus_Prev(Index_Of(E)).St);
         end loop;
         Restore(L);
-        Set_Node_Info(Nod_Inf, Name => Null_Ustring, Position => 0.0, Height => 0.0, Width => 0.0, Length => 0.0, Margin => 0.0, Is_Leaf => False, Num_Leaves => Clus(C).Num_Leaves, Id => Total_Clus);
+        if Internal_Names then
+          Name := Internal_Node_Name_Prefix + I2S(Total_Clus);
+        else
+          Name := Null_Ustring;
+        end if;
+        Set_Node_Info(Nod_Inf, Name => Name, Position => 0.0, Height => 0.0, Width => 0.0, Length => 0.0, Margin => 0.0, Is_Leaf => False, Num_Leaves => Clus(C).Num_Leaves, Id => Total_Clus);
         Set_Value(Nod, Nod_Inf);
         Set_Cluster_Heterogeneity(Prox, L, C, Clus, Clus_Prev, Pt, Precision);
       end if;

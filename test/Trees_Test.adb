@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 06/04/2012
--- @revision 26/10/2014
+-- @revision 01/02/2016
 -- @brief Test of Trees packages
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -29,8 +29,12 @@ with Utils.IO; use Utils.IO;
 
 procedure Trees_Test is
 
-  Fn_Text  : constant String  := "trees_test-text.txt";
-  Fn_Newick: constant String  := "trees_test-newick.txt";
+  Fn_Text      : constant String  := "trees_test-text.txt";
+  Fn_Newick    : constant String  := "trees_test-newick.txt";
+  Fn_Json      : constant String  := "trees_test-json.txt";
+  Fn_Html      : constant String  := "trees_test-json.html";
+  Fn_Html_Head : constant String  := "trees_test-json-html_head.txt";
+  Fn_Html_Tail : constant String  := "trees_test-json-html_tail.txt";
 
   use Trees_Float.Nodes_Lists;
   use Trees_String.Nodes_Lists;
@@ -65,6 +69,7 @@ begin
 
   Delete_File(Fn_Text);
   Delete_File(Fn_Newick);
+  Delete_File(Fn_Json);
 
   Put_Line("Is Tree initially empty? " & Capitalize(Boolean'Image(Is_Empty(Ts))));
   New_Line;
@@ -82,8 +87,10 @@ begin
   Put_Line("Tree:");
   Put_Tree(Ts);
   Put_Tree(Ts, Format => Newick_Tree);
+  Put_Tree(Ts, Format => Json_Tree);
   Put_Tree(Fn_Text, Ts);
   Put_Tree(Fn_Newick, Ts, Format => Newick_Tree);
+  Put_Tree(Fn_Json, Ts, Format => Json_Tree);
   New_Line;
   Free(Ts);
 
@@ -95,6 +102,12 @@ begin
 
   Put_Line("Read Tree in Newick Format:");
   Get_Tree(Fn_Newick, Ts);
+  Put_Tree(Ts);
+  New_Line;
+  Free(Ts);
+
+  Put_Line("Read Tree in JSON Format:");
+  Get_Tree(Fn_Json, Ts);
   Put_Tree(Ts);
   New_Line;
   Free(Ts);
@@ -112,8 +125,10 @@ begin
   Put_Line("Tree without values:");
   Put_Tree(Ts);
   Put_Tree(Ts, Format => Newick_Tree);
+  Put_Tree(Ts, Format => Json_Tree);
   Put_Tree(Fn_Text, Ts);
   Put_Tree(Fn_Newick, Ts, Format => Newick_Tree);
+  Put_Tree(Fn_Json, Ts, Format => Json_Tree);
   New_Line;
   Free(Ts);
 
@@ -131,6 +146,7 @@ begin
 
   Delete_File(Fn_Text);
   Delete_File(Fn_Newick);
+  Delete_File(Fn_Json);
 
   Tf := New_Tree(0.0);
   Add_Child(Tf, 1.0);
@@ -173,17 +189,25 @@ begin
   Ns2 := Add_Child(Ns2, S2U("SubSub1211"));
   Ns := Add_Child(Ns2, S2U("Deep12111"));
   Add_Child(Ns, S2U("VeryDeep121111"));
-  Add_Child(Ns2, S2U("SubSub1212"));
+  Add_Child(Ns2, S2U("Deep12112"));
 
   Put_Line("Tree of Strings:");
   Put_Tree(Ts);
   Put_Tree(Ts, Format => Newick_Tree);
+  -- Put_Tree(Ts, Format => Json_Tree);
   Put_String_Line(Fn_Text, "# Tree of Strings");
   Put_String_Line(Fn_Text, "");
   Put_Tree(Fn_Text, Ts, Mode => Append_File);
   Put_Tree(Fn_Newick, Ts, Mode => Out_File, Format => Newick_Tree);
+  Put_Tree(Fn_Json, Ts, Mode => Out_File, Format => Json_Tree);
   New_Line;
   Free(Ts);
+
+  Put_Line("Build HTML from Tree in JSON Format");
+  Copy_File(Fn_Html_Head, Fn_Html);
+  Append_File(Fn_Json, Fn_Html);
+  Append_File(Fn_Html_Tail, Fn_Html);
+  New_Line;
 
   Put_Line("Read Tree in Text Format:");
   Get_Tree(Fn_Text, Ts);
@@ -204,6 +228,7 @@ begin
   New_Line;
 
   Put_Line("Move Subtree:");
+  Ln := Get_Children(Get_Root(Ts));
   Ns2 := Get_First(Ln);
   Ln := Get_Children(Ns2);
   Ns2 := Get_First(Ln);

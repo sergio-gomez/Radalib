@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 14/09/2006
--- @revision 19/09/2015
+-- @revision 26/02/2016
 -- @brief Convert a network in Matrix format to Pajek format
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -35,14 +35,13 @@ procedure Matrix_To_Net is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2015 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2016 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
     Put_Line("===================================================================");
     Put_Line("== Convert a file with a graph in matrix form into               ==");
     Put_Line("== a network file in Pajek format (*.net)                        ==");
-    Put_Line("== See README.txt                                                ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;

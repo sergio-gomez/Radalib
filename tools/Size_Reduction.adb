@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -17,7 +17,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 30/11/2007
--- @revision 22/09/2015
+-- @revision 26/02/2016
 -- @brief Reduces the size of a graph and outputs a reduced graph and the reduction Lol
 
 with Ada.Text_IO;                      use Ada.Text_IO;
@@ -46,14 +46,14 @@ procedure Size_Reduction is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2015 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2016 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
     Put_Line("===================================================================");
     Put_Line("== Reduction of the size of a network preserving modularity,     ==");
-    Put_Line("== only for Weighted_Newman (WN) modularity type                 ==");
-    Put_Line("== See README.txt                                                ==");
+    Put_Line("== by elimination of simple and triangular 'hairs'               ==");
+    Put_Line("== Only for Weighted_Newman (WN) modularity type                 ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;

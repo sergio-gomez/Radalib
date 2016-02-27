@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 23/05/2011
--- @revision 07/12/2015
+-- @revision 26/02/2016
 -- @brief Properties of a Network
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -39,18 +39,19 @@ procedure Network_Properties is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2015 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2016 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
     Put_Line("===================================================================");
     Put_Line("== Find many global, node and edge properties of a network:      ==");
-    Put_Line("==   degree, strength, clustering coefficient, assortativity,    ==");
-    Put_Line("==   shortest path lengths, diameter, node and edge betweenness, ==");
-    Put_Line("==   degree distribution, distances                              ==");
+    Put_Line("==   - connectedness (weak or strong)                            ==");
+    Put_Line("==   - degrees, strengths, clustering coefficients, entropies    ==");
+    Put_Line("==   - assortativities, path lengths, efficiencies, diameters    ==");
+    Put_Line("==   - betweenness (nodes and edges)                             ==");
+    Put_Line("==   - degree distribution                                       ==");
     Put_Line("== Works with weighted and unweighted, directed and undirected,  ==");
     Put_Line("== positive and signed networks                                  ==");
-    Put_Line("== See README.txt                                                ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;
@@ -1062,7 +1063,7 @@ begin
       Deg_Max := Integer(Max(Doubles'(Max(Din), Max(Dout))));
       Degree_Distribution(Din, Fin, Cin, Deg_Max);
       Degree_Distribution(Dout, Fout, Cout, Deg_Max);
-      for K in Fin'range loop
+      for K in Fin'Range loop
         U := S2U(I2S(K) & HTab & I2S(Fin(K)) & HTab & I2S(Fout(K)) & HTab & I2S(Cin(K)) & HTab & I2S(Cout(K)));
         Put_Line(F_Out, U2S(U));
       end loop;

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,11 +16,12 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 08/05/2013
--- @revision 19/09/2015
+-- @revision 26/02/2016
 -- @brief Agglomerative Hierarchical Clustering with MultiDendrograms and Binary Dendrograms
 
 with Ada.Command_Line; use Ada.Command_Line;
 with Ada.Text_Io; use Ada.Text_Io;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Unchecked_Deallocation;
 with Ada.Containers.Generic_Array_Sort;
@@ -40,7 +41,7 @@ procedure Hierarchical_Clustering is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2015 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2016 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
@@ -59,7 +60,7 @@ procedure Hierarchical_Clustering is
     Put_Line("== For Binary Dendrograms, in case of ties, many dendrograms     ==");
     Put_Line("== may exist, and this tool can enumerate or count all of them,  ==");
     Put_Line("== or choose the one with maximum cophenetic correlation         ==");
-    Put_Line("== See README.txt                                                ==");
+    Put_Line("== See http://deim.urv.cat/~sergio.gomez/multidendrograms.php    ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;
@@ -74,13 +75,13 @@ procedure Hierarchical_Clustering is
 
   function Get_Dendrogram_Mode(Name: in String) return Dendrogram_Mode is
   begin
-    if    To_Uppercase(Name) = "S" or To_Lowercase(Name) = "sorted"   then
+    if    To_Lowercase(Name) = "sorted"   then
       return Sorted;
-    elsif To_Uppercase(Name) = "U" or To_Lowercase(Name) = "unsorted" then
+    elsif To_Lowercase(Name) = "unsorted" then
       return Unsorted;
-    elsif To_Uppercase(Name) = "B" or To_Lowercase(Name) = "best"     then
+    elsif To_Lowercase(Name) = "best"     then
       return Best;
-    elsif To_Uppercase(Name) = "C" or To_Lowercase(Name) = "count"    then
+    elsif To_Lowercase(Name) = "count"    then
       return Count;
     else
       raise Unknown_Dendrogram_Mode;
@@ -95,13 +96,20 @@ procedure Hierarchical_Clustering is
   -- Check and prepare data
   Proximity_Matrix_Error: exception;
 
-  procedure Prepare_Data(Data: in PDoubless; No_Value: in Double) is
+  procedure Prepare_Data(Data: in PDoubless; No_Value: in Double; Pt: in Proximity_Type) is
     N: Natural;
+    Filling_Value: Double;
   begin
     if Data'Length(1) /= Data'Length(2) then
       Put_Line("Input data is not a squared matrix");
       raise Proximity_Matrix_Error;
     end if;
+    case Pt is
+      when Distance =>
+        Filling_Value := Double'Last;
+      when Similarity =>
+        Filling_Value := 0.0;
+    end case;
     N := Data'Length(1);
     for I in 1..N loop
       Data(I, I) := 0.0;
@@ -111,8 +119,10 @@ procedure Hierarchical_Clustering is
         elsif Data(I, J) /= No_Value and Data(J, I) = No_Value then
           Data(J, I) := Data(I, J);
         elsif Data(I, J) = No_Value and Data(J, I) = No_Value then
-          Put_Line("No values in pair (" & I2S(I) & "," & I2S(J) & ") and its symmetric");
-          raise Proximity_Matrix_Error;
+          -- Put_Line("No values in pair (" & I2S(I) & "," & I2S(J) & ") and its symmetric");
+          -- raise Proximity_Matrix_Error;
+          Data(I, J) := Filling_Value;
+          Data(J, I) := Filling_Value;
         elsif Data(I, J) /= Data(J, I) then
           Put_Line("Non-symmetric values for pair (" & I2S(I) & "," & I2S(J) & ")");
           raise Proximity_Matrix_Error;
@@ -209,6 +219,7 @@ procedure Hierarchical_Clustering is
   Default_Dendrogram_Mode: constant Dendrogram_Mode := Sorted;
 
   Text_Sufix     : constant String  := "-tree.txt";
+  Json_Sufix     : constant String  := ".json";
   Newick_Sufix   : constant String  := "-newick.txt";
   Measures_Sufix : constant String  := "-measures.txt";
   Ultra_Sufix    : constant String  := "-ultrametric.txt";
@@ -221,13 +232,16 @@ procedure Hierarchical_Clustering is
   Ct: Clustering_Type;
   Precision: Natural := 0;
   Dm: Dendrogram_Mode;
+  Px: Ustring := Null_Ustring;
 
   Auto_Precision: Boolean;
   Fn_Out_Text: Ustring;
+  Fn_Out_Json: Ustring;
   Fn_Out_Newick: Ustring;
   Fn_Out_Measures: Ustring;
   Fn_Out_Ultra: Ustring;
   Ft_Text: File_Type;
+  Ft_Json: File_Type;
   Ft_Newick: File_Type;
   Ft_Measures: File_Type;
   Ft_Ultra: File_Type;
@@ -259,6 +273,8 @@ procedure Hierarchical_Clustering is
         if Num_Dendro <= Max_Num_Dendro then
           Put_Dendrogram(Ft_Text, T, Precision, Text_Tree);
           Put_Line(Ft_Text, "----------");
+          Put_Dendrogram(Ft_Json, T, Precision, Json_Tree);
+          New_line(Ft_Json);
         end if;
         Put_Dendrogram(Ft_Newick, T, Precision, Newick_Tree);
         Put_Line(Ft_Measures, D2Se0(Dir.Coph, Aft => 6) & HTab &
@@ -307,6 +323,7 @@ begin
     Ct := Get_Clustering_Type(Argument(5));
     Auto_Precision := True;
     Dm := Default_Dendrogram_Mode;
+    Px := Null_Ustring;
   elsif Argument_Count = 6 then
     Fn_In  := S2U(Argument(1));
     Fn_Out := S2U(Argument(2));
@@ -317,11 +334,41 @@ begin
       Precision := S2I(Argument(6));
       Auto_Precision := False;
       Dm := Default_Dendrogram_Mode;
+      Px := Null_Ustring;
+    else
+      Auto_Precision := True;
+      begin
+        Dm := Get_Dendrogram_Mode(Argument(6));
+        Px := Null_Ustring;
+      exception
+        when others =>
+          Dm := Default_Dendrogram_Mode;
+          Px := S2U(Argument(6));
+      end;
+    end if;
+  elsif Argument_Count = 7 then
+    Fn_In  := S2U(Argument(1));
+    Fn_Out := S2U(Argument(2));
+    Dt := Get_Dendrogram_Type(Argument(3));
+    Pt := Get_Proximity_Type(Argument(4));
+    Ct := Get_Clustering_Type(Argument(5));
+    if Is_Integer(Argument(6)) then
+      Precision := S2I(Argument(6));
+      Auto_Precision := False;
+      begin
+        Dm := Get_Dendrogram_Mode(Argument(7));
+        Px := Null_Ustring;
+      exception
+        when others =>
+          Dm := Default_Dendrogram_Mode;
+          Px := S2U(Argument(7));
+      end;
     else
       Auto_Precision := True;
       Dm := Get_Dendrogram_Mode(Argument(6));
+      Px := S2U(Argument(7));
     end if;
-  elsif Argument_Count = 7 then
+  elsif Argument_Count = 8 then
     Fn_In  := S2U(Argument(1));
     Fn_Out := S2U(Argument(2));
     Dt := Get_Dendrogram_Type(Argument(3));
@@ -330,49 +377,52 @@ begin
     Precision := S2I(Argument(6));
     Auto_Precision := False;
     Dm := Get_Dendrogram_Mode(Argument(7));
+    Px := S2U(Argument(8));
   else
-    Put_Line("Usage:  " & Command_Name & "  proximities_name  output_prefix  dendrogram_type  proximity_type  clustering_type  [ precision ]  [ dendrogram_mode ]");
+    Put_Line("Usage:  " & Command_Name & "  proximities_name  output_prefix  dendrogram_type  proximity_type  clustering_type  [ precision ]  [ dendrogram_mode ]  [ internal_nodes_prefix ]");
     New_Line;
-    Put_Line("   proximities_name :  name of the proximities file, either in matrix or list form");
-    Put_Line("                         in matrix form, the names may be in first column, first row, or none");
+    Put_Line("   proximities_name      :  name of the proximities file, either in matrix or list form");
+    Put_Line("                              in matrix form, the names may be in first column, first row, or none");
+    Put_Line("                              in list form, missing values are filled with:");
+    Put_Line("                                Double'Last for Distances");
+    Put_Line("                                0.0         for Similarities");
     New_Line;
-    Put_Line("   output_prefix    :  prefix of the output files");
+    Put_Line("   output_prefix         :  prefix of the output files");
     New_Line;
-    Put_Line("   dendrogram_type  :  MD | BD");
-    Put_Line("                         also lowercase symbols");
-    Put_Line("                         also case-insensitive short and full names (Distance, ...)");
-    Put_Line("                         MD | Multidendrogram");
-    Put_Line("                         BD | Binary_Dendrogram");
+    Put_Line("   dendrogram_type       :  MD | BD");
+    Put_Line("                              also lowercase symbols");
+    Put_Line("                              also case-insensitive short and full names (Distance, ...)");
+    Put_Line("                              MD | Multidendrogram");
+    Put_Line("                              BD | Binary_Dendrogram");
     New_Line;
-    Put_Line("   proximity_type   :  D | S");
-    Put_Line("                         also lowercase symbols");
-    Put_Line("                         also case-insensitive short and full names (Distance, ...)");
-    Put_Line("                         D | DIST | Distance");
-    Put_Line("                         S | SIM  | Similarity");
+    Put_Line("   proximity_type        :  D | S");
+    Put_Line("                              also lowercase symbols");
+    Put_Line("                              also case-insensitive short and full names (Distance, ...)");
+    Put_Line("                              D | DIST | Distance");
+    Put_Line("                              S | SIM  | Similarity");
     New_Line;
-    Put_Line("   clustering_type  :  SL | CL | UA | WA | UC | WC | WD | UPGMA | WPGMA");
-    Put_Line("                         also lowercase symbols");
-    Put_Line("                         also case-insensitive short and full names (Single_Linkage, ...)");
-    Put_Line("                         SL = Single_Linkage");
-    Put_Line("                         CL = Complete_Linkage");
-    Put_Line("                         UA = UPGMA = Unweighted_Average");
-    Put_Line("                         WA = WPGMA = Weighted_Average");
-    Put_Line("                         UC = Unweighted_Centroid");
-    Put_Line("                         WC = Weighted_Centroid");
-    Put_Line("                         WD = Ward");
+    Put_Line("   clustering_type       :  SL | CL | UA | WA | UC | WC | WD | UPGMA | WPGMA");
+    Put_Line("                              also lowercase symbols");
+    Put_Line("                              also case-insensitive short and full names (Single_Linkage, ...)");
+    Put_Line("                              SL = Single_Linkage");
+    Put_Line("                              CL = Complete_Linkage");
+    Put_Line("                              UA = UPGMA = Unweighted_Average");
+    Put_Line("                              WA = WPGMA = Weighted_Average");
+    Put_Line("                              UC = Unweighted_Centroid");
+    Put_Line("                              WC = Weighted_Centroid");
+    Put_Line("                              WD = Ward");
     New_Line;
-    Put_Line("   precision        :  Number of decimal significant digits of the data and for the calculations");
-    Put_Line("                         if not specified, is that of the value with largest number of decimal digits");
+    Put_Line("   precision             :  Number of decimal significant digits of the data and for the calculations");
+    Put_Line("                              if not specified, is that of the value with largest number of decimal digits");
     New_Line;
-    Put_Line("   dendrogram_mode  :  S | U | B | C");
-    Put_Line("                         also lowercase symbols");
-    Put_Line("                         also case-insensitive full names (Sorted, ...)");
-    Put_Line("                         S | Sorted");
-    Put_Line("                         U | Unsorted");
-    Put_Line("                         B | Best");
-    Put_Line("                         C | Count");
-    Put_Line("                         default => " & To_Name(Default_Dendrogram_Mode));
-    Put_Line("                         mode discarded for MultiDendrograms");
+    Put_Line("   dendrogram_mode       :  Sorted | Unsorted | Best | Count");
+    Put_Line("                              also case-insensitive full names)");
+    Put_Line("                              default => " & To_Name(Default_Dendrogram_Mode));
+    Put_Line("                              mode discarded for MultiDendrograms");
+    New_Line;
+    Put_Line("   internal_nodes_prefix :  Prefix for the names of the internal nodes");
+    Put_Line("                              if 'None' (case insensitive) no names are assigned to internal nodes");
+    Put_Line("                              default => " & U2S(Internal_Node_Name_Prefix));
     return;
   end if;
 
@@ -383,12 +433,18 @@ begin
     return;
   end if;
 
+  if Px /= Null_Ustring then
+    Internal_Node_Name_Prefix := Px;
+  end if;
+
   Fn_Out_Text     := S2U(U2S(Fn_Out) & Text_Sufix);
+  Fn_Out_Json     := S2U(U2S(Fn_Out) & Json_Sufix);
   Fn_Out_Newick   := S2U(U2S(Fn_Out) & Newick_Sufix);
   Fn_Out_Measures := S2U(U2S(Fn_Out) & Measures_Sufix);
   Fn_Out_Ultra    := S2U(U2S(Fn_Out) & Ultra_Sufix);
 
   Delete_File(U2S(Fn_Out_Text));
+  Delete_File(U2S(Fn_Out_Json));
   Delete_File(U2S(Fn_Out_Newick));
   Delete_File(U2S(Fn_Out_Measures));
   Delete_File(U2S(Fn_Out_Ultra));
@@ -403,7 +459,7 @@ begin
   else
     Get_Data(U2S(Fn_In), Data, Col_Name, Row_Name, No_Value);
   end if;
-  Prepare_Data(Data, No_Value);
+  Prepare_Data(Data, No_Value, Pt);
 
   if Col_Name /= null then
     Names := Col_Name;
@@ -425,11 +481,13 @@ begin
   -- Prepare output files
   if Dm /= Count then
     Open_Or_Create(Ft_Text    , U2S(Fn_Out_Text));
+    Open_Or_Create(Ft_Json    , U2S(Fn_Out_Json));
     Open_Or_Create(Ft_Newick  , U2S(Fn_Out_Newick));
     Open_Or_Create(Ft_Measures, U2S(Fn_Out_Measures));
 
     if Dm = Unsorted then
       Put_Line(Ft_Text, "# First Binary Dendrograms (maximum " & L2S(Max_Num_Dendro) & ")");
+      Put_Line(Ft_Json, "# First Binary Dendrograms (maximum " & L2S(Max_Num_Dendro) & ")");
       Put_Line(Ft_Newick, "# All Binary Dendrograms");
       Cet := Fisher_Transform;
     end if;
@@ -493,23 +551,29 @@ begin
     -- Write Saved Dendrograms and Deviation Measures
     case Dt is
       when Multidendrogram =>
-        Put_Line(Ft_Text, "# MultiDendrogram");
+        Put_Line(Ft_Text  , "# MultiDendrogram");
+        Put_Line(Ft_Json  , "# MultiDendrogram");
         Put_Line(Ft_Newick, "# MultiDendrogram");
       when Binary_Dendrogram =>
         if Num_Dendro = 1 then
-          Put_Line(Ft_Text, "# Binary Dendrogram");
+          Put_Line(Ft_Text  , "# Binary Dendrogram");
+          Put_Line(Ft_Json  , "# Binary Dendrogram");
           Put_Line(Ft_Newick, "# Binary Dendrogram");
         elsif Num_Saved = 1 then
-          Put_Line(Ft_Text, "# Binary Dendrogram with Highest Cophenetic Correlation");
+          Put_Line(Ft_Text  , "# Binary Dendrogram with Highest Cophenetic Correlation");
+          Put_Line(Ft_Json  , "# Binary Dendrogram with Highest Cophenetic Correlation");
           Put_Line(Ft_Newick, "# Binary Dendrogram with Highest Cophenetic Correlation");
         elsif Dm = Best then
-          Put_Line(Ft_Text, "# The " & I2S(Num_Saved) & " Binary Dendrograms with Highest Cophenetic Correlation");
+          Put_Line(Ft_Text  , "# The " & I2S(Num_Saved) & " Binary Dendrograms with Highest Cophenetic Correlation");
+          Put_Line(Ft_Json  , "# The " & I2S(Num_Saved) & " Binary Dendrograms with Highest Cophenetic Correlation");
           Put_Line(Ft_Newick, "# The " & I2S(Num_Saved) & " Binary Dendrograms with Highest Cophenetic Correlation");
         elsif Num_Dendro <= Max_Num_Dendro then
-          Put_Line(Ft_Text, "# Binary Dendrograms");
+          Put_Line(Ft_Text  , "# Binary Dendrograms");
+          Put_Line(Ft_Json  , "# Binary Dendrograms");
           Put_Line(Ft_Newick, "# Binary Dendrograms");
         else
-          Put_Line(Ft_Text, "# First " & L2S(Max_Num_Dendro) & " Binary Dendrograms");
+          Put_Line(Ft_Text  , "# First " & L2S(Max_Num_Dendro) & " Binary Dendrograms");
+          Put_Line(Ft_Json  , "# First " & L2S(Max_Num_Dendro) & " Binary Dendrograms");
           Put_Line(Ft_Newick, "# Binary Dendrograms");
         end if;
     end case;
@@ -518,6 +582,8 @@ begin
       if Longint(I) <= Max_Num_Dendro then
         Put_Dendrogram(Ft_Text, Di(I).Dendro, Precision, Text_Tree);
         Put_Line(Ft_Text, "----------");
+        Put_Dendrogram(Ft_Json, Di(I).Dendro, Precision, Json_Tree);
+        New_Line(Ft_Json);
       end if;
       Put_Dendrogram(Ft_Newick, Di(I).Dendro, Precision, Newick_Tree);
       Put_Line(Ft_Measures, D2Se0(Di(I).Coph, Aft => 6) & HTab & D2Se0(Di(I).Coph_Err, Aft => 6) & HTab &
@@ -527,6 +593,7 @@ begin
 
   if Dm /= Count then
     Close(Ft_Text);
+    Close(Ft_Json);
     Close(Ft_Newick);
     Close(Ft_Measures);
   end if;
@@ -556,7 +623,7 @@ begin
   Free(Dendros);
 
   if Num_Saved > 0 then
-    for I in Di'range loop
+    for I in Di'Range loop
       Free(Di(I).Dendro);
     end loop;
     Free(Di);

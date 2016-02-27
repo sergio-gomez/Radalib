@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -37,13 +37,13 @@ package body Chrono_Utils is
     T: Time;
   begin
     accept Start(Rate: in Duration; Ticker: in String) do
-      S := new String(Ticker'range);
+      S := new String(Ticker'Range);
       S.all := Ticker;
       R := Rate;
       T := Clock + To_Time_Span(R);
     end Start;
     while Go_On loop
-      Put(S.All);
+      Put(S.all);
       select
         accept Stop;
         Go_On := False;

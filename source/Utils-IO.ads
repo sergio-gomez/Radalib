@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 11/05/2005
--- @revision 10/08/2014
+-- @revision 30/01/2016
 -- @brief Several IO Utils
 
 with Ada.Containers.Ordered_Maps;
@@ -64,6 +64,42 @@ package Utils.IO is
   -- New_Fn  : The New File Name
   -- return  : True if Rename successful
   function Rename_File(Old_Fn: in String; New_Fn: in String) return Boolean;
+
+  -- Purpose : Copy a File
+  -- Note    : If Destination File exists, it is overwritten
+  -- Note    : No exception is raised
+  --
+  -- Ori_Fn  : The Origin File Name
+  -- Dest_Fn : The Destination File Name
+  -- Fn      : The File Name
+  procedure Copy_File(Ori_Fn: in String; Dest_Fn: in String);
+
+  -- Purpose : Copy a File
+  -- Note    : If Destination File exists, it is overwritten
+  -- Note    : No exception is raised
+  --
+  -- Ori_Fn  : The Origin File Name
+  -- Dest_Fn : The Destination File Name
+  -- return  : True if Copy successful
+  function Copy_File(Ori_Fn: in String; Dest_Fn: in String) return Boolean;
+
+  -- Purpose : Append a File
+  -- Note    : If Destination File does not exist, it is created
+  -- Note    : No exception is raised
+  --
+  -- Ori_Fn  : The Origin File Name
+  -- Dest_Fn : The Destination File Name
+  -- Fn      : The File Name
+  procedure Append_File(Ori_Fn: in String; Dest_Fn: in String);
+
+  -- Purpose : Append a File
+  -- Note    : If Destination File does not exist, it is created
+  -- Note    : No exception is raised
+  --
+  -- Ori_Fn  : The Origin File Name
+  -- Dest_Fn : The Destination File Name
+  -- return  : True if Append successful
+  function Append_File(Ori_Fn: in String; Dest_Fn: in String) return Boolean;
 
   -- Purpose : Delete a File
   -- Note    : No exception is raised
@@ -152,41 +188,54 @@ package Utils.IO is
   -- Ft      : The File
   procedure Comments_Skip(Ft: in File_Type);
 
-  -- Purpose : Skip Separator from Current Input
-  -- Note    : Sep is included as an additional Separator Character
+  -- Purpose : Skip Separator in a Line from Current Input
   -- Note    : Spaces before and after a Separator are Skipped
-  -- Note    : One or more Spaces are also considered as a Separator
+  -- Note    : In Strict mode, Sep is the only possible Separator
+  -- Note    : Otherwise, Sep is included as an additional Separator Character
+  -- Note    : and one or more Spaces are also considered as a Separator
   --
   -- Sep     : Additional Separator Character
+  -- Strict  : True if Sep must be found
   -- return  : True if Separator found and skipped
-  function Separator_Skip(Sep: in Character := ' ') return Boolean;
+  function Separator_Skip(Sep: in Character := ' '; Strict: in Boolean := False) return Boolean;
 
-  -- Purpose : Skip Separator from a File
-  -- Note    : Sep is included as an additional Separator Character
+  -- Purpose : Skip Separator in a Line from a File
   -- Note    : Spaces before and after a Separator are Skipped
-  -- Note    : One or more Spaces are also considered as a Separator
+  -- Note    : In Strict mode, Sep is the only possible Separator
+  -- Note    : Otherwise, Sep is included as an additional Separator Character
+  -- Note    : and one or more Spaces are also considered as a Separator
   --
   -- Ft      : The File
   -- Sep     : Additional Separator Character
+  -- Strict  : True if Sep must be found
   -- return  : True if Separator found and skipped
-  function Separator_Skip(Ft: in File_Type; Sep: in Character := ' ') return Boolean;
+  function Separator_Skip(Ft: in File_Type; Sep: in Character := ' '; Strict: in Boolean := False) return Boolean;
 
-  -- Purpose : Skip Separator from Current Input
-  -- Note    : Sep is included as an additional Separator Character
+  -- Purpose : Skip Separator in a Line from Current Input
   -- Note    : Spaces before and after a Separator are Skipped
-  -- Note    : One or more Spaces are also considered as a Separator
+  -- Note    : In Strict mode, Sep is the only possible Separator
+  -- Note    : Otherwise, Sep is included as an additional Separator Character
+  -- Note    : and one or more Spaces are also considered as a Separator
   --
   -- Sep     : Additional Separator Character
-  procedure Separator_Skip(Sep: in Character := ' ');
+  -- Strict  : True if Sep must be found
+  procedure Separator_Skip(Sep: in Character := ' '; Strict: in Boolean := False);
 
-  -- Purpose : Skip Separator from a File
-  -- Note    : Sep is included as an additional Separator Character
+  -- Purpose : Skip Separator in a Line from a File
   -- Note    : Spaces before and after a Separator are Skipped
-  -- Note    : One or more Spaces are also considered as a Separator
+  -- Note    : In Strict mode, Sep is the only possible Separator
+  -- Note    : Otherwise, Sep is included as an additional Separator Character
+  -- Note    : and one or more Spaces are also considered as a Separator
   --
   -- Ft      : The File
   -- Sep     : Additional Separator Character
-  procedure Separator_Skip(Ft: in File_Type; Sep: in Character := ' ');
+  -- Strict  : True if Sep must be found
+  procedure Separator_Skip(Ft: in File_Type; Sep: in Character := ' '; Strict: in Boolean := False);
+
+  -- Purpose : Deallocate the space used by a Word
+  --
+  -- W       : The Word
+  procedure Free_Word(W: in out Word_Access);
 
   -- Purpose : Skip Word from Current Input
   -- Note    : The boundaries of a Word may be Sep, spaces, separators, comments or end of lines
@@ -248,10 +297,81 @@ package Utils.IO is
   -- Sep     : Additional Separator Character
   procedure Get_Word(Ft: in File_Type; W: out Word_Access; Sep: in Character := ' ');
 
-  -- Purpose : Deallocate the space used by a Word
+  -- Purpose : Obtain next Quoted Word from Current Input
+  -- Note    : The boundaries of a Quoted Word must be matching open and close quotes
   --
-  -- W       : The Word
-  procedure Free_Word(W: in out Word_Access);
+  -- Us      : The Quoted Word without the Quotes
+  -- Forbid_Quote_Mark_Inside: True to forbid quote marks different to the closing one inside the word
+  -- raises  : Quotes_Error
+  procedure Get_Quoted_Word(Us: out Ustring; Forbid_Quote_Mark_Inside: in Boolean := False);
+
+  -- Purpose : Obtain next Quoted Word from a File
+  -- Note    : The boundaries of a Quoted Word must be matching open and close quotes
+  --
+  -- Ft      : The File
+  -- Us      : The Quoted Word without the Quotes
+  -- Forbid_Quote_Mark_Inside: True to forbid quote marks different to the closing one inside the word
+  -- raises  : Quotes_Error
+  procedure Get_Quoted_Word(Ft: in File_Type; Us: out Ustring; Forbid_Quote_Mark_Inside: in Boolean := False);
+
+  -- Purpose : Obtain next Quoted Word from Current Input
+  -- Note    : The boundaries of a Quoted Word must be matching open and close quotes
+  -- Note    : The output Word should be deallocated using Free_Word
+  --
+  -- W       : The Quoted Word without the Quotes
+  -- Forbid_Quote_Mark_Inside: True to forbid quote marks different to the closing one inside the word
+  -- raises  : Quotes_Error
+  procedure Get_Quoted_Word(W: out Word_Access; Forbid_Quote_Mark_Inside: in Boolean := False);
+
+  -- Purpose : Obtain next Quoted Word from a File
+  -- Note    : The boundaries of a Quoted Word must be matching open and close quotes
+  -- Note    : The output Word should be deallocated using Free_Word
+  --
+  -- Ft      : The File
+  -- W       : The Quoted Word without the Quotes
+  -- Forbid_Quote_Mark_Inside: True to forbid quote marks different to the closing one inside the word
+  -- raises  : Quotes_Error
+  procedure Get_Quoted_Word(Ft: in File_Type; W: out Word_Access; Forbid_Quote_Mark_Inside: in Boolean := False);
+
+  -- Purpose : Obtain next Pair Key/Value from Current Input
+  -- Note    : Sep Character must be between Key and Value
+  -- Note    : The boundaries of each Word may be Sep, spaces, separators, comments or end of lines
+  --
+  -- Key     : The Key
+  -- Value   : The Value
+  -- Sep     : The Separator Character
+  procedure Get_Pair(Key, Value: out Ustring; Sep: in Character := ' ');
+
+  -- Purpose : Obtain next Pair Key/Value from a File
+  -- Note    : Sep Character must be between Key and Value
+  -- Note    : The boundaries of each Word may be Sep, spaces, separators, comments or end of lines
+  --
+  -- Ft      : The File
+  -- Key     : The Key
+  -- Value   : The Value
+  -- Sep     : The Separator Character
+  procedure Get_Pair(Ft: in File_Type; Key, Value: out Ustring; Sep: in Character := ' ');
+
+  -- Purpose : Obtain next Pair Key/Value from Current Input
+  -- Note    : Sep Character must be between Key and Value
+  -- Note    : The boundaries of each Word may be Sep, spaces, separators, comments or end of lines
+  -- Note    : The output Key and Value should be deallocated using Free_Word
+  --
+  -- Key     : The Key
+  -- Value   : The Value
+  -- Sep     : The Separator Character
+  procedure Get_Pair(Key, Value: out Word_Access; Sep: in Character := ' ');
+
+  -- Purpose : Obtain next Pair Key/Value from a File
+  -- Note    : Sep Character must be between Key and Value
+  -- Note    : The boundaries of each Word may be Sep, spaces, separators, comments or end of lines
+  -- Note    : The output Key and Value should be deallocated using Free_Word
+  --
+  -- Ft      : The File
+  -- Key     : The Key
+  -- Value   : The Value
+  -- Sep     : The Separator Character
+  procedure Get_Pair(Ft: in File_Type; Key, Value: out Word_Access; Sep: in Character := ' ');
 
   -- Purpose : Obtain next Integer from Current Input
   -- Note    : The boundaries of the Integer may be Sep, spaces, separators, comments or end of lines

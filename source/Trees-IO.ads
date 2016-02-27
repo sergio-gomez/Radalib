@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 05/04/2012
--- @revision 23/09/2015
+-- @revision 01/02/2016
 -- @brief Input and Output of Trees
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -30,7 +30,7 @@ package Trees.IO is
 
   -- Purpose : Put a Tree to Current Output
   -- Note    : Names of Nodes must not contain these characters (no check is made):
-  -- Note    :   ' '   ','   ';'   ':'   '|'   '['    ']'   '('   ')'
+  -- Note    :   ' '   ','   ';'   ':'   '|'   '['    ']'   '('   ')'   '{'   '}'
   --
   -- T       : The Tree
   -- Param   : Optional Parameter
@@ -41,7 +41,7 @@ package Trees.IO is
 
   -- Purpose : Put a Tree to a File
   -- Note    : Names of Nodes must not contain these characters (no check is made):
-  -- Note    :   ' '   ','   ';'   ':'   '|'   '['    ']'   '('   ')'
+  -- Note    :   ' '   ','   ';'   ':'   '|'   '['    ']'   '('   ')'   '{'   '}'
   --
   -- Ft      : The File Type
   -- T       : The Tree
@@ -53,7 +53,7 @@ package Trees.IO is
 
   -- Purpose : Put a Tree to a File
   -- Note    : Names of Nodes must not contain these characters (no check is made):
-  -- Note    :   ' '   ','   ';'   ':'   '|'   '['    ']'   '('   ')'
+  -- Note    :   ' '   ','   ';'   ':'   '|'   '['    ']'   '('   ')'   '{'   '}'
   --
   -- Fn      : The File Name
   -- T       : The Tree

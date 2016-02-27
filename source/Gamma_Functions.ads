@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -44,7 +44,7 @@ package Gamma_Functions is
 
   -- Purpose : Calculate the Incomplete Gamma Function G(A, X)
   -- Note    : G(A, X) = Integrate[T^(A-1) Exp(-T), T=X..Infinity]
-  -- Note    : X >= 0, A /= 0,-1,-2, ... 
+  -- Note    : X >= 0, A /= 0,-1,-2, ...
   --
   -- A       : The exponent argument
   -- X       : The integration limit argument
@@ -54,7 +54,7 @@ package Gamma_Functions is
 
   -- Purpose : Calculate the Incomplete Gamma Function g(A, X)
   -- Note    : g(A, X) = Integrate[T^(A-1) Exp(-T), T=0..X]
-  -- Note    : X >= 0, A /= 0,-1,-2, ... 
+  -- Note    : X >= 0, A /= 0,-1,-2, ...
   --
   -- A       : The exponent argument
   -- X       : The integration limit argument
@@ -64,7 +64,7 @@ package Gamma_Functions is
 
   -- Purpose : Calculate the Incomplete Gamma Ratio Function Q(A, X)
   -- Note    : Q(A, X) = G(A, X) / G(A)
-  -- Note    : X >= 0, A /= 0,-1,-2, ... 
+  -- Note    : X >= 0, A /= 0,-1,-2, ...
   --
   -- A       : The exponent argument
   -- X       : The integration limit argument
@@ -74,7 +74,7 @@ package Gamma_Functions is
 
   -- Purpose : Calculate the Incomplete Gamma Ratio Function P(A, X)
   -- Note    : P(A, X) = g(A, X) / G(A)
-  -- Note    : X >= 0, A /= 0,-1,-2, ... 
+  -- Note    : X >= 0, A /= 0,-1,-2, ...
   --
   -- A       : The exponent argument
   -- X       : The integration limit argument

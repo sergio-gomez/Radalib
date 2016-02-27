@@ -22,7 +22,7 @@ rm -f multiplex_out??.txt
 rm -f pajek_test_out.clu pajek_test_out?.net
 
 # Trees_Test
-rm -f trees_test-*.txt
+rm -f trees_test-text.txt trees_test-newick.txt trees_test-json.txt trees_test-json.html
 
 # Utils_Properties_Test
 rm -f utils_properties_test-out.txt

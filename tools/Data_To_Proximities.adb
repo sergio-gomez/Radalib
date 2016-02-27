@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 02/05/2012
--- @revision 19/09/2015
+-- @revision 26/02/2016
 -- @brief Calculation of Proximities from a Data set
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -37,13 +37,16 @@ procedure Data_To_Proximities is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2015 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2016 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
     Put_Line("===================================================================");
-    Put_Line("== Calculation of Proximities from a Data set                    ==");
-    Put_Line("== See README.txt                                                ==");
+    Put_Line("== Calculate many types of proximities (distances or             ==");
+    Put_Line("== similarities) between rows or columns in a data set:          ==");
+    Put_Line("==   - Eucldean, Manhattan, Chebyshev, Minkowski, Canberra       ==");
+    Put_Line("==   - Bray Curtis, correlation, cosine                          ==");
+    Put_Line("==   - several scalings and transformations available            ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;
@@ -157,7 +160,7 @@ procedure Data_To_Proximities is
   begin
     case Dissim is
       when Euclidean_Distance =>
-        for I in P1'range loop
+        for I in P1'Range loop
           if P1(I) /= P2(I) then
             D := D + (P1(I) - P2(I)) * (P1(I) - P2(I));
           end if;
@@ -166,13 +169,13 @@ procedure Data_To_Proximities is
           D := Sqrt(D);
         end if;
       when Manhattan_Distance =>
-        for I in P1'range loop
+        for I in P1'Range loop
           if P1(I) /= P2(I) then
             D := D + abs (P1(I) - P2(I));
           end if;
         end loop;
       when Chebyshev_Distance =>
-        for I in P1'range loop
+        for I in P1'Range loop
           if P1(I) /= P2(I) then
             Diff := abs (P1(I) - P2(I));
             if Diff > D then
@@ -182,7 +185,7 @@ procedure Data_To_Proximities is
         end loop;
       when Minkowski_Distance =>
         if Mink_Param /= 0.0 then
-          for I in P1'range loop
+          for I in P1'Range loop
             if P1(I) /= P2(I) then
               D := D + (abs (P1(I) - P2(I))) ** Mink_Param;
             end if;
@@ -192,7 +195,7 @@ procedure Data_To_Proximities is
           end if;
         end if;
       when Canberra_Distance =>
-        for I in P1'range loop
+        for I in P1'Range loop
           if P1(I) /= P2(I) then
             if P1(I) /= 0.0 and P2(I) /= 0.0 then
               D := D + (abs (P1(I) - P2(I))) / ((abs P1(I)) + (abs P2(I)));
@@ -202,7 +205,7 @@ procedure Data_To_Proximities is
           end if;
         end loop;
       when Bray_Curtis_Dissimilarity =>
-        for I in P1'range loop
+        for I in P1'Range loop
           if P1(I) /= P2(I) then
             Num := Num + (abs (P1(I) - P2(I)));
           end if;
@@ -229,7 +232,7 @@ procedure Data_To_Proximities is
           D := Sqrt(Diff);
         end if;
       when Cosine_Dissimilarity =>
-        for I in P1'range loop
+        for I in P1'Range loop
           if P1(I) /= 0.0 and P2(I) /= 0.0 then
             D := D + P1(I) * P2(I);
           end if;

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 06/04/2012
--- @revision 10/05/2013
+-- @revision 30/01/2016
 -- @brief Input and Output of Trees of Doubles
 
 with Ada.Text_IO; use Ada.Text_IO;

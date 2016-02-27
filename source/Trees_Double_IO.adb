@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 06/04/2012
--- @revision 10/05/2013
+-- @revision 30/01/2016
 -- @brief Input and Output of Trees of Doubles
 
 with Utils.IO; use Utils.IO;
@@ -29,7 +29,12 @@ package body Trees_Double_IO is
 
   function To_S(D: in Double; Aft: in Field := Default_Double_Aft; Format: in Tree_Format) return String is
   begin
-    return D2Sea(D, Aft => Aft);
+    case Format is
+      when Json_Tree =>
+        return """name"": """ & D2Sea(D, Aft => Aft) & """";
+      when others =>
+        return D2Sea(D, Aft => Aft);
+    end case;
   end To_S;
 
   -----------
@@ -37,8 +42,25 @@ package body Trees_Double_IO is
   -----------
 
   procedure Get_D(D: out Double; Format: in Tree_Format) is
+    Key, Value: Ustring;
+    Found: Boolean := False;
   begin
-    Get_Double(D);
+    case Format is
+      when Json_Tree =>
+        loop
+          Get_Pair(Key, Value, ':');
+          if U2S(To_Lowercase(Key)) = "name" then
+            D := U2D(Value);
+            return;
+          end if;
+          Comments_Skip;
+          if not Separator_Skip(',', Strict => True) then
+            raise Trees_IO_D.Tree_IO_Error with "Name field not found";
+          end if;
+        end loop;
+      when others =>
+        Get_Double(D);
+    end case;
   end Get_D;
 
 end Trees_Double_IO;

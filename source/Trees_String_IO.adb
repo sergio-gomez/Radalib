@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 06/04/2012
--- @revision 10/05/2013
+-- @revision 30/01/2016
 -- @brief Input and Output of Trees of Strings
 
 with Utils.IO; use Utils.IO;
@@ -29,11 +29,16 @@ package body Trees_String_IO is
 
   function To_S(Us: in Ustring; Width: in Natural := Default_Integer_Width; Format: in Tree_Format) return String is
   begin
-    if Width = 0 then
-      return U2S(Us);
-    else
-      return Right_Justify(U2S(Us), Width => Width, Pad => ' ');
-    end if;
+    case Format is
+      when Json_Tree =>
+        return """name"": """ & U2S(Us) & """";
+      when others =>
+        if Width = 0 then
+          return U2S(Us);
+        else
+          return Right_Justify(U2S(Us), Width => Width, Pad => ' ');
+        end if;
+    end case;
   end To_S;
 
   -----------
@@ -41,8 +46,25 @@ package body Trees_String_IO is
   -----------
 
   procedure Get_S(Us: out Ustring; Format: in Tree_Format) is
+    Key, Value: Ustring;
+    Found: Boolean := False;
   begin
-    Get_Word(Us);
+    case Format is
+      when Json_Tree =>
+        loop
+          Get_Pair(Key, Value, ':');
+          if U2S(To_Lowercase(Key)) = "name" then
+            Us := Value;
+            return;
+          end if;
+          Comments_Skip;
+          if not Separator_Skip(',', Strict => True) then
+            raise Trees_IO_S.Tree_IO_Error with "Name field not found";
+          end if;
+        end loop;
+      when others =>
+        Get_Word(Us);
+    end case;
   end Get_S;
 
 end Trees_String_IO;

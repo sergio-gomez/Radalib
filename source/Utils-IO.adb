@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 11/05/2005
--- @revision 10/08/2014
+-- @revision 30/01/2016
 -- @brief Several IO Utils
 
 with Ada.Unchecked_Deallocation;
@@ -84,6 +84,48 @@ package body Utils.IO is
   exception
     when others => return False;
   end Rename_File;
+
+  ---------------
+  -- Copy_File --
+  ---------------
+
+  procedure Copy_File(Ori_Fn: in String; Dest_Fn: in String) is
+  begin
+    Copy_File(Ori_Fn, Dest_Fn, Form => "mode=overwrite");
+  end Copy_File;
+
+  ---------------
+  -- Copy_File --
+  ---------------
+
+  function Copy_File(Ori_Fn: in String; Dest_Fn: in String) return Boolean is
+  begin
+    Copy_File(Ori_Fn, Dest_Fn, Form => "mode=overwrite");
+    return True;
+  exception
+    when others => return False;
+  end Copy_File;
+
+  -----------------
+  -- Append_File --
+  -----------------
+
+  procedure Append_File(Ori_Fn: in String; Dest_Fn: in String) is
+  begin
+    Copy_File(Ori_Fn, Dest_Fn, Form => "mode=append");
+  end Append_File;
+
+  -----------------
+  -- Append_File --
+  -----------------
+
+  function Append_File(Ori_Fn: in String; Dest_Fn: in String) return Boolean is
+  begin
+    Copy_File(Ori_Fn, Dest_Fn, Form => "mode=append");
+    return True;
+  exception
+    when others => return False;
+  end Append_File;
 
   -----------------
   -- Delete_File --
@@ -253,7 +295,7 @@ package body Utils.IO is
   -- Separator_Skip --
   --------------------
 
-  function Separator_Skip(Sep: in Character := ' ') return Boolean is
+  function Separator_Skip(Sep: in Character := ' '; Strict: in Boolean := False) return Boolean is
     Found: Boolean := False;
     C: Character;
     Eol: Boolean;
@@ -261,11 +303,11 @@ package body Utils.IO is
     Look_Ahead(C, Eol);
     if not Eol then
       if Is_Space(C) then
-        Found := True;
+        Found := not Strict;
         Line_Spaces_Skip;
         Look_Ahead(C, Eol);
       end if;
-      if not Eol and then (Is_Separator(C) or (C = Sep)) then
+      if not Eol and then (C = Sep or ((not Strict) and Is_Separator(C))) then
         Found := True;
         Get(C);
         Line_Spaces_Skip;
@@ -278,13 +320,13 @@ package body Utils.IO is
   -- Separator_Skip --
   --------------------
 
-  function Separator_Skip(Ft: in File_Type; Sep: in Character := ' ') return Boolean is
+  function Separator_Skip(Ft: in File_Type; Sep: in Character := ' '; Strict: in Boolean := False) return Boolean is
     Ft_Prev: File_Access;
     Found: Boolean;
   begin
     Ft_Prev := Current_Input;
     Set_Input(Ft);
-    Found := Separator_Skip(Sep);
+    Found := Separator_Skip(Sep, Strict);
     Set_Input(Ft_Prev.all);
     return Found;
   end Separator_Skip;
@@ -293,9 +335,9 @@ package body Utils.IO is
   -- Separator_Skip --
   --------------------
 
-  procedure Separator_Skip(Sep: in Character := ' ') is
+  procedure Separator_Skip(Sep: in Character := ' '; Strict: in Boolean := False) is
   begin
-    if Separator_Skip(Sep) then
+    if Separator_Skip(Sep, Strict) then
       null;
     end if;
   end Separator_Skip;
@@ -304,12 +346,24 @@ package body Utils.IO is
   -- Separator_Skip --
   --------------------
 
-  procedure Separator_Skip(Ft: in File_Type; Sep: in Character := ' ') is
+  procedure Separator_Skip(Ft: in File_Type; Sep: in Character := ' '; Strict: in Boolean := False) is
   begin
-    if Separator_Skip(Ft, Sep) then
+    if Separator_Skip(Ft, Sep, Strict) then
       null;
     end if;
   end Separator_Skip;
+
+  ---------------
+  -- Free_Word --
+  ---------------
+
+  procedure Free_Word(W: in out Word_Access) is
+  begin
+    if W /= null then
+      Dispose(W);
+      W := null;
+    end if;
+  end Free_Word;
 
   ---------------
   -- Word_Skip --
@@ -424,17 +478,157 @@ package body Utils.IO is
     Set_Input(Ft_Prev.all);
   end Get_Word;
 
-  ---------------
-  -- Free_Word --
-  ---------------
+  ---------------------
+  -- Get_Quoted_Word --
+  ---------------------
 
-  procedure Free_Word(W: in out Word_Access) is
+  procedure Get_Quoted_Word(Us: out Ustring; Forbid_Quote_Mark_Inside: in Boolean := False) is
+    C: Character;
+    Eol, Found: Boolean;
+    Qi: Integer;
   begin
-    if W /= null then
-      Dispose(W);
-      W := null;
+    Us := Null_Ustring;
+    Line_Spaces_Skip;
+    Found := False;
+    Look_Ahead(C, Eol);
+    if Eol then
+      raise Quotes_Error with "No word found";
     end if;
-  end Free_Word;
+    for I in Quotes_Open'Range loop
+      if C = Quotes_Open(I) then
+        Qi := I;
+        Found := True;
+        exit;
+      end if;
+    end loop;
+    if not Found then
+      raise Quotes_Error with "No starting quote character";
+    end if;
+    Get(C);
+    loop
+      Look_Ahead(C, Eol);
+      if Eol then
+        raise Quotes_Error with "No ending quote character";
+      elsif C = Quotes_Close(Qi) then
+        Get(C);
+        exit;
+      elsif Forbid_Quote_Mark_Inside and (Is_In_Characters(C, Quotes_Open) or Is_In_Characters(C, Quotes_Close)) then
+        raise Quotes_Error with "Found quote character different from the closing one";
+      end if;
+      Us := Us & C;
+      Get(C);
+    end loop;
+  end Get_Quoted_Word;
+
+  ---------------------
+  -- Get_Quoted_Word --
+  ---------------------
+
+  procedure Get_Quoted_Word(Ft: in File_Type; Us: out Ustring; Forbid_Quote_Mark_Inside: in Boolean := False) is
+    Ft_Prev: File_Access;
+  begin
+    Ft_Prev := Current_Input;
+    Set_Input(Ft);
+    Get_Quoted_Word(Us, Forbid_Quote_Mark_Inside);
+    Set_Input(Ft_Prev.all);
+  end Get_Quoted_Word;
+
+  ---------------------
+  -- Get_Quoted_Word --
+  ---------------------
+
+  procedure Get_Quoted_Word(W: out String_Access; Forbid_Quote_Mark_Inside: in Boolean := False) is
+    Us: Ustring;
+  begin
+    Get_Quoted_Word(Us, Forbid_Quote_Mark_Inside);
+    W := new String(1..Length(Us));
+    W.all := To_String(Us);
+  end Get_Quoted_Word;
+
+  ---------------------
+  -- Get_Quoted_Word --
+  ---------------------
+
+  procedure Get_Quoted_Word(Ft: in File_Type; W: out String_Access; Forbid_Quote_Mark_Inside: in Boolean := False) is
+    Ft_Prev: File_Access;
+  begin
+    Ft_Prev := Current_Input;
+    Set_Input(Ft);
+    Get_Quoted_Word(W, Forbid_Quote_Mark_Inside);
+    Set_Input(Ft_Prev.all);
+  end Get_Quoted_Word;
+
+  --------------
+  -- Get_Pair --
+  --------------
+
+  procedure Get_Pair(Key, Value: out Ustring; Sep: in Character := ' ') is
+    C: Character;
+    Eol: Boolean;
+  begin
+    Key   := Null_Ustring;
+    Value := Null_Ustring;
+    Line_Spaces_Skip;
+    Look_Ahead(C, Eol);
+    if Eol then
+      raise Key_Value_Pair_Error with "Cannot find key";
+    elsif Is_Open_Quote(C) then
+      Get_Quoted_Word(Key);
+    else
+      Get_Word(Key, Sep);
+    end if;
+    if not Separator_Skip(Sep, Strict => True) then
+      raise Key_Value_Pair_Error with "Separator '" & Sep & "' not found between key and value";
+    end if;
+    Look_Ahead(C, Eol);
+    if Eol then
+      raise Key_Value_Pair_Error with "Cannot find value for key: " & U2S(Key);
+    elsif Is_Open_Quote(C) then
+      Get_Quoted_Word(Value);
+    else
+      Get_Word(Value, Sep);
+    end if;
+  end Get_Pair;
+
+  --------------
+  -- Get_Pair --
+  --------------
+
+  procedure Get_Pair(Ft: in File_Type; Key, Value: out Ustring; Sep: in Character := ' ') is
+    Ft_Prev: File_Access;
+  begin
+    Ft_Prev := Current_Input;
+    Set_Input(Ft);
+    Get_Pair(Key, Value, Sep);
+    Set_Input(Ft_Prev.all);
+  end Get_Pair;
+
+  --------------
+  -- Get_Pair --
+  --------------
+
+  procedure Get_Pair(Key, Value: out String_Access; Sep: in Character := ' ') is
+    Us_Key, Us_Value: Ustring;
+  begin
+    Get_Pair(Us_Key, Us_Value, Sep);
+    Key   := new String(1..Length(Us_Key));
+    Value := new String(1..Length(Us_Value));
+    Key.all   := To_String(Us_Key);
+    Value.all := To_String(Us_Value);
+  end Get_Pair;
+
+  --------------
+  -- Get_Pair --
+  --------------
+
+  procedure Get_Pair(Ft: in File_Type; Key, Value: out String_Access; Sep: in Character := ' ') is
+    Ft_Prev: File_Access;
+  begin
+    Ft_Prev := Current_Input;
+    Set_Input(Ft);
+    Get_Pair(Key, Value, Sep);
+    Set_Input(Ft_Prev.all);
+  end Get_Pair;
 
   -----------------
   -- Get_Integer --

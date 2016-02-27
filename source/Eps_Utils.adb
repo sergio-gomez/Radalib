@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -346,7 +346,7 @@ package body Eps_Utils is
   function Change_Backslash(S: in String) return String is
     Res: String := S;
   begin
-    for I in Res'range loop
+    for I in Res'Range loop
       if Res(I) = '\' then
         Res(I) := '/';
       end if;

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2015 by
+-- Radalib, Copyright (c) 2016 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -106,7 +106,7 @@ package body Contingency_Tables is
 
   function Find_Index(Ls: in Plists; L: in List) return Natural is
   begin
-    for I in Ls'range loop
+    for I in Ls'Range loop
       if Ls(I) = L then
         return I;
       end if;

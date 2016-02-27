@@ -21,7 +21,7 @@ How to install the GNAT Ada compiler
       $ cd gnat-gpl-2015-x86_64-linux-bin
       $ sudo ./doinstall
    We will assume that GNAT has been installed in the directory
-      /usr/gnat/
+      /usr/local/gnat/
 
 
 -----------------------------------------
@@ -37,7 +37,7 @@ How to install radalib for the first time
 2) Add the following lines to your /home/myusername/.bashrc or
    /home/myusername/.bash_profile, using the previously chosen values
    of the GNAT and radalib installation directories:
-      export PATH=/usr/gnat/bin:$PATH
+      export PATH=/usr/local/gnat/bin:$PATH
       export RADALIB_ROOT=/home/myusername/ada/radalib
       export ADA_INCLUDE_PATH=$RADALIB_ROOT/source
       export ADA_OBJECTS_PATH=$RADALIB_ROOT/compiled
