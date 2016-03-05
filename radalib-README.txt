@@ -1,5 +1,5 @@
 ===================================================================
-== Radalib 20160227-144606                                       ==
+== Radalib 20160302-130549                                       ==
 ==                                                               ==
 == Copyright (c) 2016 by                                         ==
 ==   Sergio Gomez             (sergio.gomez@urv.cat)             ==
@@ -93,18 +93,18 @@ Their contents are:
 
 - radalib\compiled
     Object files obtained from the compilation of the source packages. By default,
-    they are for Windows; they need to be rebuild when working in other platforms.
+    they are for Windows; they need to be rebuilt when working in other platforms.
 
 - radalib\maintenance
     Scripts to simplify the upgrade and installation of Radalib in the different
     platforms.
 
 
-The size of radalib at version radalib-20160202-112148 is:
+The size of radalib at version radalib-20160227-144606 is:
 
 Code   :   249 Ada files
-Files  :   658 files
-Source : 60348 lines of Ada code
+Files  :   654 files
+Source : 60407 lines of Ada code
 
 
 -----------

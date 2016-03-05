@@ -16,7 +16,7 @@ How to install the GNAT Ada compiler
 2) You may need "root" permissions to install GNAT (depending on the installation
    directory)
 
-3) Expand and install the GNAT Ada GPL 2015 (64 or 32 bits ), or newer:
+3) Expand and install the GNAT Ada GPL 2015 (64 bits), or newer:
       $ tar xvfz gnat-gpl-2015-x86_64-linux-bin.tar.gz
       $ cd gnat-gpl-2015-x86_64-linux-bin
       $ sudo ./doinstall

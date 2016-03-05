@@ -3,8 +3,8 @@
 VERS=`date "+%Y%m%d-%H%M%S"`
 VERSNAME=radalib-$VERS
 VERSFILE=$VERSNAME.txt
-README=README.txt
-READMETMP=README.tmp
+README=radalib-README.txt
+READMETMP=radalib-README.tmp
 
 cd ..
 
