@@ -18,7 +18,7 @@ for i in *.exe; do
   echo "" >> $USAGE_FILE
   echo "===================================================================" >> $USAGE_FILE
   printf "== %-61s ==\n" $i >> $USAGE_FILE
-  ./$i | tail -n +8 | sed "s/^Usage:.*radalib.tools./Usage:  /g" >> $USAGE_FILE
+  ./$i | tail -n +8 | sed "s/^Usage:.*radalib.tools./Usage:  /g" | sed "s/^Usage:.*-win32-src./Usage:  /g" >> $USAGE_FILE
   echo -n "."
 done
 echo ""
