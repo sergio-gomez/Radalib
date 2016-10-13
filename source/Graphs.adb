@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 18/11/2004
--- @revision 28/10/2014
+-- @revision 26/08/2016
 -- @brief Treatment of Graphs
 
 with Ada.Containers; use Ada.Containers;
@@ -466,9 +466,9 @@ package body Graphs is
           Remove(Ll);
         elsif Er.Vertex = Er_Next.Vertex then
           if Is_From then
-            raise Incompatible_Values_Error with "Incompatible values for edge " & I2S(I) & " -> " & I2S(Er.Vertex);
-          else
             raise Incompatible_Values_Error with "Incompatible values for edge " & I2S(Er.Vertex) & " -> " & I2S(I);
+          else
+            raise Incompatible_Values_Error with "Incompatible values for edge " & I2S(I) & " -> " & I2S(Er.Vertex);
           end if;
         else
           Next(Ll);

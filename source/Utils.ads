@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 11/05/2005
--- @revision 19/02/2016
+-- @revision 13/10/2016
 -- @brief Several Utils
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -205,6 +205,7 @@ package Utils is
   -- F       : The Float
   -- return  : The Floor
   function Floor(F: in Float) return Float;
+  pragma Inline(Floor);
 
   -- Purpose : Return the Floor of a Float
   -- Note    : Cannot handle properly values above Floats resolution
@@ -212,6 +213,7 @@ package Utils is
   -- F       : The Float
   -- return  : The Floor
   function Floor(F: in Float) return Integer;
+  pragma Inline(Floor);
 
   -- Purpose : Return the Floor of a Double
   -- Note    : Cannot handle properly values out of Integers range
@@ -219,6 +221,7 @@ package Utils is
   -- D       : The Double
   -- return  : The Floor
   function Floor(D: in Double) return Double;
+  pragma Inline(Floor);
 
   -- Purpose : Return the Floor of a Double
   -- Note    : Cannot handle properly values out of Integers range
@@ -226,6 +229,7 @@ package Utils is
   -- D       : The Double
   -- return  : The Floor
   function Floor(D: in Double) return Integer;
+  pragma Inline(Floor);
 
   -- Purpose : Return the Ceiling of a Float
   -- Note    : Cannot handle properly values above Floats resolution
@@ -233,6 +237,7 @@ package Utils is
   -- F       : The Float
   -- return  : The Ceiling
   function Ceiling(F: in Float) return Float;
+  pragma Inline(Ceiling);
 
   -- Purpose : Return the Ceiling of a Float
   -- Note    : Cannot handle properly values above Floats resolution
@@ -240,6 +245,7 @@ package Utils is
   -- F       : The Float
   -- return  : The Ceiling
   function Ceiling(F: in Float) return Integer;
+  pragma Inline(Ceiling);
 
   -- Purpose : Return the Ceiling of a Double
   -- Note    : Cannot handle properly values out of Integers range
@@ -247,6 +253,7 @@ package Utils is
   -- D       : The Double
   -- return  : The Ceiling
   function Ceiling(D: in Double) return Double;
+  pragma Inline(Ceiling);
 
   -- Purpose : Return the Ceiling of a Double
   -- Note    : Cannot handle properly values out of Integers range
@@ -254,6 +261,7 @@ package Utils is
   -- D       : The Double
   -- return  : The Ceiling
   function Ceiling(D: in Double) return Integer;
+  pragma Inline(Ceiling);
 
   -- Purpose : Return the Minimum of two Integer
   --

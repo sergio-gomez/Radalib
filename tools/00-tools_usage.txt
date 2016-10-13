@@ -1,7 +1,7 @@
 
 
 ===================================================================
-== communities_detection.exe                                     ==
+== Communities_Detection.exe                                     ==
 ===================================================================
 == Community detection in complex networks by                    ==
 == optimization of modularity:                                   ==
@@ -19,7 +19,7 @@
 ===================================================================
 
 
-Usage:  communities_detection.exe  log_level  modularity_type  heuristics  repetitions  [ resistance  [ penalty_coeff ] ]  net_name  lol_best_name
+Usage:  Communities_Detection.exe  log_level  modularity_type  heuristics  repetitions  [ resistance  [ penalty_coeff ] ]  net_name  lol_best_name
 
    Logging Levels      :  N | S | P | V
                             also lowercase symbols
@@ -72,13 +72,13 @@ Usage:  communities_detection.exe  log_level  modularity_type  heuristics  repet
 
 
 ===================================================================
-== communities_network.exe                                       ==
+== Communities_Network.exe                                       ==
 ===================================================================
 == Find the Network of Communities of a given Network            ==
 ===================================================================
 
 
-Usage:  communities_network.exe  net_name  clu_or_lol_name  [ number_of_lines_to_skip ]  comms_net_name  weights_type  [ decimal_digits ]
+Usage:  Communities_Network.exe  net_name  clu_or_lol_name  [ number_of_lines_to_skip ]  comms_net_name  weights_type  [ decimal_digits ]
 
    net_name                :  name of the input network file in Pajek format (*.net)
 
@@ -103,7 +103,7 @@ Usage:  communities_network.exe  net_name  clu_or_lol_name  [ number_of_lines_to
 
 
 ===================================================================
-== compare_partitions.exe                                        ==
+== Compare_Partitions.exe                                        ==
 ===================================================================
 == Compare partitions in Lol or Pajek format                     ==
 == Many indices and metrics are calculated:                      ==
@@ -114,7 +114,7 @@ Usage:  communities_network.exe  net_name  clu_or_lol_name  [ number_of_lines_to
 ===================================================================
 
 
-Usage:  compare_partitions.exe  clu_or_lol(s)_1_name  clu_or_lol(s)_2_name  [ out_name [ out_format ] ]  [ number_of_lines_to_skip ]
+Usage:  Compare_Partitions.exe  clu_or_lol(s)_1_name  clu_or_lol(s)_2_name  [ out_name [ out_format ] ]  [ number_of_lines_to_skip ]
 
    clu_or_lol(s)_1_name    :  name of the file with the first partition(s) in Pajek or Lol(s) format
                                 only one partition per file if in Pajek format
@@ -139,13 +139,13 @@ Usage:  compare_partitions.exe  clu_or_lol(s)_1_name  clu_or_lol(s)_2_name  [ ou
 
 
 ===================================================================
-== connected_subgraphs.exe                                       ==
+== Connected_Subgraphs.exe                                       ==
 ===================================================================
 == Split a network into its weak or strong connected components  ==
 ===================================================================
 
 
-Usage:  connected_subgraphs.exe  net_name_without_ext  [ components_type ]   [ skip_size ]
+Usage:  Connected_Subgraphs.exe  net_name_without_ext  [ components_type ]   [ skip_size ]
 
    net_name_without_ext :  name of the network file in Pajek format without the .net extension
 
@@ -162,14 +162,14 @@ Usage:  connected_subgraphs.exe  net_name_without_ext  [ components_type ]   [ s
 
 
 ===================================================================
-== convert_clu_to_lol.exe                                        ==
+== Convert_Clu_To_Lol.exe                                        ==
 ===================================================================
 == Convert a file with a partition in Pajek format (*.clu)       ==
 == into a file with a partition in Lol format                    ==
 ===================================================================
 
 
-Usage:  convert_clu_to_lol.exe  clu_file_name  lol_file_name  [ sorted ]
+Usage:  Convert_Clu_To_Lol.exe  clu_file_name  lol_file_name  [ sorted ]
 
    clu_file_name :  name of the input partition file in Pajek format (*.clu)
 
@@ -181,14 +181,14 @@ Usage:  convert_clu_to_lol.exe  clu_file_name  lol_file_name  [ sorted ]
 
 
 ===================================================================
-== convert_lol_to_clu.exe                                        ==
+== Convert_Lol_To_Clu.exe                                        ==
 ===================================================================
 == Convert a file with a partition in Lol format into            ==
 == a file with a partition in Pajek format (*.clu)               ==
 ===================================================================
 
 
-Usage:  convert_lol_to_clu.exe  lol_file_name  clu_file_name  [ number_of_lines_to_skip ]
+Usage:  Convert_Lol_To_Clu.exe  lol_file_name  clu_file_name  [ number_of_lines_to_skip ]
 
    lol_file_name           :  name of the input partition file in Lol format
 
@@ -200,7 +200,7 @@ Usage:  convert_lol_to_clu.exe  lol_file_name  clu_file_name  [ number_of_lines_
 
 
 ===================================================================
-== data_statistics.exe                                           ==
+== Data_Statistics.exe                                           ==
 ===================================================================
 == Find statistic indicators of a data set, in rows or columns:  ==
 == - minimum, maximum, percentiles                               ==
@@ -212,7 +212,7 @@ Usage:  convert_lol_to_clu.exe  lol_file_name  clu_file_name  [ number_of_lines_
 ===================================================================
 
 
-Usage:  data_statistics.exe  data_name  [ statistics_name ]  [ index1 [ index2 ] ]  rows_or_columns  [ decimal_digits ]
+Usage:  Data_Statistics.exe  data_name  [ statistics_name ]  [ index1 [ index2 ] ]  rows_or_columns  [ decimal_digits ]
 
    data_name       :  name of the data file
 
@@ -235,13 +235,13 @@ Usage:  data_statistics.exe  data_name  [ statistics_name ]  [ index1 [ index2 ]
 
 
 ===================================================================
-== data_to_correlations.exe                                      ==
+== Data_To_Correlations.exe                                      ==
 ===================================================================
 == Find the correlations network of a data set                   ==
 ===================================================================
 
 
-Usage:  data_to_correlations.exe  data_file  rows_or_columns  scaling_type  correlations_file  [ decimal_digits ]
+Usage:  Data_To_Correlations.exe  data_file  rows_or_columns  scaling_type  correlations_file  [ decimal_digits ]
 
    rows_or_columns :  R | C
                         also lowercase symbols
@@ -261,7 +261,7 @@ Usage:  data_to_correlations.exe  data_file  rows_or_columns  scaling_type  corr
 
 
 ===================================================================
-== data_to_proximities.exe                                       ==
+== Data_To_Proximities.exe                                       ==
 ===================================================================
 == Calculate many types of proximities (distances or             ==
 == similarities) between rows or columns in a data set:          ==
@@ -271,7 +271,7 @@ Usage:  data_to_correlations.exe  data_file  rows_or_columns  scaling_type  corr
 ===================================================================
 
 
-Usage:  data_to_proximities.exe  data_name  proximities_name  rows_or_columns  scaling_type  dissimilarity_type  [ dissimilarity_param ]  transform_type  [ decimal_digits ]
+Usage:  Data_To_Proximities.exe  data_name  proximities_name  rows_or_columns  scaling_type  dissimilarity_type  [ dissimilarity_param ]  transform_type  [ decimal_digits ]
 
    data_name           :  name of the data file
 
@@ -353,13 +353,13 @@ Usage:  data_to_proximities.exe  data_name  proximities_name  rows_or_columns  s
 
 
 ===================================================================
-== extract_subgraphs.exe                                         ==
+== Extract_Subgraphs.exe                                         ==
 ===================================================================
 == Extract subgraphs from a graph                                ==
 ===================================================================
 
 
-Usage:  extract_subgraphs.exe  net_name  clu_or_lol_name  out_name_prefix  [ number_of_lines_to_skip ]
+Usage:  Extract_Subgraphs.exe  net_name  clu_or_lol_name  out_name_prefix  [ number_of_lines_to_skip ]
 
    net_name                :  name of the network file in Pajek format
 
@@ -374,7 +374,7 @@ Usage:  extract_subgraphs.exe  net_name  clu_or_lol_name  out_name_prefix  [ num
 
 
 ===================================================================
-== hierarchical_clustering.exe                                   ==
+== Hierarchical_Clustering.exe                                   ==
 ===================================================================
 == Agglomerative Hierarchical Clustering with MultiDendrograms   ==
 == and Binary Dendrograms, for distances and similarities        ==
@@ -394,7 +394,7 @@ Usage:  extract_subgraphs.exe  net_name  clu_or_lol_name  out_name_prefix  [ num
 ===================================================================
 
 
-Usage:  hierarchical_clustering.exe  proximities_name  output_prefix  dendrogram_type  proximity_type  clustering_type  [ precision ]  [ dendrogram_mode ]  [ internal_nodes_prefix ]
+Usage:  Hierarchical_Clustering.exe  proximities_name  output_prefix  dendrogram_type  proximity_type  clustering_type  [ precision ]  [ dendrogram_mode ]  [ internal_nodes_prefix ]
 
    proximities_name      :  name of the proximities file, either in matrix or list form
                               in matrix form, the names may be in first column, first row, or none
@@ -441,13 +441,13 @@ Usage:  hierarchical_clustering.exe  proximities_name  output_prefix  dendrogram
 
 
 ===================================================================
-== links_info.exe                                                ==
+== Links_Info.exe                                                ==
 ===================================================================
 == Obtain degrees and strengths of nodes attached to each link   ==
 ===================================================================
 
 
-Usage:  links_info.exe  net_name  [ num_random_links ]  links_info_name  [ decimal_digits ]
+Usage:  Links_Info.exe  net_name  [ num_random_links ]  links_info_name  [ decimal_digits ]
 
    net_name         :  name of the network file in Pajek format
 
@@ -464,14 +464,14 @@ Usage:  links_info.exe  net_name  [ num_random_links ]  links_info_name  [ decim
 
 
 ===================================================================
-== list_to_net.exe                                               ==
+== List_To_Net.exe                                               ==
 ===================================================================
 == Convert a file with the list of links of a graph into         ==
 == a network file in Pajek format (*.net)                        ==
 ===================================================================
 
 
-Usage:  list_to_net.exe  list_input_file  net_output_file  [ network_type ]
+Usage:  List_To_Net.exe  list_input_file  net_output_file  [ network_type ]
 
    list_input_file : text file containing a list of links
 
@@ -489,14 +489,14 @@ Usage:  list_to_net.exe  list_input_file  net_output_file  [ network_type ]
 
 
 ===================================================================
-== matrix_to_list.exe                                            ==
+== Matrix_To_List.exe                                            ==
 ===================================================================
 == Convert a file with a graph in matrix form into               ==
 == a file with the list of links                                 ==
 ===================================================================
 
 
-Usage:  matrix_to_list.exe matrix_input_file  list_output_file  [ no_link_string ]
+Usage:  Matrix_To_List.exe matrix_input_file  list_output_file  [ no_link_string ]
 
    matrix_input_file : text file containing a matrix
 
@@ -508,14 +508,14 @@ Usage:  matrix_to_list.exe matrix_input_file  list_output_file  [ no_link_string
 
 
 ===================================================================
-== matrix_to_net.exe                                             ==
+== Matrix_To_Net.exe                                             ==
 ===================================================================
 == Convert a file with a graph in matrix form into               ==
 == a network file in Pajek format (*.net)                        ==
 ===================================================================
 
 
-Usage:  matrix_to_net.exe matrix_input_file  net_output_file  [ no_link_string ]
+Usage:  Matrix_To_Net.exe matrix_input_file  net_output_file  [ no_link_string ]
 
    matrix_input_file : text file containing an adjacency or weights matrix
 
@@ -526,7 +526,7 @@ Usage:  matrix_to_net.exe matrix_input_file  net_output_file  [ no_link_string ]
 
 
 ===================================================================
-== mesoscales_detection.exe                                      ==
+== Mesoscales_Detection.exe                                      ==
 ===================================================================
 == Mesoscales search in complex networks by optimization of      ==
 == modularity using common self-loops                            ==
@@ -540,7 +540,7 @@ Usage:  matrix_to_net.exe matrix_input_file  net_output_file  [ no_link_string ]
 ===================================================================
 
 
-Usage:  mesoscales_detection.exe  net_name  weighted_modularity_type  heuristics  repetitions  [ num_steps  max_delta_loop_ratio ]  [ min_self_loop  max_self_loop ]
+Usage:  Mesoscales_Detection.exe  net_name  weighted_modularity_type  heuristics  repetitions  [ num_steps  max_delta_loop_ratio ]  [ min_self_loop  max_self_loop ]
 
    Network Name              :  Name of the input network file in Pajek format (*.net)
 
@@ -584,13 +584,13 @@ Usage:  mesoscales_detection.exe  net_name  weighted_modularity_type  heuristics
 
 
 ===================================================================
-== mesoscales_fine_tuning.exe                                    ==
+== Mesoscales_Fine_Tuning.exe                                    ==
 ===================================================================
 == Mesoscales fine-tuning after Mesoscales detection             ==
 ===================================================================
 
 
-Usage:  mesoscales_fine_tuning.exe  net_name_without_ext  weighted_modularity_type
+Usage:  Mesoscales_Fine_Tuning.exe  net_name_without_ext  weighted_modularity_type
 
    net_name_without_ext      :  name of the network file in Pajek format without the .net extension
                                   it is supposed that files with this name and the following endings exist:
@@ -612,14 +612,14 @@ Usage:  mesoscales_fine_tuning.exe  net_name_without_ext  weighted_modularity_ty
 
 
 ===================================================================
-== modularity_calculation.exe                                    ==
+== Modularity_Calculation.exe                                    ==
 ===================================================================
 == Calculate the total modularity, decomposed in node            ==
 == and community contributions                                   ==
 ===================================================================
 
 
-Usage:  modularity_calculation.exe  net_name  clu_or_lol_name  [ resistance  [ penalty_coeff ] ]  modularity_type  [ modularity_details ]  [ number_of_lines_to_skip ]
+Usage:  Modularity_Calculation.exe  net_name  clu_or_lol_name  [ resistance  [ penalty_coeff ] ]  modularity_type  [ modularity_details ]  [ number_of_lines_to_skip ]
 
    net_name                :  name of the input network file in Pajek format (*.net)
 
@@ -663,13 +663,13 @@ Usage:  modularity_calculation.exe  net_name  clu_or_lol_name  [ resistance  [ p
 
 
 ===================================================================
-== multiplex_aggregate.exe                                       ==
+== Multiplex_Aggregate.exe                                       ==
 ===================================================================
 == Aggregate the Layers of a Multiplex                           ==
 ===================================================================
 
 
-Usage:  multiplex_aggregate.exe  list_input_file  output_file  network_type  aggregation_type  weights_type  [ decimal_digits ]
+Usage:  Multiplex_Aggregate.exe  list_input_file  output_file  network_type  aggregation_type  weights_type  [ decimal_digits ]
 
    list_input_file  :  text file containing the list of links of a multiplex
 
@@ -701,13 +701,13 @@ Usage:  multiplex_aggregate.exe  list_input_file  output_file  network_type  agg
 
 
 ===================================================================
-== multiplex_extract_layers.exe                                  ==
+== Multiplex_Extract_Layers.exe                                  ==
 ===================================================================
 == Extract the Layers of a Multiplex as Networks in Pajek format ==
 ===================================================================
 
 
-Usage:  multiplex_extract_layers.exe  list_input_file  net_output_prefix  network_type
+Usage:  Multiplex_Extract_Layers.exe  list_input_file  net_output_prefix  network_type
 
    list_input_file   : text file containing the list of links of a multiplex
 
@@ -722,14 +722,14 @@ Usage:  multiplex_extract_layers.exe  list_input_file  net_output_prefix  networ
 
 
 ===================================================================
-== net_to_list.exe                                               ==
+== Net_To_List.exe                                               ==
 ===================================================================
 == Convert a network file in Pajek format (*.net) into           ==
 == a file with the list of links                                 ==
 ===================================================================
 
 
-Usage:  net_to_list.exe net_input_file  list_output_file
+Usage:  Net_To_List.exe net_input_file  list_output_file
 
    net_input_file   : name of the input network file in Pajek format (*.net)
 
@@ -737,14 +737,14 @@ Usage:  net_to_list.exe net_input_file  list_output_file
 
 
 ===================================================================
-== net_to_matrix.exe                                             ==
+== Net_To_Matrix.exe                                             ==
 ===================================================================
 == Convert a network file in Pajek format (*.net) into           ==
 == a file with a graph in matrix form                            ==
 ===================================================================
 
 
-Usage:  net_to_matrix.exe net_input_file  matrix_output_file  [ no_link_string ]
+Usage:  Net_To_Matrix.exe net_input_file  matrix_output_file  [ no_link_string ]
 
    net_input_file     : name of the input network file in Pajek format (*.net)
 
@@ -756,7 +756,7 @@ Usage:  net_to_matrix.exe net_input_file  matrix_output_file  [ no_link_string ]
 
 
 ===================================================================
-== network_properties.exe                                        ==
+== Network_Properties.exe                                        ==
 ===================================================================
 == Find many global, node and edge properties of a network:      ==
 ==   - connectedness (weak or strong)                            ==
@@ -769,7 +769,7 @@ Usage:  net_to_matrix.exe net_input_file  matrix_output_file  [ no_link_string ]
 ===================================================================
 
 
-Usage:  network_properties.exe  net_name  [ properties ]  [ decimal_digits ]
+Usage:  Network_Properties.exe  net_name  [ properties ]  [ decimal_digits ]
 
    Network Name      :  Name of the input network file in Pajek format (*.net)
 
@@ -809,14 +809,14 @@ Usage:  network_properties.exe  net_name  [ properties ]  [ decimal_digits ]
 
 
 ===================================================================
-== reformat_partitions.exe                                       ==
+== Reformat_Partitions.exe                                       ==
 ===================================================================
 == Reformat partitions in Lol or Pajek format changing           ==
 == nodes' indices by nodes' names, and grouping in columns       ==
 ===================================================================
 
 
-Usage:  reformat_partitions.exe net_name  clu_or_lol_name  lol_out_name  [ header_lines  header_mode ]  [ group_by  justify_width  skip_size ]
+Usage:  Reformat_Partitions.exe net_name  clu_or_lol_name  lol_out_name  [ header_lines  header_mode ]  [ group_by  justify_width  skip_size ]
 
    net_name        : name of the network file in Pajek format (*.net)
 
@@ -852,7 +852,7 @@ Usage:  reformat_partitions.exe net_name  clu_or_lol_name  lol_out_name  [ heade
 
 
 ===================================================================
-== size_reduction.exe                                            ==
+== Size_Reduction.exe                                            ==
 ===================================================================
 == Reduction of the size of a network preserving modularity,     ==
 == by elimination of simple and triangular 'hairs'               ==
@@ -860,7 +860,7 @@ Usage:  reformat_partitions.exe net_name  clu_or_lol_name  lol_out_name  [ heade
 ===================================================================
 
 
-Usage:  size_reduction.exe  net_name_without_ext  weights_type  [ decimal_digits ]
+Usage:  Size_Reduction.exe  net_name_without_ext  weights_type  [ decimal_digits ]
 
    net_name_without_ext :  name of the network file in Pajek format without the .net extension
 
@@ -877,14 +877,14 @@ Usage:  size_reduction.exe  net_name_without_ext  weights_type  [ decimal_digits
 
 
 ===================================================================
-== size_reduction_lol_expand.exe                                 ==
+== Size_Reduction_Lol_Expand.exe                                 ==
 ===================================================================
 == Expansion of a partition of a size-reduced network into       ==
 == a partition of the original network                           ==
 ===================================================================
 
 
-Usage:  size_reduction_lol_expand.exe  reduced_lol_name  reducing_lol_name  expanded_lol_name  [ header_lines  header_mode ]
+Usage:  Size_Reduction_Lol_Expand.exe  reduced_lol_name  reducing_lol_name  expanded_lol_name  [ header_lines  header_mode ]
 
    reduced_lol_name  : name of the input partition file in Lol format of a size-reduced network
                          the file may contain many partitions
@@ -909,13 +909,13 @@ Usage:  size_reduction_lol_expand.exe  reduced_lol_name  reducing_lol_name  expa
 
 
 ===================================================================
-== sort_nodes.exe                                                ==
+== Sort_Nodes.exe                                                ==
 ===================================================================
 == Sort nodes randomly or according to degree                    ==
 ===================================================================
 
 
-Usage:  sort_nodes.exe  net_name  sorted_net_name  [ sort_direction ]
+Usage:  Sort_Nodes.exe  net_name  sorted_net_name  [ sort_direction ]
 
    sort_direction :  A | D | R
                        also lowercase symbols
@@ -927,14 +927,14 @@ Usage:  sort_nodes.exe  net_name  sorted_net_name  [ sort_direction ]
 
 
 ===================================================================
-== spanning_tree.exe                                             ==
+== Spanning_Tree.exe                                             ==
 ===================================================================
 == Find the minimum or maximum spanning tree of a                ==
 == weighted network                                              ==
 ===================================================================
 
 
-Usage:  spanning_tree.exe  net_name  mst_net_name  optimization_type  weights_type  [ decimal_digits ]
+Usage:  Spanning_Tree.exe  net_name  mst_net_name  optimization_type  weights_type  [ decimal_digits ]
 
    net_name          : name of the input network file in Pajek format (*.net)
 
@@ -959,13 +959,13 @@ Usage:  spanning_tree.exe  net_name  mst_net_name  optimization_type  weights_ty
 
 
 ===================================================================
-== symmetrize_network.exe                                        ==
+== Symmetrize_Network.exe                                        ==
 ===================================================================
 == Symmetrization of a directed graph                            ==
 ===================================================================
 
 
-Usage:  symmetrize_network.exe  net_name  sym_net_name  weights_type  [ decimal_digits ]
+Usage:  Symmetrize_Network.exe  net_name  sym_net_name  weights_type  [ decimal_digits ]
 
    net_name       : name of the input network file in Pajek format (*.net)
 

@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 10/05/2013
--- @revision 01/02/2016
+-- @revision 13/10/2016
 -- @brief Test of Dendrograms packages
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -153,6 +153,12 @@ procedure Dendrograms_Test is
 
   procedure Print_Dendrogram_Nodes is new Generic_Depth_First_Postorder_Traversal(Print_Node);
 
+  -- Show Dendrogram Plot Header
+  procedure Print_Dendrogram_Plot_Header is
+  begin
+    Put_Line("#Type" & Htab & "Id" & Htab & "x1" & Htab & "y1" & Htab & "x2" & Htab & "y2" & Htab & "Name");
+  end Print_Dendrogram_Plot_Header;
+
   -- Show Deviation Measures
   procedure Print_Deviation_Measures(Data: in PDoubless; Dendro: in Dendrogram) is
     Coph, Coph_Err, Nmse, Nmae: Double;
@@ -206,8 +212,10 @@ begin
   New_Line;
   Put_Dendrogram_Structure(Dendro, Aft => 2);  -- using Dendrograms.IO
   New_Line;
+  Print_Dendrogram_Plot_Header;
   Put_Dendrogram_Plot_Info(Dendro, Include_Bands => True, Aft => 2);
   New_Line;
+  Print_Dendrogram_Plot_Header;
   Put_Dendrogram_Plot_Info(Dendro, Include_Bands => False, Aft => 2);
   New_Line;
   Um := Get_Ultrametric_Matrix(Dendro);

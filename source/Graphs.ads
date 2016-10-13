@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 18/11/2004
--- @revision 28/10/2014
+-- @revision 26/08/2016
 -- @brief Treatment of Graphs
 
 with Ada.Strings.Unbounded;

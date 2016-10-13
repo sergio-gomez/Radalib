@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 11/05/2005
--- @revision 19/02/2016
+-- @revision 13/10/2016
 -- @brief Several Utils
 
 with Ada.Strings; use Ada.Strings;
@@ -205,14 +205,8 @@ package body Utils is
   -----------
 
   function Floor(F: in Float) return Float is
-    R: Float;
   begin
-    R := Round(F);
-    if R <= F then
-      return R;
-    else
-      return Round(F - 0.5);
-    end if;
+    return Float'Floor(F);
   end Floor;
 
   -----------
@@ -220,10 +214,8 @@ package body Utils is
   -----------
 
   function Floor(F: in Float) return Integer is
-    R: Float;
   begin
-    R := Floor(F);
-    return Integer(R);
+    return Integer(Float'Floor(F));
   end Floor;
 
   -----------
@@ -231,14 +223,8 @@ package body Utils is
   -----------
 
   function Floor(D: in Double) return Double is
-    R: Double;
   begin
-    R := Round(D);
-    if R <= D then
-      return R;
-    else
-      return Round(D - 0.5);
-    end if;
+    return Double'Floor(D);
   end Floor;
 
   -----------
@@ -246,10 +232,8 @@ package body Utils is
   -----------
 
   function Floor(D: in Double) return Integer is
-    R: Double;
   begin
-    R := Floor(D);
-    return Integer(R);
+    return Integer(Double'Floor(D));
   end Floor;
 
   -------------
@@ -257,14 +241,8 @@ package body Utils is
   -------------
 
   function Ceiling(F: in Float) return Float is
-    R: Float;
   begin
-    R := Round(F);
-    if R >= F then
-      return R;
-    else
-      return Round(F + 0.5);
-    end if;
+    return Float'Ceiling(F);
   end Ceiling;
 
   -------------
@@ -272,10 +250,8 @@ package body Utils is
   -------------
 
   function Ceiling(F: in Float) return Integer is
-    R: Float;
   begin
-    R := Ceiling(F);
-    return Integer(R);
+    return Integer(Float'Ceiling(F));
   end Ceiling;
 
   -------------
@@ -283,14 +259,8 @@ package body Utils is
   -------------
 
   function Ceiling(D: in Double) return Double is
-    R: Double;
   begin
-    R := Round(D);
-    if R >= D then
-      return R;
-    else
-      return Round(D + 0.5);
-    end if;
+    return Double'Ceiling(D);
   end Ceiling;
 
   -------------
@@ -298,10 +268,8 @@ package body Utils is
   -------------
 
   function Ceiling(D: in Double) return Integer is
-    R: Double;
   begin
-    R := Ceiling(D);
-    return Integer(R);
+    return Integer(Double'Ceiling(D));
   end Ceiling;
 
   ---------

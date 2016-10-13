@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/05/2005
--- @revision 31/10/2014
+-- @revision 13/10/2016
 -- @brief Test of Utils package
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -46,6 +46,7 @@ begin
   Put_Line("Longint: " & L2S(Longint'First) & " to " & L2S(Longint'Last));
   New_Line;
 
+  Put_Line("Left and Right Justify");
   Put_Line("<" & Left_Justify("Left", 2) & ">");
   Put_Line("<" & Left_Justify("Left", 6) & ">");
   Put_Line("<" & Left_Justify("  Left    ", 6, '*') & ">");
@@ -54,6 +55,7 @@ begin
   Put_Line("<" & Right_Justify("  Right  ", 10, '*') & ">");
   New_Line;
 
+  Put_Line("Conversion to String");
   Put_Line("<" & I2S(-255) & ">");
   Put_Line("<" & I2S(255, Base => 2) & ">");
   Put_Line("<" & To_String(F => 0.000001234, Exp => 2) & ">");
@@ -81,6 +83,7 @@ begin
   end loop;
   New_Line;
 
+  Put_Line("Floor, Round and Ceiling of Float");
   X := -2.0;
   Put_Line(F2Se0(X, Aft => 2) & ":  " & F2Se0(Floor(X), Aft => 2) & "  " & I2S(Integer(X)) & "  " & F2Se0(Round(X), Aft => 2) & "  " & F2Se0(Ceiling(X), Aft => 2));
   X := -1.8;
@@ -97,8 +100,31 @@ begin
   Put_Line(F2Se0(X, Aft => 2) & ":  " & F2Se0(Floor(X), Aft => 2) & "  " & I2S(Integer(X)) & "  " & F2Se0(Round(X), Aft => 2) & "  " & F2Se0(Ceiling(X), Aft => 2));
   X := 2.0;
   Put_Line(F2Se0(X, Aft => 2) & ":  " & F2Se0(Floor(X), Aft => 2) & "  " & I2S(Integer(X)) & "  " & F2Se0(Round(X), Aft => 2) & "  " & F2Se0(Ceiling(X), Aft => 2));
+  X := 0.999;
+  Put_Line(F2Se0(X, Aft => 6) & ":  " & F2Se0(Floor(X), Aft => 2) & "  " & I2S(Integer(X)) & "  " & F2Se0(Round(X), Aft => 2) & "  " & F2Se0(Ceiling(X), Aft => 2));
+  X := 0.9999;
+  Put_Line(F2Se0(X, Aft => 6) & ":  " & F2Se0(Floor(X), Aft => 2) & "  " & I2S(Integer(X)) & "  " & F2Se0(Round(X), Aft => 2) & "  " & F2Se0(Ceiling(X), Aft => 2));
+  X := 0.99999;
+  Put_Line(F2Se0(X, Aft => 6) & ":  " & F2Se0(Floor(X), Aft => 2) & "  " & I2S(Integer(X)) & "  " & F2Se0(Round(X), Aft => 2) & "  " & F2Se0(Ceiling(X), Aft => 2));
+  X := 0.999999;
+  Put_Line(F2Se0(X, Aft => 6) & ":  " & F2Se0(Floor(X), Aft => 2) & "  " & I2S(Integer(X)) & "  " & F2Se0(Round(X), Aft => 2) & "  " & F2Se0(Ceiling(X), Aft => 2));
   X := 98765432198.7654;
   Put_Line(F2Se0(X, Aft => 4) & ":  " & F2Se0(Floor(X), Aft => 4) & "  " & F2Se0(Round(X), Aft => 4) & "  " & F2Se0(Ceiling(X), Aft => 4));
+  New_Line;
+
+  Put_Line("Floor, Round and Ceiling of Double");
+  D := 0.999;
+  Put_Line(D2Se0(D, Aft => 8) & ":  " & D2Se0(Floor(D), Aft => 4) & "  " & D2Se0(Round(D), Aft => 4) & "  " & D2Se0(Ceiling(D), Aft => 4));
+  D := 0.9999;
+  Put_Line(D2Se0(D, Aft => 8) & ":  " & D2Se0(Floor(D), Aft => 4) & "  " & D2Se0(Round(D), Aft => 4) & "  " & D2Se0(Ceiling(D), Aft => 4));
+  D := 0.99999;
+  Put_Line(D2Se0(D, Aft => 8) & ":  " & D2Se0(Floor(D), Aft => 4) & "  " & D2Se0(Round(D), Aft => 4) & "  " & D2Se0(Ceiling(D), Aft => 4));
+  D := 0.999999;
+  Put_Line(D2Se0(D, Aft => 8) & ":  " & D2Se0(Floor(D), Aft => 4) & "  " & D2Se0(Round(D), Aft => 4) & "  " & D2Se0(Ceiling(D), Aft => 4));
+  D := 0.9999999;
+  Put_Line(D2Se0(D, Aft => 8) & ":  " & D2Se0(Floor(D), Aft => 4) & "  " & D2Se0(Round(D), Aft => 4) & "  " & D2Se0(Ceiling(D), Aft => 4));
+  D := 0.99999999;
+  Put_Line(D2Se0(D, Aft => 8) & ":  " & D2Se0(Floor(D), Aft => 4) & "  " & D2Se0(Round(D), Aft => 4) & "  " & D2Se0(Ceiling(D), Aft => 4));
   D := -98765432198.7654;
   Put_Line(D2Se0(D, Aft => 4) & ":  " & D2Se0(Floor(D), Aft => 4) & "  " & D2Se0(Round(D), Aft => 4) & "  " & D2Se0(Ceiling(D), Aft => 4));
   New_Line;
@@ -191,6 +217,7 @@ begin
     Open(Ft, In_File, Fn);
     Comments_Skip(Ft);
 
+    Put_Line("Read file using a variety of tools");
     while not End_Of_Line(Ft) loop
       Line_Spaces_Skip(Ft);
       Line_Comment_Skip(Ft);
@@ -263,6 +290,7 @@ begin
     Separator_Skip(Ft, '}', Strict => True);
     New_Line;
 
+    Set_Separators;
     while not End_Of_File(Ft) loop
       Line_Spaces_Skip(Ft);
       Line_Comment_Skip(Ft);

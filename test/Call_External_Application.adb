@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 30/08/2006
--- @revision 28/08/2009
+-- @revision 13/10/2016
 -- @brief Test of the way to Call an External Application
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -26,23 +26,33 @@ with Utils; use Utils;
 with Utils.IO; use Utils.IO;
 
 procedure Call_External_Application is
-  Name  : constant String := "c:\usrlocal\pstools\pslist.exe";
-  Title : constant String_Access := new String'("PsList");
-  Param1: constant String_Access := new String'("-m");
-  Params_List: constant String_List := (1 => Title, 2 => Param1);
-begin
-  Put_Line("Calling " & Title.all & ":");
-  Put("  " & Name);
-  for I in 2..Params_List'Last loop
-    Put(" " & Params_List(I).all);
-  end loop;
-  New_Line;
 
-  if File_Exists(Name) then
-    if Spawn(Name, Params_List) = 0 then
-      null;
-    end if;
+  Success: Boolean := False;
+  -- Windows
+  Prog_Windows        : constant String := "C:\Windows\System32\cmd.exe";
+  Title_Windows       : constant String_Access := new String'("cmd -> hostname]");
+  Param1_Windows      : constant String_Access := new String'("/C C:\Windows\System32\hostname.exe");
+  Params_List_Windows : constant String_List := (1 => Title_Windows, 2 => Param1_Windows);
+  -- Others
+  Prog_Others         : constant String := "/bin/hostname";
+  Param1_Others       : constant String_Access := new String'("-s");
+  Params_List_Others  : constant String_List := (1 => Param1_Others);
+
+begin
+  if File_Exists(Prog_Windows) then
+    Put_Line("Calling: " & Title_Windows.all);
+    Put_Line("---");
+    Spawn(Prog_Windows, Params_List_Windows, Success);
+    Put_Line("---");
+  elsif File_Exists(Prog_Others) then
+    Put_Line("Calling: " & Prog_Others & " " & Param1_Others.all);
+    Put_Line("---");
+    Spawn(Prog_Others, Params_List_Others, Success);
+    Put_Line("---");
   else
-    Put_Line("File not found!");
+    Put_Line("External application not found!");
+  end if;
+  if Success then
+    Put_Line("Done!");
   end if;
 end Call_External_Application;
