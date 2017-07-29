@@ -16,7 +16,7 @@
 -- @author Javier Borge
 -- @version 1.0
 -- @date 20/11/2007
--- @revision 26/10/2014
+-- @revision 29/07/2017
 -- @brief Extremal Modularity Optimization implementation (after J. Duch and A. Arenas)
 
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
@@ -31,7 +31,7 @@ package body Modularities_Extremal is
   -- Constants --
   ---------------
 
-  Maximum_Of_Nonimprovements: constant Positive := 10000;
+  Maximum_Of_Nonimprovements: constant Positive := 100;
   Improvement_Tolerance: constant := 1.0e-10;
 
   -------------------------------------------------------------------------
@@ -264,8 +264,10 @@ package body Modularities_Extremal is
     Steps: Natural;
     Pos: Positive;
     Q_Act, Q_Max: Long_Float;
+    Max_Nonimpr: Natural;
   begin
     Lol_Actual:= Clone(Lol_Best);
+    Max_Nonimpr := Min(2 * Number_Of_Elements(Modul), Maximum_Of_Nonimprovements);
 
     -- Random Initialization
     Save(Modul);
@@ -281,7 +283,7 @@ package body Modularities_Extremal is
     Update_Modularity(Mi, L1_Aux, Mt);
     Update_Modularity(Mi, L2_Aux, Mt);
     Q_Act := Total_Modularity(Mi);
-    while Q_Act <= Q_Ini + Improvement_Tolerance and Steps <= Maximum_Of_Nonimprovements loop
+    while Q_Act <= Q_Ini + Improvement_Tolerance and Steps <= Max_Nonimpr loop
       Lowest_Fitness_Node_Movement(Gr, Mi, L1_Aux, L2_Aux, Gen);
       Update_Modularity(Mi, L1_Aux, Mt);
       Update_Modularity(Mi, L2_Aux, Mt);
@@ -299,7 +301,7 @@ package body Modularities_Extremal is
       Copy_Lols_Lists(L1_Aux, L1, Lol_Best);
       Copy_Lols_Lists(L2_Aux, L2, Lol_Best);
       Remove(Modul);
-      while Steps <= Maximum_Of_Nonimprovements loop
+      while Steps <= Max_Nonimpr loop
         Lowest_Fitness_Node_Movement(Gr, Mi, L1_Aux, L2_Aux, Gen);
         Update_Modularity(Mi, L1_Aux, Mt);
         Update_Modularity(Mi, L2_Aux, Mt);

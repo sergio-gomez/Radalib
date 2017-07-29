@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/05/2008
--- @revision 26/02/2016
+-- @revision 29/07/2017
 -- @brief Modularity optimization by combination of different heuristics
 
 with Ada.Command_Line; use Ada.Command_Line;
