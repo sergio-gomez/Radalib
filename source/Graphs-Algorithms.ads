@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2016 by
+-- Radalib, Copyright (c) 2017 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 13/08/2005
--- @revision 07/12/2015
+-- @revision 07/12/2017
 -- @brief Implementation of Graphs algorithms
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;

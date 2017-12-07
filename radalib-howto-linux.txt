@@ -7,7 +7,7 @@ How to install the GNAT Ada compiler
 ------------------------------------
 
 1) Download GNAT Ada GPL 2015, or newer, from
-      http://libre.adacore.com
+      https://www.adacore.com/download
    Choose at least the following component:
       GNAT Ada GPL : Ada compiler and IDE
    If you plan to use Eclipse

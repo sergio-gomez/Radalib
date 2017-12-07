@@ -4,5 +4,5 @@ cd ..
 
 for i in */*.ad?; do
   echo $i
-  grep -i "Floor" $i
+  grep -i "Strong_Components" $i
 done

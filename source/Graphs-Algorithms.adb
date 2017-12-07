@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2016 by
+-- Radalib, Copyright (c) 2017 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 13/08/2005
--- @revision 07/12/2015
+-- @revision 07/12/2017
 -- @brief Implementation of Graphs algorithms
 
 with Utils; use Utils;
@@ -129,33 +129,41 @@ package body Graphs.Algorithms is
     Unvisited: constant Integer := -1;
 
     procedure Depth_First_Traversal(P: in Positive; U, L: in List) is
+      St: Stack;
+      I: Positive;
       E: Element;
       El: Edges_List;
     begin
-      E := Get_Element(Lol, P);
-      if Belongs_To(E, U) then
-        Move(E, L);
-        -- Links from
-        El := Edges_From(Get_Vertex(Gr, P));
-        Save(El);
-        Reset(El);
-        while Has_Next(El) loop
-          Depth_First_Traversal(Index_Of(Next(El)), U, L);
-        end loop;
-        Restore(El);
-        if Gr.Directed then
-          -- Links to
-          El := Edges_To(Get_Vertex(Gr, P));
+      Initialize(St);
+      Push(P, St);
+      while not Is_Empty(St) loop
+        I := Pop(St);
+        E := Get_Element(Lol, I);
+        if Belongs_To(E, U) then
+          Move(E, L);
+          -- Links from
+          El := Edges_From(Get_Vertex(Gr, I));
           Save(El);
           Reset(El);
           while Has_Next(El) loop
-            Depth_First_Traversal(Index_Of(Next(El)), U, L);
+            Push(Index_Of(Next(El)), St);
           end loop;
           Restore(El);
+          if Gr.Directed then
+            -- Links to
+            El := Edges_To(Get_Vertex(Gr, I));
+            Save(El);
+            Reset(El);
+            while Has_Next(El) loop
+              Push(Index_Of(Next(El)), St);
+            end loop;
+            Restore(El);
+          end if;
+        elsif not Belongs_To(E, L) then
+          Move(L, List_Of(E));
         end if;
-      elsif not Belongs_To(E, L) then
-        Move(L, List_Of(E));
-      end if;
+      end loop;
+      Free(St);
     end Depth_First_Traversal;
 
     procedure Tarjan(Vf: in Vertex; S: in Stack; Index, Lowlink: in PIntegers; Ind: in out Positive) is
@@ -253,42 +261,50 @@ package body Graphs.Algorithms is
   procedure Connected_Components(Gr: in Graph; Lol_In: in List_Of_Lists; Lol_Out: out List_Of_Lists) is
 
     procedure Depth_First_Traversal(P: in Positive; U, L_Out: in List) is
+      St: Stack;
+      I: Positive;
       E: Element;
       L_In: List;
       El: Edges_List;
       P_Nxt: Positive;
     begin
-      E := Get_Element(Lol_Out, P);
-      if Belongs_To(E, U) then
-        Move(E, L_Out);
-        L_In := List_Of(Get_Element(Lol_In, P));
-        -- Links from
-        El := Edges_From(Get_Vertex(Gr, P));
-        Save(El);
-        Reset(El);
-        while Has_Next(El) loop
-          P_Nxt := Index_Of(Next(El));
-          if Belongs_To(Get_Element(Lol_In, P_Nxt), L_In) then
-            Depth_First_Traversal(P_Nxt, U, L_Out);
-          end if;
-        end loop;
-        Restore(El);
-        if Gr.Directed then
-          -- Links to
-          El := Edges_To(Get_Vertex(Gr, P));
+      Initialize(St);
+      Push(P, St);
+      while not Is_Empty(St) loop
+        I := Pop(St);
+        E := Get_Element(Lol_Out, I);
+        if Belongs_To(E, U) then
+          Move(E, L_Out);
+          L_In := List_Of(Get_Element(Lol_In, I));
+          -- Links from
+          El := Edges_From(Get_Vertex(Gr, I));
           Save(El);
           Reset(El);
           while Has_Next(El) loop
             P_Nxt := Index_Of(Next(El));
             if Belongs_To(Get_Element(Lol_In, P_Nxt), L_In) then
-              Depth_First_Traversal(P_Nxt, U, L_Out);
+              Push(P_Nxt, St);
             end if;
           end loop;
           Restore(El);
+          if Gr.Directed then
+            -- Links to
+            El := Edges_To(Get_Vertex(Gr, I));
+            Save(El);
+            Reset(El);
+            while Has_Next(El) loop
+              P_Nxt := Index_Of(Next(El));
+              if Belongs_To(Get_Element(Lol_In, P_Nxt), L_In) then
+                Push(P_Nxt, St);
+              end if;
+            end loop;
+            Restore(El);
+          end if;
+        elsif not Belongs_To(E, L_Out) then
+          Move(L_Out, List_Of(E));
         end if;
-      elsif not Belongs_To(E, L_Out) then
-        Move(L_Out, List_Of(E));
-      end if;
+      end loop;
+      Free(St);
     end Depth_First_Traversal;
 
     U, L_Out: List;
@@ -308,6 +324,9 @@ package body Graphs.Algorithms is
         Remove(L_Out);
       end if;
     end loop;
+
+    Sort_Lists(Lol_Out);
+    Sort_By_Size(Lol_Out);
   end Connected_Components;
 
   ------------------

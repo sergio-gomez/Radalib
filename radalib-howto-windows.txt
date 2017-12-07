@@ -10,7 +10,7 @@ How to install the GNAT Ada compiler
       Windows XP SP2, Windows Vista, Windows 7, Windows 8, Windows 10 or newer
 
 1) Download and install the GNAT Ada GPL 2015, or newer, from
-      http://libre.adacore.com
+      https://www.adacore.com/download
    Choose at least the following components:
       GNAT Ada GPL : Ada compiler and IDE
       Win32Ada GPL : Ada bindings to Win32 API
