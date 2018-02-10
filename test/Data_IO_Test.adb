@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 09/05/2013
--- @revision 26/10/2014
+-- @revision 28/12/2017
 -- @brief Test of Data_IO packages
 
 with Ada.Text_Io; use Ada.Text_Io;
@@ -80,9 +80,9 @@ procedure Data_IO_Test is
     end loop;
   end Put_Data;
 
-  Fn_01: constant String := "data_toy_01.txt";
-  Fn_02: constant String := "data_toy_02.txt";
-  Fn_03: constant String := "data_toy_03.txt";
+  Fn_01: constant String := "test-data_toy_01.txt";
+  Fn_02: constant String := "test-data_toy_02.txt";
+  Fn_03: constant String := "test-data_toy_03.txt";
 
   Data_I: PIntegerss;
   Data_D: PDoubless;

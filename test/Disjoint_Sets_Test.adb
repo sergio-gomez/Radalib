@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 11/11/2014
--- @revision 16/11/2014
+-- @revision 28/12/2017
 -- @brief Test of Disjoint_Sets package
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -62,7 +62,7 @@ procedure Disjoint_Sets_Test is
     Finite_Disjoint_Lists.Free(Lol);
   end Put;
 
-  Fn: constant String := "disjoint_sets_test.txt";
+  Fn: constant String := "test-disjoint_sets.txt";
   Total: constant Positive := 9;
   Num: Natural := 5;
 

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 19/11/2008
--- @revision 26/02/2016
+-- @revision 27/01/2018
 -- @brief Search Mesoscales using Self-Loops
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -45,7 +45,7 @@ procedure Mesoscales_Detection is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2017 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2018 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
@@ -53,12 +53,10 @@ procedure Mesoscales_Detection is
     Put_Line("== Mesoscales search in complex networks by optimization of      ==");
     Put_Line("== modularity using common self-loops                            ==");
     Put_Line("== Implements several algorithms for modularity optimization:    ==");
-    Put_Line("==   - exhaustive search (h)                                     ==");
-    Put_Line("==   - tabu search (t)                                           ==");
-    Put_Line("==   - extremal optimization (e)                                 ==");
-    Put_Line("==   - spectral optimization (s)                                 ==");
-    Put_Line("==   - fast algorithm (f)                                        ==");
-    Put_Line("==   - fine-tuning by reposition (r) or bootstrapping (b)        ==");
+    Put_Line("==   - exhaustive search (h)       - louvain (l)                 ==");
+    Put_Line("==   - tabu search (t)             - fast algorithm (f)          ==");
+    Put_Line("==   - extremal (e)                - reposition (r)              ==");
+    Put_Line("==   - spectral (s)                - bootstrapping (b)           ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;
@@ -76,15 +74,17 @@ procedure Mesoscales_Detection is
   Fn_Net: Ustring;
   Mod_Type: Weighted_Modularity_Type;
   Heuristics: Ustring;
-  Num_Repetitions: Positive;
+  Repetitions_Signed: Integer;
+  Num_Repetitions: Natural;
   Num_Steps: Natural;
   Max_Delta_Loop_Ratio: Double;
   Min_Self_Loop: Double;
   Max_Self_Loop: Double;
   Auto_Self_Loop_Limits: Boolean;
+  Reversed_Scan: Boolean;
 
   Gr: Graph;
-  Q_Worst: constant Modularity_Rec := (Double'First, 0.0, Double'First);
+  Q_Worst: constant Modularity_Rec := Null_Modularity_Rec;
   Q_Best: Modularity_Rec := Q_Worst;
   Lol_Best: List_Of_Lists;
   Degeneration: Positive;
@@ -101,11 +101,12 @@ procedure Mesoscales_Detection is
   Max_Root, Max_Root_Pos, Max_Root_Neg, Min_Root_Pos, Min_Root_Neg: Double;
   Loop_Min, Loop_Max, Delta_Loop_Ratio, The_Loop, The_Loop_Prev, Loop_Left, Loop_Right: Double;
   Wh, Factor, Tau, B, C, X: Double;
-  N, Num_Comms, Num_Count, Cnt: Natural;
+  N, Num_Comms, Num_Count: Natural;
+  Cnt: Integer;
   Vi, Vj: Vertex;
   E: Edge;
   Ct: Contingency_Table;
-  Exhaustive_Search, Different, Prev_Together: Boolean;
+  Exhaustive_Search, Different: Boolean;
 
 begin
   Put_Info;
@@ -120,15 +121,15 @@ begin
   Auto_Self_Loop_Limits := True;
 
   if Argument_Count = 4 then
-    Fn_Net          := S2U(Argument(1));
-    Mod_Type        := To_Modularity_Type(Argument(2));
-    Heuristics      := S2U(Argument(3));
-    Num_Repetitions := S2I(Argument(4));
+    Fn_Net             := S2U(Argument(1));
+    Mod_Type           := To_Modularity_Type(Argument(2));
+    Heuristics         := S2U(Argument(3));
+    Repetitions_Signed := S2I(Argument(4));
   elsif Argument_Count = 6 then
-    Fn_Net          := S2U(Argument(1));
-    Mod_Type        := To_Modularity_Type(Argument(2));
-    Heuristics      := S2U(Argument(3));
-    Num_Repetitions := S2I(Argument(4));
+    Fn_Net             := S2U(Argument(1));
+    Mod_Type           := To_Modularity_Type(Argument(2));
+    Heuristics         := S2U(Argument(3));
+    Repetitions_Signed := S2I(Argument(4));
     if Is_Integer(Argument(5)) then
       Num_Steps             := S2I(Argument(5));
       Max_Delta_Loop_Ratio  := S2D(Argument(6));
@@ -138,10 +139,10 @@ begin
       Auto_Self_Loop_Limits := False;
     end if;
   elsif Argument_Count = 8 then
-    Fn_Net          := S2U(Argument(1));
-    Mod_Type        := To_Modularity_Type(Argument(2));
-    Heuristics      := S2U(Argument(3));
-    Num_Repetitions := S2I(Argument(4));
+    Fn_Net                := S2U(Argument(1));
+    Mod_Type              := To_Modularity_Type(Argument(2));
+    Heuristics            := S2U(Argument(3));
+    Repetitions_Signed    := S2I(Argument(4));
     Num_Steps             := S2I(Argument(5));
     Max_Delta_Loop_Ratio  := S2D(Argument(6));
     Min_Self_Loop         := S2D(Argument(7));
@@ -155,33 +156,39 @@ begin
     Put_Line("   Weighted Modularity Types :  WN | WS | WUN | WLA | WULA | WLUN | WNN | WLR");
     Put_Line("                                  also lowercase symbols");
     Put_Line("                                  also case-insensitive full names (Weighted_Newman, ...)");
-    Put_Line("                                  WN   = Weighted_Newman");
-    Put_Line("                                  WS   = Weighted_Signed");
-    Put_Line("                                  WUN  = Weighted_Uniform_Nullcase");
-    Put_Line("                                  WLA  = Weighted_Local_Average");
-    Put_Line("                                  WULA = Weighted_Uniform_Local_Average");
-    Put_Line("                                  WLUN = Weighted_Links_Unweighted_Nullcase");
-    Put_Line("                                  WNN  = Weighted_No_Nullcase");
-    Put_Line("                                  WLR  = Weighted_Link_Rank");
+    Put_Line("                                    WN   = Weighted_Newman");
+    Put_Line("                                    WS   = Weighted_Signed");
+    Put_Line("                                    WUN  = Weighted_Uniform_Nullcase");
+    Put_Line("                                    WLA  = Weighted_Local_Average");
+    Put_Line("                                    WULA = Weighted_Uniform_Local_Average");
+    Put_Line("                                    WLUN = Weighted_Links_Unweighted_Nullcase");
+    Put_Line("                                    WNN  = Weighted_No_Nullcase");
+    Put_Line("                                    WLR  = Weighted_Link_Rank");
     New_Line;
-    Put_Line("   Heuristics String         :  [htsefrb]+");
+    Put_Line("   Heuristics String         :  [htseflrb!:.+-]+");
     Put_Line("                                  also uppercase symbols");
     Put_Line("                                  also single case-insensitive full names (Exhaustive, ...)");
-    Put_Line("                                  h = Exhaustive");
-    Put_Line("                                  t = Tabu");
-    Put_Line("                                  s = Spectral");
-    Put_Line("                                  e = Extremal");
-    Put_Line("                                  f = Fast");
-    Put_Line("                                  r = Reposition");
-    Put_Line("                                  b = Bootstrapping");
+    Put_Line("                                  heuristics");
+    Put_Line("                                    h = Exhaustive        l = Louvain");
+    Put_Line("                                    t = Tabu              f = Fast");
+    Put_Line("                                    s = Spectral          r = Reposition");
+    Put_Line("                                    e = Extremal          b = Bootstrapping");
+    Put_Line("                                  initializations");
+    Put_Line("                                    ! = Ini_Best          . = Ini_Isolated");
+    Put_Line("                                    : = Ini_Prev          + = Ini_Together");
+    Put_Line("                                    - = Ini_Default ");
     New_Line;
-    Put_Line("   Repetitions               :  positive integer");
-    Put_Line("                                  does not apply to [hfr] algorithms");
+    Put_Line("   Repetitions               :  integer");
+    Put_Line("                                  absolute value indicates the number of repetitions");
+    Put_Line("                                  positive values indicate scan self-loops from min to max");
+    Put_Line("                                  negative values indicate scan self-loops from max to min");
+    Put_Line("                                  0 = no scan, just calculate min and max for WN and WS");
+    Put_Line("                                  ignored by [hlfr] algorithms");
     New_Line;
     Put_Line("   Number of Steps           :  default => " & I2S(Default_Num_Steps));
     New_Line;
     Put_Line("   Max Delta Loop Ratio      :  default => " & D2S(Default_Max_Delta_Loop_Ratio, Aft => 4, Exp => 0));
-    Put_Line("                                  ratio between the last and the first increments of the self-loop");
+    Put_Line("                                  ratio between last and first increments of the self-loop");
     Put_Line("                                  use 1 for a linear scale of the self-loop");
     New_Line;
     Put_Line("   Min Self-loop             :  default => " & D2S(Default_Min_Self_Loop, Aft => 4, Exp => 0));
@@ -200,6 +207,14 @@ begin
 
   Delete_File(U2S(Fn_Out_Lols));
   Delete_File(U2S(Fn_Out_Table));
+
+  Num_Repetitions := abs Repetitions_Signed;
+  Reversed_Scan := False;
+  if Repetitions_Signed = 0 then
+    Num_Repetitions := 2;
+  elsif Repetitions_Signed < 0 then
+    Reversed_Scan := True;
+  end if;
 
   Exhaustive_Search := False;
   begin
@@ -372,23 +387,27 @@ begin
           Loop_Right := 0.0;
           The_Loop   := Loop_Left;
           Num_Comms := 1;
+          Optimization_Combined_Heuristic(Gr, "lrfr", 1, Lol_Best_Prev, Q_Best, Degeneration, Mod_Type, None, Null_Ustring, Loop_Right);
           -- Bisection to improve Min_Self_Loop
           for Count in 1..Num_Bisection_Steps loop
             if Num_Comms = 1 then
-              Loop_Left  := The_Loop;
-              The_Loop   := (The_Loop + Loop_Right) / 2.0;
+              Loop_Left := The_Loop;
             else
               Loop_Right := The_Loop;
-              The_Loop   := (Loop_Left + The_Loop) / 2.0;
             end if;
-            Optimization_Combined_Heuristic(Gr, "r", 1, Lol_Best, Q_Best, Degeneration, Mod_Type, None, Null_Ustring, The_Loop);
+            The_Loop := (Loop_Left + Loop_Right) / 2.0;
+            Optimization_Combined_Heuristic(Gr, "lrfr", 1, Lol_Best_Prev, Lol_Best, Q_Best, Degeneration, Mod_Type, None, Null_Ustring, The_Loop);
             Num_Comms := Number_Of_Lists(Lol_Best);
-            Free(Lol_Best_Prev);
-            Free(Lol_Best);
             if Num_Comms = 1 then
-              Optimization_Combined_Heuristic(Gr, "e", 1, Lol_Best, Q_Best, Degeneration, Mod_Type, None, Null_Ustring, The_Loop);
-              Num_Comms := Number_Of_Lists(Lol_Best);
               Free(Lol_Best);
+              Optimization_Combined_Heuristic(Gr, "-" & U2S(Heuristics) & "!rfr", Num_Repetitions, Lol_Best_Prev, Lol_Best, Q_Best, Degeneration, Mod_Type, None, Null_Ustring, The_Loop);
+              Num_Comms := Number_Of_Lists(Lol_Best);
+            end if;
+            if Num_Comms = 1 then
+              Free(Lol_Best);
+            else
+              Free(Lol_Best_Prev);
+              Lol_Best_Prev := Lol_Best;
             end if;
             Put(".");
 --            Put_Line(
@@ -400,6 +419,7 @@ begin
 --              & "  " & D2S(Q_Best.Total, Aft => 6)
 --            );
           end loop;
+          Free(Lol_Best_Prev);
           if Num_Comms > 1 then
             The_Loop := Loop_Left;
             Loop_Left := Loop_Left - (Loop_Right - Loop_Left);
@@ -439,6 +459,11 @@ begin
   Put_Line("Self-loop_Min = " & D2S(Loop_Min, Aft => 6, Exp => 0));
   Put_Line("Self-loop_Max = " & D2S(Loop_Max, Aft => 6, Exp => 0));
 
+  if Repetitions_Signed = 0 then
+    Stop(Chrono);
+    return;
+  end if;
+
   if Auto_Self_Loop_Limits then
     case Mod_Type is
       when Weighted_Newman =>
@@ -451,15 +476,21 @@ begin
         null;
     end case;
   end if;
-  if Loop_Min < 0.0 and Loop_Max >= 0.0 then
+  if Loop_Min <= 0.0 and Loop_Max >= 0.0 then
     Num_Count := Num_Steps + 1;
   else
     Num_Count := Num_Steps;
   end if;
 
   -- Search best partition for running parameter
-  The_Loop_Prev := Loop_Min;
-  Cnt := 0;
+  if not Reversed_Scan then
+    The_Loop_Prev := Loop_Min;
+    Cnt := 0;
+  else
+    The_Loop_Prev := Loop_Max;
+    Cnt := Num_Steps;
+  end if;
+
   for Count in 0..Num_Count loop
     Put(".");
     -- Calculate self-loops
@@ -475,31 +506,29 @@ begin
       end if;
       The_Loop := Loop_Min + Factor * (Loop_Max - Loop_Min);
     end if;
-    if The_Loop_Prev < 0.0 and The_Loop >= 0.0 then
+    if The_Loop_Prev * The_Loop < 0.0 or The_Loop = 0.0 then
       The_Loop := 0.0;
     else
-      Cnt := Cnt + 1;
+      if not Reversed_Scan then
+        Cnt := Cnt + 1;
+      else
+        Cnt := Cnt - 1;
+      end if;
     end if;
     The_Loop_Prev := The_Loop;
     Tau := The_Loop - Loop_Min;
+
     -- Search best partition
-    Prev_Together := False;
     Free(Lol_Best);
     if Count = 0 then
       Initialize(Lol_Best_Prev, N, Unassigned_Initialization);
-    elsif Number_Of_Lists(Lol_Best_Prev) <= 1 then
-      Prev_Together := True;
-      Free(Lol_Best_Prev);
-      Initialize(Lol_Best_Prev, N, Unassigned_Initialization);
-    elsif Count = Num_Count then
-      Free(Lol_Best_Prev);
-      Initialize(Lol_Best_Prev, N, Isolated_Initialization);
     end if;
     Optimization_Combined_Heuristic(Gr, U2S(Heuristics), Num_Repetitions, Lol_Best_Prev, Lol_Best, Q_Best,
                                     Degeneration, Mod_Type, None, Null_Ustring, The_Loop);
+
     -- Check if partition is different from previous one
-    Different := not (Prev_Together and Number_Of_Lists(Lol_Best) = 1);
-    if Different then
+    Different := True;
+    if (Count > 0 and Count < Num_Count) and then Number_Of_Lists(Lol_Best_Prev) = Number_Of_Lists(Lol_Best) then
       Initialize(Ct, Lol_Best, Lol_Best_Prev);
       Different := Number_Of_Disagreements(Ct) > 0;
       Free(Ct);
@@ -512,6 +541,7 @@ begin
         Different := False;
       end if;
     end if;
+
     -- Print values to table
     Open_Or_Create(F_Out, U2S(Fn_Out_Table));
     Put(F_Out, The_Loop, Fore => 0, Aft => 6, Exp => 0); Put(F_Out, HTab);
@@ -519,12 +549,13 @@ begin
     Put(F_Out, Q_Best.Total, Fore => 0, Aft => 6, Exp => 0); Put(F_Out, HTab);
     Put(F_Out, Number_Of_Lists(Lol_Best), Width => 0);
     Close(F_Out);
+
     -- Print partition if different from previous one
     if (Count = 0 or Count = Num_Count) or Different then
       Open_Or_Create(F_Out, U2S(Fn_Out_Lols));
       Put_Line(F_Out, "--------");
       Put(F_Out, "Self-loop(" & I2S(Count) & ") = ");
-      Put(F_Out, The_Loop, Fore => 0, Aft => 4, Exp => 0);
+      Put(F_Out, The_Loop, Fore => 0, Aft => 6, Exp => 0);
       if Exhaustive_Search and Degeneration > 1 then
         Put(F_Out, "    (Degeneration found = "); Put(F_Out, Degeneration, Width => 0); Put(F_Out, ")");
       end if;
@@ -536,9 +567,6 @@ begin
       Free(Lol_Best_Prev);
       Lol_Best_Prev := Clone(Lol_Best);
     end if;
---    if Number_Of_Lists(Lol_Best) = N then
---      exit;
---    end if;
   end loop;
 
   Free(Lol_Best);

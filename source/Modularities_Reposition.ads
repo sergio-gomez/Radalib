@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,10 +16,8 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 01/04/2008
--- @revision 26/10/2014
+-- @revision 16/01/2018
 -- @brief Reposition Algorithm implementation
-
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
 with Graphs_Double; use Graphs_Double;
@@ -32,12 +30,13 @@ generic
   Number_Of_Repetitions: Positive;
 
   with procedure Improvement_Action(
-    Log_Name: in Unbounded_String;
+    Log_Name: in Ustring;
     Lol: in List_Of_Lists;
-    Q: in Modularity_Rec);
+    Q: in Modularity_Rec;
+    Us: in Ustring := Null_Ustring);
 
   with procedure Repetition_Action(
-    Log_Name: in Unbounded_String;
+    Log_Name: in Ustring;
     Lol: in List_Of_Lists;
     Q: in Modularity_Rec);
 
@@ -46,7 +45,7 @@ package Modularities_Reposition is
   procedure Reposition_Modularity(
     Mt: in Modularity_Type;
     Gr: in Graph;
-    Log_Name: in Unbounded_String;
+    Log_Name: in Ustring;
     Lol_Ini: in List_Of_Lists;
     Lol_Best: out List_Of_Lists;
     Q_Best: out Modularity_Rec;
@@ -64,12 +63,6 @@ private
     E_Ori: in Finite_Disjoint_Lists.Element;
     Dq_Best: in out Double);
 
-  procedure Make_Move(
-    Mt: in Modularity_Type;
-    Mi: in Modularity_Info;
-    I: in Positive;
-    L_Best: in List);
-
   procedure Optimization_Process(
     Mt: in Modularity_Type;
     Gr: in Graph;
@@ -81,7 +74,7 @@ private
   procedure Execute_Repetition (
     Mt: in Modularity_Type;
     Gr: in Graph;
-    Log_Name: in Unbounded_String;
+    Log_Name: in Ustring;
     Lol_Ini: in List_Of_Lists;
     Lol_Best: out List_Of_Lists;
     Q_Best: out Modularity_Rec;

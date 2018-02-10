@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -17,7 +17,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 22/10/2007
--- @revision 26/10/2014
+-- @revision 21/01/2018
 -- @brief Test of Minheaps package
 
 with Ada.Text_Io; use Ada.Text_Io;
@@ -57,6 +57,12 @@ begin
   Add(222, St);
   Put("Head: "); Put(Head(St), Width => 0); New_Line;
   Add(333, St);
+  Put("Head: "); Put(Head(St), Width => 0); New_Line;
+  Add(666, St);
+  Put("Head: "); Put(Head(St), Width => 0); New_Line;
+  Add(444, St);
+  Put("Head: "); Put(Head(St), Width => 0); New_Line;
+  Add(222, St);
   Put("Head: "); Put(Head(St), Width => 0); New_Line;
 
   Put(Number_Of_Elements(St), Width => 0); Put(": ");

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,8 +16,8 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 02/03/2010
--- @revision 10/04/2013
--- @brief Several Random Number Generators
+-- @revision 21/01/2018
+-- @brief Several Random Generators
 
 with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
 with Utils; use Utils;
@@ -71,5 +71,14 @@ package Random_Numbers is
   function Random_Weighted(G: in Generator; Weights: in Floats) return Integer;
   function Random_Weighted(G: in Generator; Weights: in PFloats) return Integer;
 
+  -- Purpose : Generate a Random Permutation
+  -- Note    : The Permutation consists of Integers in the same range as the array
+  -- Note    : Durstenfeld version of Fisher & Yates algorithm
+  -- Note    : The array must exist, no check is performed
+  --
+  -- G       : The seed
+  -- Permutation : The Permutation
+  procedure Random_Permutation(G: in Generator; Permutation: in out Integers);
+  procedure Random_Permutation(G: in Generator; Permutation: in PIntegers);
 
 end Random_Numbers;

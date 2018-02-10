@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,16 +16,17 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 01/03/2007
--- @revision 26/02/2016
+-- @revision 14/01/2018
 -- @brief Convert a List of Lists in a file from Clu to Lol format
 
 with Ada.Command_Line; use Ada.Command_Line;
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
 with Finite_Disjoint_Lists.IO; use Finite_Disjoint_Lists.IO;
 with Finite_Disjoint_Lists.Algorithms; use Finite_Disjoint_Lists.Algorithms;
 with Pajek_IO; use Pajek_IO;
+with Utils; use Utils;
 
 procedure Convert_Clu_To_Lol is
 
@@ -33,7 +34,7 @@ procedure Convert_Clu_To_Lol is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2017 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2018 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
@@ -44,8 +45,8 @@ procedure Convert_Clu_To_Lol is
     New_Line(2);
   end Put_Info;
 
-  Fn_Lol: Unbounded_String;
-  Fn_Clu: Unbounded_String;
+  Fn_Lol: Ustring;
+  Fn_Clu: Ustring;
   Lol: List_Of_Lists;
   Sorted: Boolean;
 
@@ -53,12 +54,12 @@ begin
   Put_Info;
 
   if Argument_Count = 2 then
-    Fn_Clu := To_Unbounded_String(Argument(1));
-    Fn_Lol := To_Unbounded_String(Argument(2));
+    Fn_Clu := S2U(Argument(1));
+    Fn_Lol := S2U(Argument(2));
     Sorted := False;
   elsif Argument_Count = 3 then
-    Fn_Clu := To_Unbounded_String(Argument(1));
-    Fn_Lol := To_Unbounded_String(Argument(2));
+    Fn_Clu := S2U(Argument(1));
+    Fn_Lol := S2U(Argument(2));
     Sorted := True;
   else
     Put_Line("Usage:  " & Command_Name & "  clu_file_name  lol_file_name  [ sorted ]");
@@ -73,13 +74,13 @@ begin
     return;
   end if;
 
-  Put_Line(To_String(Fn_Clu) & "  ->  " & To_String(Fn_Lol));
-  Get_Partition(To_String(Fn_Clu), Lol);
+  Put_Line(U2S(Fn_Clu) & "  ->  " & U2S(Fn_Lol));
+  Get_Partition(U2S(Fn_Clu), Lol);
   if Sorted then
     Sort_Lists(Lol);
     Sort_By_Size(Lol);
   end if;
-  Put(To_String(Fn_Lol), Lol);
+  Put(U2S(Fn_Lol), Lol);
 
   Free(Lol);
 end Convert_Clu_To_Lol;

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 10/10/2004
--- @revision 08/04/2012
+-- @revision 15/12/2017
 -- @brief Treatment of Lists of Lists with Finite Disjoint Elements
 
 with Ada.Unchecked_Deallocation;

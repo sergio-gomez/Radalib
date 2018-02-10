@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,12 +16,12 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 01/03/2007
--- @revision 26/02/2016
+-- @revision 14/01/2018
 -- @brief Convert a List of Lists in a file from Lol to Clu format
 
 with Ada.Command_Line; use Ada.Command_Line;
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
 with Finite_Disjoint_Lists.IO; use Finite_Disjoint_Lists.IO;
 with Pajek_IO; use Pajek_IO;
@@ -33,7 +33,7 @@ procedure Convert_Lol_To_Clu is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2017 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2018 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
@@ -46,20 +46,20 @@ procedure Convert_Lol_To_Clu is
 
   Default_Num_Skip_Lines: constant := 0;
   Num_Skip_Lines: Natural := Default_Num_Skip_Lines;
-  Fn_Lol: Unbounded_String;
-  Fn_Clu: Unbounded_String;
+  Fn_Lol: Ustring;
+  Fn_Clu: Ustring;
   Lol: List_Of_Lists;
 
 begin
   Put_Info;
 
   if Argument_Count = 2 then
-    Fn_Lol := To_Unbounded_String(Argument(1));
-    Fn_Clu := To_Unbounded_String(Argument(2));
+    Fn_Lol := S2U(Argument(1));
+    Fn_Clu := S2U(Argument(2));
     Num_Skip_Lines := Default_Num_Skip_Lines;
   elsif Argument_Count = 3 then
-    Fn_Lol := To_Unbounded_String(Argument(1));
-    Fn_Clu := To_Unbounded_String(Argument(2));
+    Fn_Lol := S2U(Argument(1));
+    Fn_Clu := S2U(Argument(2));
     Num_Skip_Lines := S2I(Argument(3));
   else
     Put_Line("Usage:  " & Command_Name & "  lol_file_name  clu_file_name  [ number_of_lines_to_skip ]");
@@ -74,9 +74,9 @@ begin
     return;
   end if;
 
-  Put_Line(To_String(Fn_Lol) & "  ->  " & To_String(Fn_Clu));
+  Put_Line(U2S(Fn_Lol) & "  ->  " & U2S(Fn_Clu));
 
-  Get(To_String(Fn_Lol), Lol, Num_Skip_Lines);
-  Put_Partition(To_String(Fn_Clu), Lol);
+  Get(U2S(Fn_Lol), Lol, Num_Skip_Lines);
+  Put_Partition(U2S(Fn_Clu), Lol);
   Free(Lol);
 end Convert_Lol_To_Clu;

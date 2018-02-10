@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 5/03/2006
--- @revision 23/09/2015
+-- @revision 15/01/2018
 -- @brief Calculation of Modularities of Graphs
 
 with Ada.Unchecked_Deallocation;
@@ -120,6 +120,7 @@ package body Graphs.Modularities is
       Mi.To := Mi.From;
     end if;
     Mi.Lower_Q := new Modularity_Recs(1..Mi.Size);
+    Mi.Lower_Q_Saved := new Modularity_Recs(1..Mi.Size);
 
     Mi.Resistance := R;
     Mi.Penalty_Coefficient := Pc;
@@ -185,8 +186,8 @@ package body Graphs.Modularities is
 
   procedure Update_Graph(Mi: in Modularity_Info; Mt: in Modularity_Type := Weighted_Signed) is
     Vt, Vf: Vertex;
-    Ki, Kj, Tk, Tsln: Natural;
-    Wii, Wi, Wj, Wla, Tw, Twp, Twn, Tla, Tula, Tsl: Num;
+    Ki, Tk, Tsln: Natural;
+    Kir, Kjr, Wii, Wi, Wj, Wla, Tkr, Tw, Twp, Twn, Tla, Tula, Tsl: Num;
   begin
     if Mi = null then
       raise Uninitialized_Modularity_Info_Error;
@@ -195,15 +196,14 @@ package body Graphs.Modularities is
     for I in Mi.From'Range loop
       Vf := Get_Vertex(Mi.Gr, I);
       Mi.From(I).K := Degree_From(Vf);
+      Mi.From(I).Kr := Num(Mi.From(I).K);
       Mi.From(I).W := Strength_From(Vf);
       Mi.From(I).W_Pos := Strength_From(Vf, Positive_Links);
       Mi.From(I).W_Neg := Strength_From(Vf, Negative_Links);
       Mi.From(I).Has_Self_Loop := Has_Self_Loop(Vf);
       Mi.From(I).Self_Loop := Self_Loop(Vf);
       if Mi.Resistance /= No_Resistance then
-        if not Mi.From(I).Has_Self_Loop then
-          Mi.From(I).K := Mi.From(I).K + 1;
-        end if;
+        Mi.From(I).Kr := Mi.From(I).Kr + Mi.Resistance;
         Mi.From(I).W := Mi.From(I).W + Mi.Resistance;
         Wii := Mi.From(I).Self_Loop + Mi.Resistance;
         if Mi.From(I).Self_Loop >= 0.0 then
@@ -228,15 +228,14 @@ package body Graphs.Modularities is
       for J in Mi.To'Range loop
         Vt := Get_Vertex(Mi.Gr, J);
         Mi.To(J).K := Degree_To(Vt);
+        Mi.To(J).Kr := Num(Mi.To(J).K);
         Mi.To(J).W := Strength_To(Vt);
         Mi.To(J).W_Pos := Strength_To(Vt, Positive_Links);
         Mi.To(J).W_Neg := Strength_To(Vt, Negative_Links);
         Mi.To(J).Has_Self_Loop := Has_Self_Loop(Vt);
         Mi.To(J).Self_Loop := Self_Loop(Vt);
         if Mi.Resistance /= No_Resistance then
-          if not Mi.To(J).Has_Self_Loop then
-            Mi.To(J).K := Mi.To(J).K + 1;
-          end if;
+          Mi.To(J).Kr := Mi.To(J).Kr + Mi.Resistance;
           Mi.To(J).W := Mi.To(J).W + Mi.Resistance;
           Wii := Mi.To(J).Self_Loop + Mi.Resistance;
           if Mi.To(J).Self_Loop >= 0.0 then
@@ -259,6 +258,7 @@ package body Graphs.Modularities is
       end loop;
     end if;
     Tk := 0;
+    Tkr := 0.0;
     Tw := 0.0;
     Twp := 0.0;
     Twn := 0.0;
@@ -268,8 +268,10 @@ package body Graphs.Modularities is
     Tsln := 0;
     for I in Mi.From'Range loop
       Ki := Mi.From(I).K;
+      Kir := Mi.From(I).Kr;
       Wi := Mi.From(I).W;
       Tk := Tk + Ki;
+      Tkr := Tkr + Kir;
       Tw := Tw + Wi;
       Twp := Twp + Mi.From(I).W_Pos;
       Twn := Twn + Mi.From(I).W_Neg;
@@ -278,16 +280,17 @@ package body Graphs.Modularities is
         Tsln := Tsln + 1;
       end if;
       for J in Mi.To'Range loop
-        Kj := Mi.To(J).K;
+        Kjr := Mi.To(J).Kr;
         Wj := Mi.To(J).W;
-        if Ki + Kj > 0 then
-          Wla := (Wi + Wj) / Num(Ki + Kj);
-          Tla := Tla + Num(Ki * Kj) * Wla;
+        if Kir + Kjr /= 0.0 then
+          Wla := (Wi + Wj) / (Kir + Kjr);
+          Tla := Tla + (Kir * Kjr) * Wla;
           Tula := Tula + Wla;
         end if;
       end loop;
     end loop;
     Mi.Two_M := Tk;
+    Mi.Two_Mr := Tkr;
     Mi.Two_W := Tw;
     Mi.Two_W_Pos := Twp;
     Mi.Two_W_Neg := Twn;
@@ -337,6 +340,7 @@ package body Graphs.Modularities is
         Dispose(Mi.To);
       end if;
       Dispose(Mi.Lower_Q);
+      Dispose(Mi.Lower_Q_Saved);
       if Mi.Eigenvec /= null then
         Free(Mi.Gr_Trans);
         Free(Mi.Eigenvec);
@@ -345,6 +349,19 @@ package body Graphs.Modularities is
       Mi := null;
     end if;
   end Free;
+
+  --------------
+  -- Graph_Of --
+  --------------
+
+  function Graph_Of(Mi: in Modularity_Info) return Graph is
+  begin
+    if Mi = null then
+      raise Uninitialized_Modularity_Info_Error;
+    end if;
+
+    return Mi.Gr;
+  end Graph_Of;
 
   -----------
   -- Clone --
@@ -369,6 +386,8 @@ package body Graphs.Modularities is
     end if;
     Mi_Clone.Lower_Q := new Modularity_Recs(1..Mi.Size);
     Mi_Clone.Lower_Q.all := Mi.Lower_Q.all;
+    Mi_Clone.Lower_Q_Saved := new Modularity_Recs(1..Mi.Size);
+    Mi_Clone.Lower_Q_Saved.all := Mi.Lower_Q_Saved.all;
     if Mi.Eigenvec /= null then
       Mi_Clone.Gr_Trans := Clone(Mi.Gr_Trans);
       Mi_Clone.Eigenvec := Alloc(1, Mi.Size);
@@ -538,12 +557,215 @@ package body Graphs.Modularities is
     return Mi.Eigenvec;
   end Left_Leading_Eigenvector;
 
+  ---------------------
+  -- Save_Modularity --
+  ---------------------
+
+  procedure Save_Modularity(Mi: in Modularity_Info) is
+  begin
+    if Mi = null then
+      raise Uninitialized_Modularity_Info_Error;
+    end if;
+
+    Mi.Lower_Q_Saved.all := Mi.Lower_Q.all;
+  end Save_Modularity;
+
+  ---------------------
+  -- Save_Modularity --
+  ---------------------
+
+  procedure Save_Modularity(Mi: in Modularity_Info; L: in List) is
+    Lol: List_Of_Lists;
+    I: Positive;
+  begin
+    if Mi = null then
+      raise Uninitialized_Modularity_Info_Error;
+    end if;
+    Lol := List_Of_Lists_Of(L);
+    if Mi.Size /= Number_Of_Elements(Lol) then
+      raise Incompatible_Modules_Error;
+    end if;
+
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      I := Index_Of(Next_Element(L));
+      Mi.Lower_Q_Saved(I) := Mi.Lower_Q(I);
+    end loop;
+    Restore(L);
+  end Save_Modularity;
+
+  ---------------------
+  -- Save_Modularity --
+  ---------------------
+
+  procedure Save_Modularity(Mi: in Modularity_Info; E: in Element) is
+    I: Positive;
+  begin
+    if Mi = null then
+      raise Uninitialized_Modularity_Info_Error;
+    end if;
+
+    I := Index_Of(E);
+    Mi.Lower_Q_Saved(I) := Mi.Lower_Q(I);
+  end Save_Modularity;
+
+  ------------------------
+  -- Restore_Modularity --
+  ------------------------
+
+  procedure Restore_Modularity(Mi: in Modularity_Info) is
+  begin
+    if Mi = null then
+      raise Uninitialized_Modularity_Info_Error;
+    end if;
+
+    Mi.Lower_Q.all := Mi.Lower_Q_Saved.all;
+  end Restore_Modularity;
+
+  ------------------------
+  -- Restore_Modularity --
+  ------------------------
+
+  procedure Restore_Modularity(Mi: in Modularity_Info; L: in List) is
+    Lol: List_Of_Lists;
+    I: Positive;
+  begin
+    if Mi = null then
+      raise Uninitialized_Modularity_Info_Error;
+    end if;
+    Lol := List_Of_Lists_Of(L);
+    if Mi.Size /= Number_Of_Elements(Lol) then
+      raise Incompatible_Modules_Error;
+    end if;
+
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      I := Index_Of(Next_Element(L));
+      Mi.Lower_Q(I) := Mi.Lower_Q_Saved(I);
+    end loop;
+    Restore(L);
+  end Restore_Modularity;
+
+  ------------------------
+  -- Restore_Modularity --
+  ------------------------
+
+  procedure Restore_Modularity(Mi: in Modularity_Info; E: in Element) is
+    I: Positive;
+  begin
+    if Mi = null then
+      raise Uninitialized_Modularity_Info_Error;
+    end if;
+
+    I := Index_Of(E);
+    Mi.Lower_Q(I) := Mi.Lower_Q_Saved(I);
+  end Restore_Modularity;
+
+  ------------------------------------
+  -- Update_Modularity_Move_Element --
+  ------------------------------------
+
+  procedure Update_Modularity_Move_Element(Mi: in Modularity_Info; E: in Element; L: in List; Mt: in Modularity_Type) is
+    Lol: List_Of_Lists;
+    Li: List;
+  begin
+    if Mi = null then
+      raise Uninitialized_Modularity_Info_Error;
+    end if;
+    Lol := List_Of_Lists_Of(L);
+    if Mi.Size /= Number_Of_Elements(Lol) then
+      raise Incompatible_Modules_Error;
+    end if;
+
+    if not Belongs_To(E, L) then
+      Update_Modularity_Inserted_Element(Mi, E, L, Mt);
+      Li := List_Of(E);
+      Move(E, L);
+      Update_Modularity_Removed_Element(Mi, E, Li, Mt);
+    end if;
+  end Update_Modularity_Move_Element;
+
+  ----------------------------------------
+  -- Update_Modularity_Inserted_Element --
+  ----------------------------------------
+
+  procedure Update_Modularity_Inserted_Element(Mi: in Modularity_Info; E: in Element; L: in List; Mt: in Modularity_Type) is
+    Lol: List_Of_Lists;
+  begin
+    if Mi = null then
+      raise Uninitialized_Modularity_Info_Error;
+    end if;
+    Lol := List_Of_Lists_Of(L);
+    if Mi.Size /= Number_Of_Elements(Lol) then
+      raise Incompatible_Modules_Error;
+    end if;
+    if Belongs_To(E, L) then
+      raise Element_In_List_Error;
+    end if;
+
+    case Mt is
+      when Unweighted_Newman                  => Update_Inserted_Element_Unweighted_Newman(Mi, E, L);
+      when Unweighted_Uniform_Nullcase        => Update_Inserted_Element_Unweighted_Uniform_Nullcase(Mi, E, L);
+      when Weighted_Newman                    => Update_Inserted_Element_Weighted_Newman(Mi, E, L);
+      when Weighted_Signed                    => Update_Inserted_Element_Weighted_Signed(Mi, E, L);
+      when Weighted_Uniform_Nullcase          => Update_Inserted_Element_Weighted_Uniform_Nullcase(Mi, E, L);
+      when Weighted_Local_Average             => Update_Inserted_Element_Weighted_Local_Average(Mi, E, L);
+      when Weighted_Uniform_Local_Average     => Update_Inserted_Element_Weighted_Uniform_Local_Average(Mi, E, L);
+      when Weighted_Links_Unweighted_Nullcase => Update_Inserted_Element_Weighted_Links_Unweighted_Nullcase(Mi, E, L);
+      when Weighted_No_Nullcase               => Update_Inserted_Element_Weighted_No_Nullcase(Mi, E, L);
+      when Weighted_Link_Rank                 => Update_Inserted_Element_Weighted_Link_Rank(Mi, E, L);
+    end case;
+  end Update_Modularity_Inserted_Element;
+
+  ---------------------------------------
+  -- Update_Modularity_Removed_Element --
+  ---------------------------------------
+
+  procedure Update_Modularity_Removed_Element(Mi: in Modularity_Info; E: in Element; L: in List; Mt: in Modularity_Type) is
+    Lol: List_Of_Lists;
+  begin
+    if Mi = null then
+      raise Uninitialized_Modularity_Info_Error;
+    end if;
+    Lol := List_Of_Lists_Of(L);
+    if Mi.Size /= Number_Of_Elements(Lol) then
+      raise Incompatible_Modules_Error;
+    end if;
+    if Belongs_To(E, L) then
+      raise Element_In_List_Error;
+    end if;
+
+    case Mt is
+      when Unweighted_Newman                  => Update_Removed_Element_Unweighted_Newman(Mi, E, L);
+      when Unweighted_Uniform_Nullcase        => Update_Removed_Element_Unweighted_Uniform_Nullcase(Mi, E, L);
+      when Weighted_Newman                    => Update_Removed_Element_Weighted_Newman(Mi, E, L);
+      when Weighted_Signed                    => Update_Removed_Element_Weighted_Signed(Mi, E, L);
+      when Weighted_Uniform_Nullcase          => Update_Removed_Element_Weighted_Uniform_Nullcase(Mi, E, L);
+      when Weighted_Local_Average             => Update_Removed_Element_Weighted_Local_Average(Mi, E, L);
+      when Weighted_Uniform_Local_Average     => Update_Removed_Element_Weighted_Uniform_Local_Average(Mi, E, L);
+      when Weighted_Links_Unweighted_Nullcase => Update_Removed_Element_Weighted_Links_Unweighted_Nullcase(Mi, E, L);
+      when Weighted_No_Nullcase               => Update_Removed_Element_Weighted_No_Nullcase(Mi, E, L);
+      when Weighted_Link_Rank                 => Update_Removed_Element_Weighted_Link_Rank(Mi, E, L);
+    end case;
+  end Update_Modularity_Removed_Element;
+
   -----------------------
   -- Update_Modularity --
   -----------------------
 
   procedure Update_Modularity(Mi: in Modularity_Info; L: in List; Mt: in Modularity_Type) is
+    Lol: List_Of_Lists;
   begin
+    if Mi = null then
+      raise Uninitialized_Modularity_Info_Error;
+    end if;
+    Lol := List_Of_Lists_Of(L);
+    if Mi.Size /= Number_Of_Elements(Lol) then
+      raise Incompatible_Modules_Error;
+    end if;
+
     case Mt is
       when Unweighted_Newman                  => Update_Unweighted_Newman(Mi, L);
       when Unweighted_Uniform_Nullcase        => Update_Unweighted_Uniform_Nullcase(Mi, L);
@@ -743,44 +965,40 @@ package body Graphs.Modularities is
     Lol: List_Of_Lists;
     El: Edges_List;
     I, J: Positive;
-    Sum_K_In, Sum_A: Natural;
+    Sum_K_In, Sum_A: Num;
     Re, Pe: Num;
   begin
-    if Mi = null then
-      raise Uninitialized_Modularity_Info_Error;
-    end if;
     Lol := List_Of_Lists_Of(L);
-    if Mi.Size /= Number_Of_Elements(Lol) then
-      raise Incompatible_Modules_Error;
-    end if;
 
-    Sum_K_In := 0;
+    Sum_K_In := 0.0;
     Save(L);
     Reset(L);
     while Has_Next_Element(L) loop
       J := Index_Of(Next_Element(L));
-      Sum_K_In := Sum_K_In + Mi.To(J).K;
+      Sum_K_In := Sum_K_In + Mi.To(J).Kr;
     end loop;
+
     Reset(L);
     while Has_Next_Element(L) loop
       I := Index_Of(Next_Element(L));
-      El := Edges_From(Get_Vertex(Mi.Gr, I));
-      if (not Mi.From(I).Has_Self_Loop) and Mi.Resistance /= No_Resistance then
-        Sum_A := 1;
+      if Mi.Resistance /= No_Resistance then
+        Sum_A := Mi.Resistance;
       else
-        Sum_A := 0;
+        Sum_A := 0.0;
       end if;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
       Save(El);
       Reset(El);
       while Has_Next(El) loop
         J := Index_Of(Next(El));
         if Belongs_To(Get_Element(Lol, J), L) then
-          Sum_A := Sum_A + 1;
+          Sum_A := Sum_A + 1.0;
         end if;
       end loop;
       Restore(El);
-      Re := Num(Sum_A) / Num(Mi.Two_M);
-      Pe := Num(Mi.From(I).K * Sum_K_In) / (Num(Mi.Two_M) * Num(Mi.Two_M));
+
+      Re := Sum_A / Mi.Two_Mr;
+      Pe := Mi.From(I).Kr * Sum_K_In / (Mi.Two_Mr * Mi.Two_Mr);
       Pe := Mi.Penalty_Coefficient * Pe;
       Mi.Lower_Q(I).Reward := Re;
       Mi.Lower_Q(I).Penalty := Pe;
@@ -797,39 +1015,34 @@ package body Graphs.Modularities is
     Lol: List_Of_Lists;
     El: Edges_List;
     I, J: Positive;
-    Sum_A: Natural;
-    Re, Pec, Pe: Num;
+    Sum_A: Num;
+    Re, Pe: Num;
   begin
-    if Mi = null then
-      raise Uninitialized_Modularity_Info_Error;
-    end if;
     Lol := List_Of_Lists_Of(L);
-    if Mi.Size /= Number_Of_Elements(Lol) then
-      raise Incompatible_Modules_Error;
-    end if;
+
+    Pe := Mi.Penalty_Coefficient * Num(Number_Of_Elements(L)) / (Num(Mi.Size) * Num(Mi.Size));
 
     Save(L);
     Reset(L);
-    Pec := Num(Number_Of_Elements(L)) / (Num(Mi.Size) * Num(Mi.Size));
     while Has_Next_Element(L) loop
       I := Index_Of(Next_Element(L));
-      El := Edges_From(Get_Vertex(Mi.Gr, I));
-      if (not Mi.From(I).Has_Self_Loop) and Mi.Resistance /= No_Resistance then
-        Sum_A := 1;
+      if Mi.Resistance /= No_Resistance then
+        Sum_A := Mi.Resistance;
       else
-        Sum_A := 0;
+        Sum_A := 0.0;
       end if;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
       Save(El);
       Reset(El);
       while Has_Next(El) loop
         J := Index_Of(Next(El));
         if Belongs_To(Get_Element(Lol, J), L) then
-          Sum_A := Sum_A + 1;
+          Sum_A := Sum_A + 1.0;
         end if;
       end loop;
       Restore(El);
-      Re := Num(Sum_A) / Num(Mi.Two_M);
-      Pe := Mi.Penalty_Coefficient * Pec;
+
+      Re := Num(Sum_A) / Mi.Two_Mr;
       Mi.Lower_Q(I).Reward := Re;
       Mi.Lower_Q(I).Penalty := Pe;
       Mi.Lower_Q(I).Total := Re - Pe;
@@ -849,13 +1062,7 @@ package body Graphs.Modularities is
     Sum_W_In, Sum_W: Num;
     Re, Pe: Num;
   begin
-    if Mi = null then
-      raise Uninitialized_Modularity_Info_Error;
-    end if;
     Lol := List_Of_Lists_Of(L);
-    if Mi.Size /= Number_Of_Elements(Lol) then
-      raise Incompatible_Modules_Error;
-    end if;
 
     Sum_W_In := 0.0;
     Save(L);
@@ -864,15 +1071,16 @@ package body Graphs.Modularities is
       J := Index_Of(Next_Element(L));
       Sum_W_In := Sum_W_In + Mi.To(J).W;
     end loop;
+
     Reset(L);
     while Has_Next_Element(L) loop
       I := Index_Of(Next_Element(L));
-      El := Edges_From(Get_Vertex(Mi.Gr, I));
-      if (not Mi.From(I).Has_Self_Loop) and Mi.Resistance /= No_Resistance then
+      if Mi.Resistance /= No_Resistance then
         Sum_W := Mi.Resistance;
       else
         Sum_W := 0.0;
       end if;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
       Save(El);
       Reset(El);
       while Has_Next(El) loop
@@ -883,6 +1091,7 @@ package body Graphs.Modularities is
         end if;
       end loop;
       Restore(El);
+
       Re := Sum_W / Mi.Two_W;
       Pe := Mi.From(I).W * Sum_W_In / (Mi.Two_W * Mi.Two_W);
       Pe := Mi.Penalty_Coefficient * Pe;
@@ -902,47 +1111,41 @@ package body Graphs.Modularities is
     El: Edges_List;
     E: Edge;
     I, J: Positive;
-    Sum_W, Sum_W_In, Sum_W_In_Pos, Sum_W_In_Neg: Num;
+    Sum_W, Sum_W_In_Pos, Sum_W_In_Neg: Num;
     Re, Pe: Num;
   begin
-    if Mi = null then
-      raise Uninitialized_Modularity_Info_Error;
-    end if;
     Lol := List_Of_Lists_Of(L);
-    if Mi.Size /= Number_Of_Elements(Lol) then
-      raise Incompatible_Modules_Error;
-    end if;
 
-    Sum_W_In := 0.0;
     Sum_W_In_Pos := 0.0;
     Sum_W_In_Neg := 0.0;
     Save(L);
     Reset(L);
     while Has_Next_Element(L) loop
       J := Index_Of(Next_Element(L));
-      Sum_W_In := Sum_W_In + Mi.To(J).W;
       Sum_W_In_Pos := Sum_W_In_Pos + Mi.To(J).W_Pos;
       Sum_W_In_Neg := Sum_W_In_Neg + Mi.To(J).W_Neg;
     end loop;
+
     Reset(L);
     while Has_Next_Element(L) loop
       I := Index_Of(Next_Element(L));
-      El := Edges_From(Get_Vertex(Mi.Gr, I));
-      if (not Mi.From(I).Has_Self_Loop) and Mi.Resistance /= No_Resistance then
+      if Mi.Resistance /= No_Resistance then
         Sum_W := Mi.Resistance;
       else
         Sum_W := 0.0;
       end if;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
       Save(El);
       Reset(El);
       while Has_Next(El) loop
         E := Next(El);
         J := Index_Of(To(E));
         if Belongs_To(Get_Element(Lol, J), L) then
-          Sum_W := Sum_W + Value(E, All_Links);
+          Sum_W := Sum_W + To_Num(E.Value);
         end if;
       end loop;
       Restore(El);
+
       Re := Sum_W / (Mi.Two_W_Pos + Mi.Two_W_Neg);
       Pe := 0.0;
       if Mi.Two_W_Pos > 0.0 then
@@ -970,27 +1173,22 @@ package body Graphs.Modularities is
     E: Edge;
     I, J: Positive;
     Sum_W: Num;
-    Re, Pec, Pe: Num;
+    Re, Pe: Num;
   begin
-    if Mi = null then
-      raise Uninitialized_Modularity_Info_Error;
-    end if;
     Lol := List_Of_Lists_Of(L);
-    if Mi.Size /= Number_Of_Elements(Lol) then
-      raise Incompatible_Modules_Error;
-    end if;
 
-    Pec := Num(Number_Of_Elements(L)) / (Num(Mi.Size) * Num(Mi.Size));
+    Pe := Mi.Penalty_Coefficient * Num(Number_Of_Elements(L)) / (Num(Mi.Size) * Num(Mi.Size));
+
     Save(L);
     Reset(L);
     while Has_Next_Element(L) loop
       I := Index_Of(Next_Element(L));
-      El := Edges_From(Get_Vertex(Mi.Gr, I));
-      if (not Mi.From(I).Has_Self_Loop) and Mi.Resistance /= No_Resistance then
+      if Mi.Resistance /= No_Resistance then
         Sum_W := Mi.Resistance;
       else
         Sum_W := 0.0;
       end if;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
       Save(El);
       Reset(El);
       while Has_Next(El) loop
@@ -1001,8 +1199,8 @@ package body Graphs.Modularities is
         end if;
       end loop;
       Restore(El);
+
       Re := Sum_W / Mi.Two_W;
-      Pe := Mi.Penalty_Coefficient * Pec;
       Mi.Lower_Q(I).Reward := Re;
       Mi.Lower_Q(I).Penalty := Pe;
       Mi.Lower_Q(I).Total := Re - Pe;
@@ -1019,28 +1217,21 @@ package body Graphs.Modularities is
     El: Edges_List;
     E: Edge;
     I, J: Positive;
-    Ka: Natural;
-    Sum_W, Sum_Wa_K_In, Wa: Num;
+    Sum_W, Sum_Wa_K_In, Wa, Ka: Num;
     Re, Pe: Num;
   begin
-    if Mi = null then
-      raise Uninitialized_Modularity_Info_Error;
-    end if;
     Lol := List_Of_Lists_Of(L);
-    if Mi.Size /= Number_Of_Elements(Lol) then
-      raise Incompatible_Modules_Error;
-    end if;
 
     Save(L);
     Reset(L);
     while Has_Next_Element(L) loop
       I := Index_Of(Next_Element(L));
-      El := Edges_From(Get_Vertex(Mi.Gr, I));
-      if (not Mi.From(I).Has_Self_Loop) and Mi.Resistance /= No_Resistance then
+      if Mi.Resistance /= No_Resistance then
         Sum_W := Mi.Resistance;
       else
         Sum_W := 0.0;
       end if;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
       Save(El);
       Reset(El);
       while Has_Next(El) loop
@@ -1051,22 +1242,24 @@ package body Graphs.Modularities is
         end if;
       end loop;
       Restore(El);
+
       Sum_Wa_K_In := 0.0;
       Save(L);
       Reset(L);
       while Has_Next_Element(L) loop
         J := Index_Of(Next_Element(L));
-        Ka := Mi.From(I).K + Mi.To(J).K;
-        if Ka = 0 then
+        Ka := Mi.From(I).Kr + Mi.To(J).Kr;
+        if Ka = 0.0 then
           Wa := 0.0;
         else
-          Wa := (Mi.From(I).W + Mi.To(J).W) / Num(Ka);
+          Wa := (Mi.From(I).W + Mi.To(J).W) / Ka;
         end if;
-        Sum_Wa_K_In := Sum_Wa_K_In + Num(Mi.To(J).K) * Wa;
+        Sum_Wa_K_In := Sum_Wa_K_In + Mi.To(J).Kr * Wa;
       end loop;
       Restore(L);
+
       Re := Sum_W / Mi.Two_W;
-      Pe := Num(Mi.From(I).K) * Sum_Wa_K_In / Mi.Two_La;
+      Pe := Mi.From(I).Kr * Sum_Wa_K_In / Mi.Two_La;
       Pe := Mi.Penalty_Coefficient * Pe;
       Mi.Lower_Q(I).Reward := Re;
       Mi.Lower_Q(I).Penalty := Pe;
@@ -1084,28 +1277,21 @@ package body Graphs.Modularities is
     El: Edges_List;
     E: Edge;
     I, J: Positive;
-    Ka: Natural;
-    Sum_W, Sum_Wa, Wa: Num;
+    Sum_W, Sum_Wa, Wa, Ka: Num;
     Re, Pe: Num;
   begin
-    if Mi = null then
-      raise Uninitialized_Modularity_Info_Error;
-    end if;
     Lol := List_Of_Lists_Of(L);
-    if Mi.Size /= Number_Of_Elements(Lol) then
-      raise Incompatible_Modules_Error;
-    end if;
 
     Save(L);
     Reset(L);
     while Has_Next_Element(L) loop
       I := Index_Of(Next_Element(L));
-      El := Edges_From(Get_Vertex(Mi.Gr, I));
-      if (not Mi.From(I).Has_Self_Loop) and Mi.Resistance /= No_Resistance then
+      if Mi.Resistance /= No_Resistance then
         Sum_W := Mi.Resistance;
       else
         Sum_W := 0.0;
       end if;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
       Save(El);
       Reset(El);
       while Has_Next(El) loop
@@ -1116,20 +1302,22 @@ package body Graphs.Modularities is
         end if;
       end loop;
       Restore(El);
+
       Sum_Wa := 0.0;
       Save(L);
       Reset(L);
       while Has_Next_Element(L) loop
         J := Index_Of(Next_Element(L));
-        Ka := Mi.From(I).K + Mi.To(J).K;
-        if Ka = 0 then
+        Ka := Mi.From(I).Kr + Mi.To(J).Kr;
+        if Ka = 0.0 then
           Wa := 0.0;
         else
-          Wa := (Mi.From(I).W + Mi.To(J).W) / Num(Ka);
+          Wa := (Mi.From(I).W + Mi.To(J).W) / Ka;
         end if;
         Sum_Wa := Sum_Wa + Wa;
       end loop;
       Restore(L);
+
       Re := Sum_W / Mi.Two_W;
       Pe := Sum_Wa / Mi.Two_Ula;
       Pe := Mi.Penalty_Coefficient * Pe;
@@ -1149,34 +1337,28 @@ package body Graphs.Modularities is
     El: Edges_List;
     E: Edge;
     I, J: Positive;
-    Sum_K_In: Natural;
-    Sum_W: Num;
+    Sum_K_In, Sum_W: Num;
     Re, Pe: Num;
   begin
-    if Mi = null then
-      raise Uninitialized_Modularity_Info_Error;
-    end if;
     Lol := List_Of_Lists_Of(L);
-    if Mi.Size /= Number_Of_Elements(Lol) then
-      raise Incompatible_Modules_Error;
-    end if;
 
-    Sum_K_In := 0;
+    Sum_K_In := 0.0;
     Save(L);
     Reset(L);
     while Has_Next_Element(L) loop
       J := Index_Of(Next_Element(L));
-      Sum_K_In := Sum_K_In + Mi.To(J).K;
+      Sum_K_In := Sum_K_In + Mi.To(J).Kr;
     end loop;
+
     Reset(L);
     while Has_Next_Element(L) loop
       I := Index_Of(Next_Element(L));
-      El := Edges_From(Get_Vertex(Mi.Gr, I));
-      if (not Mi.From(I).Has_Self_Loop) and Mi.Resistance /= No_Resistance then
+      if Mi.Resistance /= No_Resistance then
         Sum_W := Mi.Resistance;
       else
         Sum_W := 0.0;
       end if;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
       Save(El);
       Reset(El);
       while Has_Next(El) loop
@@ -1187,8 +1369,9 @@ package body Graphs.Modularities is
         end if;
       end loop;
       Restore(El);
+
       Re := Sum_W / Mi.Two_W;
-      Pe := Num(Mi.From(I).K * Sum_K_In) / (Num(Mi.Two_M) * Num(Mi.Two_M));
+      Pe := Mi.From(I).Kr * Sum_K_In / (Mi.Two_Mr * Mi.Two_Mr);
       Pe := Mi.Penalty_Coefficient * Pe;
       Mi.Lower_Q(I).Reward := Re;
       Mi.Lower_Q(I).Penalty := Pe;
@@ -1207,26 +1390,22 @@ package body Graphs.Modularities is
     E: Edge;
     I, J: Positive;
     Sum_W: Num;
-    Re: Num;
+    Re, Pe: Num;
   begin
-    if Mi = null then
-      raise Uninitialized_Modularity_Info_Error;
-    end if;
     Lol := List_Of_Lists_Of(L);
-    if Mi.Size /= Number_Of_Elements(Lol) then
-      raise Incompatible_Modules_Error;
-    end if;
+
+    Pe := 0.0;
 
     Save(L);
     Reset(L);
     while Has_Next_Element(L) loop
       I := Index_Of(Next_Element(L));
-      El := Edges_From(Get_Vertex(Mi.Gr, I));
-      if (not Mi.From(I).Has_Self_Loop) and Mi.Resistance /= No_Resistance then
+      if Mi.Resistance /= No_Resistance then
         Sum_W := Mi.Resistance;
       else
         Sum_W := 0.0;
       end if;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
       Save(El);
       Reset(El);
       while Has_Next(El) loop
@@ -1237,10 +1416,11 @@ package body Graphs.Modularities is
         end if;
       end loop;
       Restore(El);
-      Re := Sum_W / Mi.Two_W_Pos;
+
+      Re := Sum_W / Mi.Two_W;
       Mi.Lower_Q(I).Reward := Re;
-      Mi.Lower_Q(I).Penalty := 0.0;
-      Mi.Lower_Q(I).Total := Re;
+      Mi.Lower_Q(I).Penalty := Pe;
+      Mi.Lower_Q(I).Total := Re - Pe;
     end loop;
     Restore(L);
   end Update_Weighted_No_Nullcase;
@@ -1258,16 +1438,7 @@ package body Graphs.Modularities is
     Re, Pe: Num;
   begin
     pragma Warnings(Off, El);
-    if Mi = null then
-      raise Uninitialized_Modularity_Info_Error;
-    end if;
     Lol := List_Of_Lists_Of(L);
-    if Mi.Size /= Number_Of_Elements(Lol) then
-      raise Incompatible_Modules_Error;
-    end if;
-    if Mi.Eigenvec = null then
-      Special_Initializations(Mi, Weighted_Link_Rank);
-    end if;
 
     Sum_Eigv := 0.0;
     Save(L);
@@ -1276,11 +1447,12 @@ package body Graphs.Modularities is
       J := Index_Of(Next_Element(L));
       Sum_Eigv := Sum_Eigv + Mi.Eigenvec(J);
     end loop;
+
     Reset(L);
     while Has_Next_Element(L) loop
       I := Index_Of(Next_Element(L));
-      El := Edges_From(Get_Vertex(Mi.Gr_Trans, I));
       Sum_Trans := 0.0;
+      El := Edges_From(Get_Vertex(Mi.Gr_Trans, I));
       Save(El);
       Reset(El);
       while Has_Next(El) loop
@@ -1291,6 +1463,7 @@ package body Graphs.Modularities is
         end if;
       end loop;
       Restore(El);
+
       Re := Mi.Eigenvec(I) * Sum_Trans;
       Pe := Mi.Eigenvec(I) * Sum_Eigv;
       Pe := Mi.Penalty_Coefficient * Pe;
@@ -1300,6 +1473,1125 @@ package body Graphs.Modularities is
     end loop;
     Restore(L);
   end Update_Weighted_Link_Rank;
+
+  -----------------------------------------------
+  -- Update_Inserted_Element_Unweighted_Newman --
+  -----------------------------------------------
+
+  procedure Update_Inserted_Element_Unweighted_Newman(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    I, J: Positive;
+    Sum_K_In, Sum_A, Sum_A_Ini: Num;
+    Pe_Inc_Fact, Pe_Inc, Re, Pe: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    Sum_A_Ini := 0.0;
+    if Mi.From(I).Has_Self_Loop then
+      Sum_A_Ini := Sum_A_Ini + 1.0;
+    end if;
+    if Mi.Resistance /= No_Resistance then
+      Sum_A_Ini := Sum_A_Ini + Mi.Resistance;
+    end if;
+
+    Sum_A := Sum_A_Ini;
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      J := Index_Of(Next(El));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward + 1.0 / Mi.Two_Mr;
+        Sum_A := Sum_A + 1.0;
+      end if;
+    end loop;
+    Restore(El);
+
+    if Mi.Directed then
+      Sum_A := Sum_A_Ini;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
+      Save(El);
+      Reset(El);
+      while Has_Next(El) loop
+        J := Index_Of(Next(El));
+        if Belongs_To(Get_Element(Lol, J), L) then
+          Sum_A := Sum_A + 1.0;
+        end if;
+      end loop;
+      Restore(El);
+    end if;
+
+    Sum_K_In := Mi.To(I).Kr;
+    Pe_Inc_Fact := Mi.Penalty_Coefficient * Mi.To(I).Kr / (Mi.Two_Mr * Mi.Two_Mr);
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Pe_Inc := Mi.From(J).Kr * Pe_Inc_Fact;
+      Mi.Lower_Q(J).Penalty := Mi.Lower_Q(J).Penalty + Pe_Inc;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+      Sum_K_In := Sum_K_In + Mi.To(J).Kr;
+    end loop;
+    Restore(L);
+
+    Re := Sum_A / Mi.Two_Mr;
+    Pe := Mi.From(I).Kr * Sum_K_In / (Mi.Two_Mr * Mi.Two_Mr);
+    Pe := Mi.Penalty_Coefficient * Pe;
+    Mi.Lower_Q(I).Reward := Re;
+    Mi.Lower_Q(I).Penalty := Pe;
+    Mi.Lower_Q(I).Total := Re - Pe;
+  end Update_Inserted_Element_Unweighted_Newman;
+
+  ---------------------------------------------------------
+  -- Update_Inserted_Element_Unweighted_Uniform_Nullcase --
+  ---------------------------------------------------------
+
+  procedure Update_Inserted_Element_Unweighted_Uniform_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    I, J: Positive;
+    Sum_A, Sum_A_Ini: Num;
+    Re, Pe: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    Sum_A_Ini := 0.0;
+    if Mi.From(I).Has_Self_Loop then
+      Sum_A_Ini := Sum_A_Ini + 1.0;
+    end if;
+    if Mi.Resistance /= No_Resistance then
+      Sum_A_Ini := Sum_A_Ini + Mi.Resistance;
+    end if;
+
+    Pe := Mi.Penalty_Coefficient * Num(1 + Number_Of_Elements(L)) / (Num(Mi.Size) * Num(Mi.Size));
+
+    Sum_A := Sum_A_Ini;
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      J := Index_Of(Next(El));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward + 1.0 / Mi.Two_Mr;
+        Sum_A := Sum_A + 1.0;
+      end if;
+    end loop;
+    Restore(El);
+
+    if Mi.Directed then
+      Sum_A := Sum_A_Ini;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
+      Save(El);
+      Reset(El);
+      while Has_Next(El) loop
+        J := Index_Of(Next(El));
+        if Belongs_To(Get_Element(Lol, J), L) then
+          Sum_A := Sum_A + 1.0;
+        end if;
+      end loop;
+      Restore(El);
+    end if;
+
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Mi.Lower_Q(J).Penalty := Pe;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+    end loop;
+    Restore(L);
+
+    Re := Sum_A / Mi.Two_Mr;
+    Mi.Lower_Q(I).Reward := Re;
+    Mi.Lower_Q(I).Penalty := Pe;
+    Mi.Lower_Q(I).Total := Re - Pe;
+  end Update_Inserted_Element_Unweighted_Uniform_Nullcase;
+
+  ---------------------------------------------
+  -- Update_Inserted_Element_Weighted_Newman --
+  ---------------------------------------------
+
+  procedure Update_Inserted_Element_Weighted_Newman(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    Eg: Edge;
+    I, J: Positive;
+    Wh, Sum_W, Sum_W_In: Num;
+    Pe_Inc_Fact, Pe_Inc, Re, Pe: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    Sum_W := Mi.From(I).Self_Loop;
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := To_Num(Eg.Value);
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward + Wh / Mi.Two_W;
+        Sum_W := Sum_W + Wh;
+      end if;
+    end loop;
+    Restore(El);
+
+    if Mi.Directed then
+      Sum_W := Mi.From(I).Self_Loop;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
+      Save(El);
+      Reset(El);
+      while Has_Next(El) loop
+        Eg := Next(El);
+        J := Index_Of(To(Eg));
+        if Belongs_To(Get_Element(Lol, J), L) then
+          Wh := To_Num(Eg.Value);
+          Sum_W := Sum_W + Wh;
+        end if;
+      end loop;
+      Restore(El);
+    end if;
+
+    Sum_W_In := Mi.To(I).W;
+    Pe_Inc_Fact := Mi.Penalty_Coefficient * Mi.To(I).W / (Mi.Two_W * Mi.Two_W);
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Pe_Inc := Mi.From(J).W * Pe_Inc_Fact;
+      Mi.Lower_Q(J).Penalty := Mi.Lower_Q(J).Penalty + Pe_Inc;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+      Sum_W_In := Sum_W_In + Mi.To(J).W;
+    end loop;
+    Restore(L);
+
+    Re := Sum_W / Mi.Two_W;
+    Pe := Mi.From(I).W * Sum_W_In / (Mi.Two_W * Mi.Two_W);
+    Pe := Mi.Penalty_Coefficient * Pe;
+    Mi.Lower_Q(I).Reward := Re;
+    Mi.Lower_Q(I).Penalty := Pe;
+    Mi.Lower_Q(I).Total := Re - Pe;
+  end Update_Inserted_Element_Weighted_Newman;
+
+  ---------------------------------------------
+  -- Update_Inserted_Element_Weighted_Signed --
+  ---------------------------------------------
+
+  procedure Update_Inserted_Element_Weighted_Signed(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    Eg: Edge;
+    I, J: Positive;
+    Wh, Sum_W, Sum_W_In_Pos, Sum_W_In_Neg: Num;
+    Re, Pe: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    Sum_W := Mi.From(I).Self_Loop;
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := To_Num(Eg.Value);
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward + Wh / (Mi.Two_W_Pos + Mi.Two_W_Neg);
+        Sum_W := Sum_W + Wh;
+      end if;
+    end loop;
+    Restore(El);
+
+    if Mi.Directed then
+      Sum_W := Mi.From(I).Self_Loop;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
+      Save(El);
+      Reset(El);
+      while Has_Next(El) loop
+        Eg := Next(El);
+        J := Index_Of(To(Eg));
+        if Belongs_To(Get_Element(Lol, J), L) then
+          Wh := To_Num(Eg.Value);
+          Sum_W := Sum_W + Wh;
+        end if;
+      end loop;
+      Restore(El);
+    end if;
+
+    Sum_W_In_Pos := Mi.To(I).W_Pos;
+    Sum_W_In_Neg := Mi.To(I).W_Neg;
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Pe := 0.0;
+      if Mi.Two_W_Pos > 0.0 then
+        Pe := Pe + Mi.From(J).W_Pos * Mi.To(I).W_Pos / Mi.Two_W_Pos;
+      end if;
+      if Mi.Two_W_Neg > 0.0 then
+        Pe := Pe - Mi.From(J).W_Neg * Mi.To(I).W_Neg / Mi.Two_W_Neg;
+      end if;
+      Pe := Pe / (Mi.Two_W_Pos + Mi.Two_W_Neg);
+      Pe := Mi.Penalty_Coefficient * Pe;
+      Mi.Lower_Q(J).Penalty := Mi.Lower_Q(J).Penalty + Pe;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+      Sum_W_In_Pos := Sum_W_In_Pos + Mi.To(J).W_Pos;
+      Sum_W_In_Neg := Sum_W_In_Neg + Mi.To(J).W_Neg;
+    end loop;
+    Restore(L);
+
+    Re := Sum_W / (Mi.Two_W_Pos + Mi.Two_W_Neg);
+    Pe := 0.0;
+    if Mi.Two_W_Pos > 0.0 then
+      Pe := Pe + Mi.From(I).W_Pos * Sum_W_In_Pos / Mi.Two_W_Pos;
+    end if;
+    if Mi.Two_W_Neg > 0.0 then
+      Pe := Pe - Mi.From(I).W_Neg * Sum_W_In_Neg / Mi.Two_W_Neg;
+    end if;
+    Pe := Pe / (Mi.Two_W_Pos + Mi.Two_W_Neg);
+    Pe := Mi.Penalty_Coefficient * Pe;
+    Mi.Lower_Q(I).Reward := Re;
+    Mi.Lower_Q(I).Penalty := Pe;
+    Mi.Lower_Q(I).Total := Re - Pe;
+  end Update_Inserted_Element_Weighted_Signed;
+
+  -------------------------------------------------------
+  -- Update_Inserted_Element_Weighted_Uniform_Nullcase --
+  -------------------------------------------------------
+
+  procedure Update_Inserted_Element_Weighted_Uniform_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    Eg: Edge;
+    I, J: Positive;
+    Wh, Sum_W: Num;
+    Re, Pe: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    Pe := Mi.Penalty_Coefficient * Num(1 + Number_Of_Elements(L)) / (Num(Mi.Size) * Num(Mi.Size));
+
+    Sum_W := Mi.From(I).Self_Loop;
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := To_Num(Eg.Value);
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward + Wh / Mi.Two_W;
+        Sum_W := Sum_W + Wh;
+      end if;
+    end loop;
+    Restore(El);
+
+    if Mi.Directed then
+      Sum_W := Mi.From(I).Self_Loop;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
+      Save(El);
+      Reset(El);
+      while Has_Next(El) loop
+        Eg := Next(El);
+        J := Index_Of(To(Eg));
+        if Belongs_To(Get_Element(Lol, J), L) then
+          Wh := To_Num(Eg.Value);
+          Sum_W := Sum_W + Wh;
+        end if;
+      end loop;
+      Restore(El);
+    end if;
+
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Mi.Lower_Q(J).Penalty := Pe;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+    end loop;
+    Restore(L);
+
+    Re := Sum_W / Mi.Two_W;
+    Mi.Lower_Q(I).Reward := Re;
+    Mi.Lower_Q(I).Penalty := Pe;
+    Mi.Lower_Q(I).Total := Re - Pe;
+  end Update_Inserted_Element_Weighted_Uniform_Nullcase;
+
+  ----------------------------------------------------
+  -- Update_Inserted_Element_Weighted_Local_Average --
+  ----------------------------------------------------
+
+  procedure Update_Inserted_Element_Weighted_Local_Average(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    Eg: Edge;
+    I, J: Positive;
+    Wh, Sum_W, Sum_Wa_K_In, Wa, Ka: Num;
+    Pe_Inc_Fact, Pe_Inc, Re, Pe: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    Sum_W := Mi.From(I).Self_Loop;
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := To_Num(Eg.Value);
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward + Wh / Mi.Two_W;
+        Sum_W := Sum_W + Wh;
+      end if;
+    end loop;
+    Restore(El);
+
+    if Mi.Directed then
+      Sum_W := Mi.From(I).Self_Loop;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
+      Save(El);
+      Reset(El);
+      while Has_Next(El) loop
+        Eg := Next(El);
+        J := Index_Of(To(Eg));
+        if Belongs_To(Get_Element(Lol, J), L) then
+          Wh := To_Num(Eg.Value);
+          Sum_W := Sum_W + Wh;
+        end if;
+      end loop;
+      Restore(El);
+    end if;
+
+    Pe_Inc_Fact := Mi.Penalty_Coefficient * Mi.To(I).Kr / Mi.Two_La;
+    Ka := Mi.From(I).Kr + Mi.To(I).Kr;
+    if Ka = 0.0 then
+      Wa := 0.0;
+    else
+      Wa := (Mi.From(I).W + Mi.To(I).W) / Ka;
+    end if;
+    Sum_Wa_K_In := Mi.To(I).Kr * Wa;
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Ka := Mi.From(J).Kr + Mi.To(I).Kr;
+      if Ka = 0.0 then
+        Wa := 0.0;
+      else
+        Wa := (Mi.From(J).W + Mi.To(I).W) / Ka;
+      end if;
+      Pe_Inc := Mi.From(J).Kr * Pe_Inc_Fact * Wa;
+      Mi.Lower_Q(J).Penalty := Mi.Lower_Q(J).Penalty + Pe_Inc;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+      Ka := Mi.From(I).Kr + Mi.To(J).Kr;
+      if Ka = 0.0 then
+        Wa := 0.0;
+      else
+        Wa := (Mi.From(I).W + Mi.To(J).W) / Ka;
+      end if;
+      Sum_Wa_K_In := Sum_Wa_K_In + Mi.To(J).Kr * Wa;
+    end loop;
+    Restore(L);
+
+    Re := Sum_W / Mi.Two_W;
+    Pe := Mi.From(I).Kr * Sum_Wa_K_In / Mi.Two_La;
+    Pe := Mi.Penalty_Coefficient * Pe;
+    Mi.Lower_Q(I).Reward := Re;
+    Mi.Lower_Q(I).Penalty := Pe;
+    Mi.Lower_Q(I).Total := Re - Pe;
+  end Update_Inserted_Element_Weighted_Local_Average;
+
+  ------------------------------------------------------------
+  -- Update_Inserted_Element_Weighted_Uniform_Local_Average --
+  ------------------------------------------------------------
+
+  procedure Update_Inserted_Element_Weighted_Uniform_Local_Average(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    Eg: Edge;
+    I, J: Positive;
+    Wh, Sum_W, Sum_Wa, Wa, Ka: Num;
+    Pe_Inc_Fact, Pe_Inc, Re, Pe: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    Sum_W := Mi.From(I).Self_Loop;
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := To_Num(Eg.Value);
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward + Wh / Mi.Two_W;
+        Sum_W := Sum_W + Wh;
+      end if;
+    end loop;
+    Restore(El);
+
+    if Mi.Directed then
+      Sum_W := Mi.From(I).Self_Loop;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
+      Save(El);
+      Reset(El);
+      while Has_Next(El) loop
+        Eg := Next(El);
+        J := Index_Of(To(Eg));
+        if Belongs_To(Get_Element(Lol, J), L) then
+          Wh := To_Num(Eg.Value);
+          Sum_W := Sum_W + Wh;
+        end if;
+      end loop;
+      Restore(El);
+    end if;
+
+    Pe_Inc_Fact := Mi.Penalty_Coefficient / Mi.Two_Ula;
+    Ka := Mi.From(I).Kr + Mi.To(I).Kr;
+    if Ka = 0.0 then
+      Wa := 0.0;
+    else
+      Wa := (Mi.From(I).W + Mi.To(I).W) / Ka;
+    end if;
+    Sum_Wa := Wa;
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Ka := Mi.From(J).Kr + Mi.To(I).Kr;
+      if Ka = 0.0 then
+        Wa := 0.0;
+      else
+        Wa := (Mi.From(J).W + Mi.To(I).W) / Ka;
+      end if;
+      Pe_Inc := Pe_Inc_Fact * Wa;
+      Mi.Lower_Q(J).Penalty := Mi.Lower_Q(J).Penalty + Pe_Inc;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+      Ka := Mi.From(I).Kr + Mi.To(J).Kr;
+      if Ka = 0.0 then
+        Wa := 0.0;
+      else
+        Wa := (Mi.From(I).W + Mi.To(J).W) / Ka;
+      end if;
+      Sum_Wa := Sum_Wa + Wa;
+    end loop;
+    Restore(L);
+
+    Re := Sum_W / Mi.Two_W;
+    Pe := Sum_Wa / Mi.Two_Ula;
+    Pe := Mi.Penalty_Coefficient * Pe;
+    Mi.Lower_Q(I).Reward := Re;
+    Mi.Lower_Q(I).Penalty := Pe;
+    Mi.Lower_Q(I).Total := Re - Pe;
+  end Update_Inserted_Element_Weighted_Uniform_Local_Average;
+
+  ----------------------------------------------------------------
+  -- Update_Inserted_Element_Weighted_Links_Unweighted_Nullcase --
+  ----------------------------------------------------------------
+
+  procedure Update_Inserted_Element_Weighted_Links_Unweighted_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    Eg: Edge;
+    I, J: Positive;
+    Sum_K_In, Wh, Sum_W: Num;
+    Pe_Inc_Fact, Pe_Inc, Re, Pe: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    Sum_W := Mi.From(I).Self_Loop;
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := To_Num(Eg.Value);
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward + Wh / Mi.Two_W;
+        Sum_W := Sum_W + Wh;
+      end if;
+    end loop;
+    Restore(El);
+
+    if Mi.Directed then
+      Sum_W := Mi.From(I).Self_Loop;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
+      Save(El);
+      Reset(El);
+      while Has_Next(El) loop
+        Eg := Next(El);
+        J := Index_Of(To(Eg));
+        if Belongs_To(Get_Element(Lol, J), L) then
+          Wh := To_Num(Eg.Value);
+          Sum_W := Sum_W + Wh;
+        end if;
+      end loop;
+      Restore(El);
+    end if;
+
+    Sum_K_In := Mi.To(I).Kr;
+    Pe_Inc_Fact := Mi.Penalty_Coefficient * Mi.To(I).Kr / (Mi.Two_Mr * Mi.Two_Mr);
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Pe_Inc := Mi.From(J).Kr * Pe_Inc_Fact;
+      Mi.Lower_Q(J).Penalty := Mi.Lower_Q(J).Penalty + Pe_Inc;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+      Sum_K_In := Sum_K_In + Mi.To(J).Kr;
+    end loop;
+    Restore(L);
+
+    Re := Sum_W / Mi.Two_W;
+    Pe := Mi.From(I).Kr * Sum_K_In / (Mi.Two_Mr * Mi.Two_Mr);
+    Pe := Mi.Penalty_Coefficient * Pe;
+    Mi.Lower_Q(I).Reward := Re;
+    Mi.Lower_Q(I).Penalty := Pe;
+    Mi.Lower_Q(I).Total := Re - Pe;
+  end Update_Inserted_Element_Weighted_Links_Unweighted_Nullcase;
+
+  --------------------------------------------------
+  -- Update_Inserted_Element_Weighted_No_Nullcase --
+  --------------------------------------------------
+
+  procedure Update_Inserted_Element_Weighted_No_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    Eg: Edge;
+    I, J: Positive;
+    Wh, Sum_W: Num;
+    Re, Pe: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    Pe := 0.0;
+
+    Sum_W := Mi.From(I).Self_Loop;
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := To_Num(Eg.Value);
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward + Wh / Mi.Two_W;
+        Sum_W := Sum_W + Wh;
+      end if;
+    end loop;
+    Restore(El);
+
+    if Mi.Directed then
+      Sum_W := Mi.From(I).Self_Loop;
+      El := Edges_From(Get_Vertex(Mi.Gr, I));
+      Save(El);
+      Reset(El);
+      while Has_Next(El) loop
+        Eg := Next(El);
+        J := Index_Of(To(Eg));
+        if Belongs_To(Get_Element(Lol, J), L) then
+          Wh := To_Num(Eg.Value);
+          Sum_W := Sum_W + Wh;
+        end if;
+      end loop;
+      Restore(El);
+    end if;
+
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Mi.Lower_Q(J).Penalty := Pe;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+    end loop;
+    Restore(L);
+
+    Re := Sum_W / Mi.Two_W;
+    Mi.Lower_Q(I).Reward := Re;
+    Mi.Lower_Q(I).Penalty := Pe;
+    Mi.Lower_Q(I).Total := Re - Pe;
+  end Update_Inserted_Element_Weighted_No_Nullcase;
+
+  ------------------------------------------------
+  -- Update_Inserted_Element_Weighted_Link_Rank --
+  ------------------------------------------------
+
+  procedure Update_Inserted_Element_Weighted_Link_Rank(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Graphs_Double.Edges_List;
+    Eg: Graphs_Double.Edge;
+    I, J: Positive;
+    Wh, Sum_Eigv, Sum_Trans: Num;
+    Re, Pe: Num;
+  begin
+    pragma Warnings(Off, El);
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    El := Edges_To(Get_Vertex(Mi.Gr_Trans, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := Num(Value(Eg));
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward + Mi.Eigenvec(J) * Wh;
+      end if;
+    end loop;
+    Restore(El);
+
+    Sum_Trans := 0.0;
+    El := Edges_From(Get_Vertex(Mi.Gr_Trans, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(To(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) or else J = I then
+        Sum_Trans := Sum_Trans + Num(Value(Eg));
+      end if;
+    end loop;
+    Restore(El);
+
+    Sum_Eigv := Mi.Eigenvec(I);
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Mi.Lower_Q(J).Penalty := Mi.Lower_Q(J).Penalty + Mi.Eigenvec(J) * Mi.Eigenvec(I);
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+      Sum_Eigv := Sum_Eigv + Mi.Eigenvec(J);
+    end loop;
+    Restore(L);
+
+    Re := Mi.Eigenvec(I) * Sum_Trans;
+    Pe := Mi.Eigenvec(I) * Sum_Eigv;
+    Pe := Mi.Penalty_Coefficient * Pe;
+    Mi.Lower_Q(I).Reward := Re;
+    Mi.Lower_Q(I).Penalty := Pe;
+    Mi.Lower_Q(I).Total := Re - Pe;
+  end Update_Inserted_Element_Weighted_Link_Rank;
+
+  ----------------------------------------------
+  -- Update_Removed_Element_Unweighted_Newman --
+  ----------------------------------------------
+
+  procedure Update_Removed_Element_Unweighted_Newman(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    I, J: Positive;
+    Pe_Inc_Fact, Pe_Inc: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      J := Index_Of(Next(El));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward - 1.0 / Mi.Two_Mr;
+      end if;
+    end loop;
+    Restore(El);
+
+    Pe_Inc_Fact := Mi.Penalty_Coefficient * Mi.To(I).Kr / (Mi.Two_Mr * Mi.Two_Mr);
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Pe_Inc := Mi.From(J).Kr * Pe_Inc_Fact;
+      Mi.Lower_Q(J).Penalty := Mi.Lower_Q(J).Penalty - Pe_Inc;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+    end loop;
+    Restore(L);
+  end Update_Removed_Element_Unweighted_Newman;
+
+  --------------------------------------------------------
+  -- Update_Removed_Element_Unweighted_Uniform_Nullcase --
+  --------------------------------------------------------
+
+  procedure Update_Removed_Element_Unweighted_Uniform_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    I, J: Positive;
+    Pe: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    Pe := Mi.Penalty_Coefficient * Num(Number_Of_Elements(L)) / (Num(Mi.Size) * Num(Mi.Size));
+
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      J := Index_Of(Next(El));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward - 1.0 / Mi.Two_Mr;
+      end if;
+    end loop;
+    Restore(El);
+
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Mi.Lower_Q(J).Penalty := Pe;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+    end loop;
+    Restore(L);
+  end Update_Removed_Element_Unweighted_Uniform_Nullcase;
+
+  --------------------------------------------
+  -- Update_Removed_Element_Weighted_Newman --
+  --------------------------------------------
+
+  procedure Update_Removed_Element_Weighted_Newman(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    Eg: Edge;
+    I, J: Positive;
+    Wh: Num;
+    Pe_Inc_Fact, Pe_Inc: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := To_Num(Eg.Value);
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward - Wh / Mi.Two_W;
+      end if;
+    end loop;
+    Restore(El);
+
+    Pe_Inc_Fact := Mi.Penalty_Coefficient * Mi.To(I).W / (Mi.Two_W * Mi.Two_W);
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Pe_Inc := Mi.From(J).W * Pe_Inc_Fact;
+      Mi.Lower_Q(J).Penalty := Mi.Lower_Q(J).Penalty - Pe_Inc;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+    end loop;
+    Restore(L);
+  end Update_Removed_Element_Weighted_Newman;
+
+  --------------------------------------------
+  -- Update_Removed_Element_Weighted_Signed --
+  --------------------------------------------
+
+  procedure Update_Removed_Element_Weighted_Signed(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    Eg: Edge;
+    I, J: Positive;
+    Wh: Num;
+    Pe: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := To_Num(Eg.Value);
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward - Wh / (Mi.Two_W_Pos + Mi.Two_W_Neg);
+      end if;
+    end loop;
+    Restore(El);
+
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Pe := 0.0;
+      if Mi.Two_W_Pos > 0.0 then
+        Pe := Pe + Mi.From(J).W_Pos * Mi.To(I).W_Pos / Mi.Two_W_Pos;
+      end if;
+      if Mi.Two_W_Neg > 0.0 then
+        Pe := Pe - Mi.From(J).W_Neg * Mi.To(I).W_Neg / Mi.Two_W_Neg;
+      end if;
+      Pe := Pe / (Mi.Two_W_Pos + Mi.Two_W_Neg);
+      Pe := Mi.Penalty_Coefficient * Pe;
+      Mi.Lower_Q(J).Penalty := Mi.Lower_Q(J).Penalty - Pe;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+    end loop;
+    Restore(L);
+  end Update_Removed_Element_Weighted_Signed;
+
+  ------------------------------------------------------
+  -- Update_Removed_Element_Weighted_Uniform_Nullcase --
+  ------------------------------------------------------
+
+  procedure Update_Removed_Element_Weighted_Uniform_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    Eg: Edge;
+    I, J: Positive;
+    Wh: Num;
+    Pe: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    Pe := Mi.Penalty_Coefficient * Num(Number_Of_Elements(L)) / (Num(Mi.Size) * Num(Mi.Size));
+
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := To_Num(Eg.Value);
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward - Wh / Mi.Two_W;
+      end if;
+    end loop;
+    Restore(El);
+
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Mi.Lower_Q(J).Penalty := Pe;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+    end loop;
+    Restore(L);
+  end Update_Removed_Element_Weighted_Uniform_Nullcase;
+
+  ---------------------------------------------------
+  -- Update_Removed_Element_Weighted_Local_Average --
+  ---------------------------------------------------
+
+  procedure Update_Removed_Element_Weighted_Local_Average(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    Eg: Edge;
+    I, J: Positive;
+    Wh, Wa, Ka: Num;
+    Pe_Inc_Fact, Pe_Inc: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := To_Num(Eg.Value);
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward - Wh / Mi.Two_W;
+      end if;
+    end loop;
+    Restore(El);
+
+    Pe_Inc_Fact := Mi.Penalty_Coefficient * Mi.To(I).Kr / Mi.Two_La;
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Ka := Mi.From(J).Kr + Mi.To(I).Kr;
+      if Ka = 0.0 then
+        Wa := 0.0;
+      else
+        Wa := (Mi.From(J).W + Mi.To(I).W) / Ka;
+      end if;
+      Pe_Inc := Mi.From(J).Kr * Pe_Inc_Fact * Wa;
+      Mi.Lower_Q(J).Penalty := Mi.Lower_Q(J).Penalty - Pe_Inc;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+    end loop;
+    Restore(L);
+  end Update_Removed_Element_Weighted_Local_Average;
+
+  -----------------------------------------------------------
+  -- Update_Removed_Element_Weighted_Uniform_Local_Average --
+  -----------------------------------------------------------
+
+  procedure Update_Removed_Element_Weighted_Uniform_Local_Average(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    Eg: Edge;
+    I, J: Positive;
+    Wh, Wa, Ka: Num;
+    Pe_Inc_Fact, Pe_Inc: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := To_Num(Eg.Value);
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward - Wh / Mi.Two_W;
+      end if;
+    end loop;
+    Restore(El);
+
+    Pe_Inc_Fact := Mi.Penalty_Coefficient / Mi.Two_Ula;
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Ka := Mi.From(J).Kr + Mi.To(I).Kr;
+      if Ka = 0.0 then
+        Wa := 0.0;
+      else
+        Wa := (Mi.From(J).W + Mi.To(I).W) / Ka;
+      end if;
+      Pe_Inc := Pe_Inc_Fact * Wa;
+      Mi.Lower_Q(J).Penalty := Mi.Lower_Q(J).Penalty - Pe_Inc;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+    end loop;
+    Restore(L);
+  end Update_Removed_Element_Weighted_Uniform_Local_Average;
+
+  ---------------------------------------------------------------
+  -- Update_Removed_Element_Weighted_Links_Unweighted_Nullcase --
+  ---------------------------------------------------------------
+
+  procedure Update_Removed_Element_Weighted_Links_Unweighted_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    Eg: Edge;
+    I, J: Positive;
+    Wh: Num;
+    Pe_Inc_Fact, Pe_Inc: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := To_Num(Eg.Value);
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward - Wh / Mi.Two_W;
+      end if;
+    end loop;
+    Restore(El);
+
+    Pe_Inc_Fact := Mi.Penalty_Coefficient * Mi.To(I).Kr / (Mi.Two_Mr * Mi.Two_Mr);
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Pe_Inc := Mi.From(J).Kr * Pe_Inc_Fact;
+      Mi.Lower_Q(J).Penalty := Mi.Lower_Q(J).Penalty - Pe_Inc;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+    end loop;
+    Restore(L);
+  end Update_Removed_Element_Weighted_Links_Unweighted_Nullcase;
+
+  -------------------------------------------------
+  -- Update_Removed_Element_Weighted_No_Nullcase --
+  -------------------------------------------------
+
+  procedure Update_Removed_Element_Weighted_No_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    Eg: Edge;
+    I, J: Positive;
+    Wh: Num;
+    Pe: Num;
+  begin
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    Pe := 0.0;
+
+    El := Edges_To(Get_Vertex(Mi.Gr, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := To_Num(Eg.Value);
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward - Wh / Mi.Two_W;
+      end if;
+    end loop;
+    Restore(El);
+
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Mi.Lower_Q(J).Penalty := Pe;
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+    end loop;
+    Restore(L);
+  end Update_Removed_Element_Weighted_No_Nullcase;
+
+  -----------------------------------------------
+  -- Update_Removed_Element_Weighted_Link_Rank --
+  -----------------------------------------------
+
+  procedure Update_Removed_Element_Weighted_Link_Rank(Mi: in Modularity_Info; E: in Element; L: in List) is
+    Lol: List_Of_Lists;
+    El: Graphs_Double.Edges_List;
+    Eg: Graphs_Double.Edge;
+    I, J: Positive;
+    Wh: Num;
+  begin
+    pragma Warnings(Off, El);
+    Lol := List_Of_Lists_Of(L);
+    I := Index_Of(E);
+
+    El := Edges_To(Get_Vertex(Mi.Gr_Trans, I));
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      Eg := Next(El);
+      J := Index_Of(From(Eg));
+      if Belongs_To(Get_Element(Lol, J), L) then
+        Wh := Num(Value(Eg));
+        Mi.Lower_Q(J).Reward := Mi.Lower_Q(J).Reward - Mi.Eigenvec(J) * Wh;
+      end if;
+    end loop;
+    Restore(El);
+
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      J := Index_Of(Next_Element(L));
+      Mi.Lower_Q(J).Penalty := Mi.Lower_Q(J).Penalty - Mi.Eigenvec(J) * Mi.Eigenvec(I);
+      Mi.Lower_Q(J).Total := Mi.Lower_Q(J).Reward - Mi.Lower_Q(J).Penalty;
+    end loop;
+    Restore(L);
+  end Update_Removed_Element_Weighted_Link_Rank;
 
   -----------------------
   -- Transitions_Graph --
@@ -1314,10 +2606,6 @@ package body Graphs.Modularities is
     J: Positive;
     Wi, Pii, Pij: Num;
   begin
-    if Mi = null then
-      raise Uninitialized_Modularity_Info_Error;
-    end if;
-
     N := Number_Of_Vertices(Mi.Gr);
     Initialize(Mi.Gr_Trans, N, Directed => True);
 
@@ -1340,7 +2628,7 @@ package body Graphs.Modularities is
           if I = J then
             Pij := Mi.From(I).Self_Loop / Wi;
           else
-            Pij := To_Num(Value(E)) / Wi;
+            Pij := To_Num(E.Value) / Wi;
           end if;
           Add_Edge(Vf, Vt, Double(Pij));
         end loop;

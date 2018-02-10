@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -12,11 +12,11 @@
 -- library (see LICENSE.txt); if not, see http://www.gnu.org/licenses/
 
 
--- @filename Graphs_Modularities_D_Test.adb
+-- @filename Graphs_Modularities_Test_D.adb
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 20/03/2006
--- @revision 16/05/2011
+-- @revision 18/01/2018
 -- @brief Test of Graphs Modularities package
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -33,13 +33,13 @@ with Finite_Disjoint_Lists.IO; use Finite_Disjoint_Lists.IO;
 with Finite_Disjoint_Lists.Algorithms; use Finite_Disjoint_Lists.Algorithms;
 with Pajek_IO; use Pajek_IO;
 
-procedure Graphs_Modularities_D_Test is
+procedure Graphs_Modularities_Test_D is
 
   Gr: Graph;
-  Fn_Net: Unbounded_String;
-  Fn_Clu: Unbounded_String;
+  Fn_Net: Ustring;
+  Fn_Clu: Ustring;
 
-  Q_Best: array(Modularity_Type) of Modularity_Rec := (others => (0.0, 0.0, Double'First));
+  Q_Best: array(Modularity_Type) of Modularity_Rec := (others => Null_Modularity_Rec);
   Lol_Best: array(Modularity_Type) of List_Of_Lists;
   Lol_Clu: List_Of_Lists;
 
@@ -144,21 +144,21 @@ procedure Graphs_Modularities_D_Test is
 
 begin
   if Argument_Count = 2 then
-    Fn_Net := To_Unbounded_String(Argument(1));
-    Fn_Clu := To_Unbounded_String(Argument(2));
+    Fn_Net := S2U(Argument(1));
+    Fn_Clu := S2U(Argument(2));
   else
     Put_Line("Usage:  " & Command_Name & "  net_file_name  clu_or_lol_file_name");
     return;
   end if;
 
-  Get_Graph(To_String(Fn_Net), Gr);
+  Get_Graph(U2S(Fn_Net), Gr);
   Graph_Info(Gr, Mt => Weighted_Link_Rank);
   Put_Line("------");
 
   if Tail(Fn_Clu, 4) = ".clu" then
-    Get_Partition(To_String(Fn_Clu), Lol_Clu);
+    Get_Partition(U2S(Fn_Clu), Lol_Clu);
   else
-    Get(To_String(Fn_Clu), Lol_Clu, 0);
+    Get(U2S(Fn_Clu), Lol_Clu, 0);
   end if;
 
   Put(Lol_Clu);
@@ -190,4 +190,4 @@ begin
   end loop;
 
   Free(Gr);
-end Graphs_Modularities_D_Test;
+end Graphs_Modularities_Test_D;

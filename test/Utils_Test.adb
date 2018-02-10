@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/05/2005
--- @revision 13/10/2016
+-- @revision 28/12/2017
 -- @brief Test of Utils package
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -29,8 +29,8 @@ with Utils.IO_Float; use Utils.IO_Float;
 
 procedure Utils_Test is
   Separators_Json: constant Characters := ('{', '}', '[', ']', ',', ':');
-  Fn: constant String := "utils_test.txt";
-  Fn_In: String := "..\test\utils_test.txt";
+  Fn: constant String := "test-utils.txt";
+  Fn_In: String := "..\test\test-utils.txt";
   Ft: File_Type;
   W: Word_Access;
   I: Integer;

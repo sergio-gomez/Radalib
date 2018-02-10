@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 10/10/2004
--- @revision 08/04/2012
+-- @revision 15/12/2017
 -- @brief Treatment of Lists of Lists with Finite Disjoint Elements
 
 with Stacks;
@@ -36,6 +36,9 @@ package Finite_Disjoint_Lists is
 
   -- Initialization possibilities for Lists of Lists
   type List_Of_Lists_Initialization is (Unassigned_Initialization, Isolated_Initialization, Together_Initialization);
+
+  -- Null List of Lists
+  Null_List_Of_Lists: constant List_Of_Lists;
 
   Index_Error: exception;
   Uninitialized_List_Of_Lists_Error: exception;
@@ -347,6 +350,8 @@ private
 
   type List_Of_Lists_Rec;
   type List_Of_Lists is access List_Of_Lists_Rec;
+
+  Null_List_Of_Lists: constant List_Of_Lists := null;
 
   --------------
   -- Elements --

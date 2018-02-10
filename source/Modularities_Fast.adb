@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -17,8 +17,11 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 20/11/2007
--- @revision 26/10/2014
+-- @revision 16/01/2018
 -- @brief Newman's Fast Algorithm implementation
+
+with Ada.Containers.Ordered_Sets;
+with Ada.Containers.Ordered_Maps;
 
 with Finite_Disjoint_Lists.Algorithms; use Finite_Disjoint_Lists.Algorithms;
 
@@ -28,15 +31,22 @@ package body Modularities_Fast is
   -- Create_Adjacent_Lists_Graph --
   ---------------------------------
 
-  procedure Create_Adjacent_Lists_Graph(Gr: in Graph; Lol: in List_Of_Lists; Gr_Adj: out Graph; Lists_Map: out PLists_Vector) is
+  procedure Create_Adjacent_Lists_Graph(Gr: in Graph; Lol: in List_Of_Lists; Mi: in Modularity_Info;
+    Mt: in Modularity_Type; Gr_Adj: out Graph; Lists_Map: out PLists_Vector)
+  is
+    package List_Id_Sets is new Ada.Containers.Ordered_Sets(Integer);
+    use List_Id_Sets;
+
     Directed: Boolean;
     N, N_Adj: Natural;
     L: List;
     El: Edges_List;
-    E, E_Adj: Edge;
+    E: Edge;
     Vi, Vj, Vi_Adj, Vj_Adj: Vertex;
     Vertex_To_List_Index: Pintegers;
-    J, I_Adj, J_Adj: Positive;
+    I, J, I_Adj, J_Adj: Positive;
+    S: Set;
+    Delta_Q: Double;
   begin
     pragma Warnings(Off, L);
     pragma Warnings(Off, El);
@@ -48,117 +58,108 @@ package body Modularities_Fast is
     -- Initialize mappings
     Vertex_To_List_Index := Alloc(1, N);
     Lists_Map := new Lists_Vector(1..N_Adj);
-    J_Adj := 1;
+    I_Adj := 1;
+    Remove_Empty(Lol);
     Save(Lol);
     Reset(Lol);
     while Has_Next_List(Lol) loop
       L := Next_List(Lol);
-      Lists_Map(J_Adj) := L;
+      Lists_Map(I_Adj) := L;
       Save(L);
       Reset(L);
       while Has_Next_Element(L) loop
-        J := Index_Of(Next_Element(L));
-        Vertex_To_List_Index(J) := J_Adj;
+        I := Index_Of(Next_Element(L));
+        Vertex_To_List_Index(I) := I_Adj;
       end loop;
       Restore(L);
-      J_Adj := J_Adj + 1;
+      I_Adj := I_Adj + 1;
     end loop;
     Restore(Lol);
 
     -- Create Edges of Adjacent Lists Graph
-    for I in 1..N loop
-      Vi := Get_Vertex(Gr, I);
-      I_Adj := Vertex_To_List_Index(I);
-      Vi_Adj := Get_Vertex(Gr_Adj, I_Adj);
-      El := Edges_From(Vi);
-      Save(El);
-      Reset(El);
-      while Has_Next(El) loop
-        E := Next(El);
-        Vj := To(E);
-        J := Index_Of(Vj);
-        J_Adj := Vertex_To_List_Index(J);
-        Vj_Adj := Get_Vertex(Gr_Adj, J_Adj);
-        if (Directed and I_Adj /= J_Adj) or (not Directed and I_Adj < J_Adj) then
-          E_Adj := Get_Edge_Or_No_Edge(Vi_Adj, Vj_Adj);
-          if E_Adj = No_Edge then
-            Add_Edge(Vi_Adj, Vj_Adj, 0.0);
+    I_Adj := 1;
+    Save(Lol);
+    Reset(Lol);
+    while Has_Next_List(Lol) loop
+      Clear(S);
+      L := Next_List(Lol);
+      Save(L);
+      Reset(L);
+      while Has_Next_Element(L) and Natural(Length(S)) < N_Adj - I_Adj loop
+        I := Index_Of(Next_Element(L));
+        Vi := Get_Vertex(Gr, I);
+        El := Edges_From(Vi);
+        Save(El);
+        Reset(El);
+        while Has_Next(El) and Natural(Length(S)) < N_Adj - I_Adj loop
+          E := Next(El);
+          Vj := To(E);
+          J := Index_Of(Vj);
+          J_Adj := Vertex_To_List_Index(J);
+          if I_Adj < J_Adj and then not Contains(S, J_Adj) then
+            Vi_Adj := Get_Vertex(Gr_Adj, I_Adj);
+            Vj_Adj := Get_Vertex(Gr_Adj, J_Adj);
+            Delta_Q := Modularity_Merging_Variation(Mi, Mt, Lists_Map(I_Adj), Lists_Map(J_Adj));
+            Add_Edge(Vi_Adj, Vj_Adj, Delta_Q);
+            Insert(S, J_Adj);
           end if;
-        end if;
+        end loop;
+        Restore(El);
       end loop;
-      Restore(El);
+      Restore(L);
+      I_Adj := I_Adj + 1;
     end loop;
+    Restore(Lol);
 
     Free(Vertex_To_List_Index);
   end Create_Adjacent_Lists_Graph;
-
-  -------------------------------------
-  -- Initialize_Adjacent_Lists_Graph --
-  -------------------------------------
-
-  procedure Initialize_Adjacent_Lists_Graph(Gr_Adj: in Graph; Lists_Map: in PLists_Vector;
-    Mi: in Modularity_Info; Mt: in Modularity_Type)
-  is
-    N_Adj: Natural;
-    El: Edges_List;
-    E: Edge;
-    Vi, Vj: Vertex;
-    J: Positive;
-    Delta_Q: Double;
-  begin
-    pragma Warnings(Off, El);
-    N_Adj := Number_Of_Vertices(Gr_Adj);
-    for I in 1..N_Adj loop
-      Vi := Get_Vertex(Gr_Adj, I);
-      El := Edges_From(Vi);
-      Save(El);
-      Reset(El);
-      while Has_Next(El) loop
-        E := Next(El);
-        Vj := To(E);
-        J := Index_Of(Vj);
-        if I < J then
-          Delta_Q := Modularity_Merging_Variation(Mi, Mt, Lists_Map(I), Lists_Map(J));
-          Set_Value(E, Delta_Q);
-        end if;
-      end loop;
-      Restore(El);
-    end loop;
-  end Initialize_Adjacent_Lists_Graph;
 
   ----------------------------------
   -- Modularity_Merging_Variation --
   ----------------------------------
 
   function Modularity_Merging_Variation(Mi: in Modularity_Info; Mt: in Modularity_Type; Li, Lj: in List) return Double is
-    Nj: constant Natural := Number_Of_Elements(Lj);
-    Moved: Integers(1..Nj);
-    E: Finite_Disjoint_Lists.Element;
-    Idx: Natural;
-    Delta_Q: Double;
+    Lf, Lt: List;
+    Q_Ini, Q_End: Double;
   begin
-    -- Merge
-    Idx := 0;
-    Save(Lj);
-    Reset(Lj);
-    while Has_Next_Element(Lj) loop
-      E := Next_Element(Lj);
-      Idx := Idx + 1;
-      Moved(Idx) := Index_Of(E);
-      Move(E, Li);
-    end loop;
-    Restore(Lj);
-    Update_Modularity(Mi, Li, Mt);
-    Delta_Q := Total_Modularity(Mi);
-    -- Undo merging
-    for K in 1..Nj loop
-      E := Get_Element(List_Of_Lists_Of(Li), Moved(K));
-      Move(E, Lj);
-    end loop;
-    Update_Modularity(Mi, Li, Mt);
-    Update_Modularity(Mi, Lj, Mt);
-    Delta_Q := Delta_Q - Total_Modularity(Mi);
-    return Delta_Q;
+    pragma Warnings(Off, Lf);
+    if Number_Of_Elements(Li) < Number_Of_Elements(Lj) then
+      Lf := Li;
+      Lt := Lj;
+    else
+      Lf := Lj;
+      Lt := Li;
+    end if;
+    declare
+      Nf: constant Natural := Number_Of_Elements(Lf);
+      Moved: Integers(1..Nf);
+      E: Finite_Disjoint_Lists.Element;
+      Idx: Natural;
+    begin
+      Save_Modularity(Mi, Li);
+      Save_Modularity(Mi, Lj);
+      -- Merge
+      Idx := 0;
+      Save(Lf);
+      Reset(Lf);
+      while Has_Next_Element(Lf) loop
+        E := Next_Element(Lf);
+        Idx := Idx + 1;
+        Moved(Idx) := Index_Of(E);
+        Update_Modularity_Move_Element(Mi, E, Lt, Mt);
+      end loop;
+      Restore(Lf);
+      Q_End := Partial_Modularity(Mi, Lt);
+      -- Undo merging
+      for K in 1..Nf loop
+        E := Get_Element(List_Of_Lists_Of(Lf), Moved(K));
+        Move(E, Lf);
+      end loop;
+      Restore_Modularity(Mi, Li);
+      Restore_Modularity(Mi, Lj);
+      Q_Ini := Partial_Modularity(Mi, Lf) + Partial_Modularity(Mi, Lt);
+    end;
+    return Q_End - Q_Ini;
   end Modularity_Merging_Variation;
 
   --------------------------------
@@ -205,52 +206,97 @@ package body Modularities_Fast is
   --------------------------
 
   procedure Merge_Adjacent_Lists(Gr_Adj: in Graph; Lists_Map: in PLists_Vector; I, J: in Positive;
-    Mi: in Modularity_Info; Mt: in Modularity_Type)
+    Mi: in Modularity_Info; Mt: in Modularity_Type; Delta_Q_Merge: in Double)
   is
-    Li, Lj, Lk: List;
+    package Dq_Maps is new Ada.Containers.Ordered_Maps(Integer, Double);
+    use Dq_Maps;
+
+    Li, Lj, Lk, Ls, Lr: List;
     El: Edges_List;
     E: Edge;
-    Vi, Vj, Vk: Vertex;
+    Vi, Vj, Vk, Vs, Vr: Vertex;
+    Mps, Mprs: Map;
+    C: Cursor;
     K: Positive;
     Delta_Q: Double;
   begin
     pragma Warnings(Off, El);
     Vi := Get_Vertex(Gr_Adj, I);
     Vj := Get_Vertex(Gr_Adj, J);
-    -- Merge Lists
     Li := Lists_Map(I);
     Lj := Lists_Map(J);
-    Move(Lj, Li);
-    Remove(Lj);
-    -- Merge Edges
-    El := Edges_From(Vj);
-    Save(El);
-    Reset(El);
-    while Has_Next(El) loop
-      E := Next(El);
-      Vk := To(E);
-      if not Edge_Exists(Vi, Vk) then
-        K := Index_Of(Vk);
-        Add_Edge(Vi, Vk);
-      end if;
-    end loop;
-    Reset(El);
-    while Has_Next(El) loop
-      E := Next(El);
-      Remove(E);
-    end loop;
-    Restore(El);
-    -- Recalculate weights
-    El := Edges_From(Vi);
+    -- Choose Lists
+    if Degree_From(Vi) > Degree_From(Vj) then
+      Vs := Vi;
+      Vr := Vj;
+      Ls := Li;
+      Lr := Lj;
+    else
+      Vs := Vj;
+      Vr := Vi;
+      Ls := Lj;
+      Lr := Li;
+    end if;
+    -- Edges from Save node
+    El := Edges_From(Vs);
     Save(El);
     Reset(El);
     while Has_Next(El) loop
       E := Next(El);
       Vk := To(E);
       K := Index_Of(Vk);
-      Lk := Lists_Map(K);
-      Delta_Q := Modularity_Merging_Variation(Mi, Mt, Li, Lk);
+      if Vk /= Vr then
+        Insert(Mps, K, Value(E));
+      end if;
+    end loop;
+    Restore(El);
+    -- Edges from Remove node
+    El := Edges_From(Vr);
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      E := Next(El);
+      Vk := To(E);
+      K := Index_Of(Vk);
+      if Vk /= Vs then
+        Delta_Q := Value(E);
+        if Contains(Mps, K) then
+          Delta_Q := Delta_Q + Dq_Maps.Element(Mps, K);
+          Insert(Mprs, K, Delta_Q);
+        else
+          Lk := Lists_Map(K);
+          Delta_Q := Delta_Q + Modularity_Merging_Variation(Mi, Mt, Ls, Lk);
+          Add_Edge(Vs, Vk, Delta_Q);
+        end if;
+      end if;
+    end loop;
+    Restore(El);
+    -- Update Edges from Save node
+    C := First(Mps);
+    while Has_Element(C) loop
+      K := Key(C);
+      Vk := Get_Vertex(Gr_Adj, K);
+      E := Get_Edge_Or_No_Edge(Vs, Vk);
+      if Contains(Mprs, K) then
+        Delta_Q := Dq_Maps.Element(Mprs, K);
+      else
+        Delta_Q := Dq_Maps.Element(C);
+        Lk := Lists_Map(K);
+        Delta_Q := Delta_Q  + Modularity_Merging_Variation(Mi, Mt, Lr, Lk);
+      end if;
       Set_Value(E, Delta_Q);
+      Next(C);
+    end loop;
+    -- Merge Lists
+    Move(Lr, Ls);
+    Remove(Lr);
+    -- Remove Edges
+    El := Edges_From(Vr);
+    Save(El);
+    Reset(El);
+    while Has_Next(El) loop
+      E := Next(El);
+      Remove(E);
     end loop;
     Restore(El);
   end Merge_Adjacent_Lists;
@@ -271,7 +317,7 @@ package body Modularities_Fast is
       if Finished then
         return;
       else
-        Merge_Adjacent_Lists(Gr_Adj, Lists_Map, I_Max, J_Max, Mi, Mt);
+        Merge_Adjacent_Lists(Gr_Adj, Lists_Map, I_Max, J_Max, Mi, Mt, Max_Delta_Q);
       end if;
     end loop;
   end Optimization_Process;
@@ -310,7 +356,7 @@ package body Modularities_Fast is
   ------------------------
 
   procedure Execute_Repetition(Mt: in Modularity_Type; Gr: in Graph;
-    Log_Name: in Unbounded_String; Lol_Ini: in List_Of_Lists;
+    Log_Name: in Ustring; Lol_Ini: in List_Of_Lists;
     Lol_Best: out List_Of_Lists; Q_Best: out Modularity_Rec;
     R: in Double := No_Resistance; Pc: in Double := 1.0)
   is
@@ -325,8 +371,7 @@ package body Modularities_Fast is
     Lol_Best := Clone(Lol_Ini);
     Update_Modularity(Mi, Lol_Best, Mt);
     Q_Total := Total_Modularity(Mi);
-    Create_Adjacent_Lists_Graph(Gr, Lol_Best, Gr_Adj, Lists_Map);
-    Initialize_Adjacent_Lists_Graph(Gr_Adj, Lists_Map, Mi, Mt);
+    Create_Adjacent_Lists_Graph(Gr, Lol_Best, Mi, Mt, Gr_Adj, Lists_Map);
     Steps := Get_Steps(Number_Of_Vertices(Gr), Number_Of_Vertices(Gr_Adj));
     Finished := False;
     while not Finished loop
@@ -348,7 +393,7 @@ package body Modularities_Fast is
   --------------------
 
   procedure Newman_Fast_Algorithm(Mt: in Modularity_Type; Gr: in Graph;
-    Log_Name: in Unbounded_String; Lol_Ini: in List_Of_Lists;
+    Log_Name: in Ustring; Lol_Ini: in List_Of_Lists;
     Lol_Best: out List_Of_Lists; Q_Best: out Modularity_Rec;
     R: in Double := No_Resistance; Pc: in Double := 1.0)
   is

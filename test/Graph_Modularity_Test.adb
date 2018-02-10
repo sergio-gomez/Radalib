@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,12 +16,13 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 01/02/2007
--- @revision 16/05/2011
+-- @revision 14/01/2018
 -- @brief Test of Graph Modularity
 
-with Ada.Command_Line; use Ada.Command_Line;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+with Ada.Command_Line; use Ada.Command_Line;
 with Ada.Text_IO; use Ada.Text_IO;
+
 with Utils; use Utils;
 with Utils.IO_Integer; use Utils.IO_Integer;
 with Utils.IO_Double; use Utils.IO_Double;
@@ -177,30 +178,30 @@ procedure Graph_Modularity_Test is
 
   Mt: Modularity_Type;
   Gr: Graph;
-  Fn_Net: Unbounded_String;
-  Fn_Clu: Unbounded_String;
+  Fn_Net: Ustring;
+  Fn_Clu: Ustring;
   Lol: List_Of_Lists;
 
 begin
   if Argument_Count = 3 then
-    Fn_Net := To_Unbounded_String(Argument(1));
-    Fn_Clu := To_Unbounded_String(Argument(2));
+    Fn_Net := S2U(Argument(1));
+    Fn_Clu := S2U(Argument(2));
     Mt := To_Modularity_Type(Argument(3));
   else
     Put_Line("Usage:  " & Command_Name & "  net_file_name  clu_or_lol_file_name  modularity_type");
     return;
   end if;
 
-  Get_Graph(To_String(Fn_Net), Gr);
+  Get_Graph(U2S(Fn_Net), Gr);
 
   if Tail(Fn_Clu, 4) = ".clu" then
-    Get_Partition(To_String(Fn_Clu), Lol);
+    Get_Partition(U2S(Fn_Clu), Lol);
   else
-    Get(To_String(Fn_Clu), Lol, 0);
+    Get(U2S(Fn_Clu), Lol, 0);
   end if;
 
   Put_Line("------");
-  Put_Line(To_String(Fn_Net) & " + " & To_String(Fn_Clu));
+  Put_Line(U2S(Fn_Net) & " + " & U2S(Fn_Clu));
 
   Put_Line("------");
   Graph_Info(Gr, Mt);

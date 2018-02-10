@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 14/12/2004
--- @revision 26/10/2014
+-- @revision 28/12/2017
 -- @brief Test of the Chrono utils
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -26,7 +26,7 @@ with Utils.IO; use Utils.IO;
 procedure Chrono_Test is
 
   Chrono: Chronometer;
-  Fn: constant String := "chrono_test.txt";
+  Fn: constant String := "test-chrono.txt";
 
 begin
 

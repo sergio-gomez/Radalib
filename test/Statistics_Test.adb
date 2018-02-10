@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,14 +16,20 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 08/11/2007
--- @revision 26/10/2014
+-- @revision 29/01/2018
 -- @brief Test of Statistics
 
 with Ada.Text_IO; use Ada.Text_IO;
-with Utils; use Utils;
+with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
+
 with Statistics_Float; use Statistics_Float;
+with Random_Numbers; use Random_Numbers;
+with Utils; use Utils;
 
 procedure Statistics_Test is
+
+  Bound_1: constant Positive := 50;
+  Bound_2: constant Positive := 10_000;
 
   procedure Put(V: in Floats; Aft: Natural := 2) is
   begin
@@ -74,9 +80,11 @@ procedure Statistics_Test is
   end Put_Data;
 
   procedure Put_Statistics(V: in Floats; Aft: Natural := 4) is
+    N: Positive;
     Pe: Floats(1..100);
     Wh: Floats(V'Range);
   begin
+    N := V'Length;
     -- Unweighted
     Put_Line("    Unweighted:");
     Put_Line("      Minimum  : " & F2S(Minimum(V), Aft => Aft, Exp => 0));
@@ -100,11 +108,18 @@ procedure Statistics_Test is
     for K in 1..3 loop
       Put_Line("      Percentile " & I2S(25 * K) & " : " & F2Se0(Pe(25 * K), Aft => Aft));
     end loop;
-    Put("      Rank (min  of tied): "); Put(Ranks(V));
-    Put("      Rank (mean of tied): "); Put(Ranks(V, Mean_Of_Tied => True));
+    if N <= Bound_1 then
+      Put("      Rank (min  of tied): "); Put(Ranks(V));
+      Put("      Rank (mean of tied): "); Put(Ranks(V, Mean_Of_Tied => True));
+    end if;
     -- Weighted (all equal)
     Wh := (others => 2.0);
-    Put("    Weighted: "); Put(Wh);
+    Put("    Weighted: ");
+    if N <= Bound_1 then
+      Put(Wh);
+    else
+      New_Line;
+    end if;
     Put_Line("      Arithmetic Mean : " & F2S(Arithmetic_Mean(V, Wh), Aft => Aft, Exp => 0));
     if Minimum(V) >= 0.0 then
       Put_Line("      Geometric Mean  : " & F2S(Geometric_Mean(V, Wh), Aft => Aft, Exp => 0));
@@ -122,8 +137,13 @@ procedure Statistics_Test is
     end loop;
     -- Weighted (not equal)
     Wh := (others => 2.0);
-    Wh(Wh'First) := 1.0;
-    Put("    Weighted: "); Put(Wh);
+    Wh(Wh'First..((Wh'First + Wh'Last) / 2)) := (others => 1.0);
+    Put("    Weighted: ");
+    if N <= Bound_1 then
+      Put(Wh);
+    else
+      New_Line;
+    end if;
     Put_Line("      Arithmetic Mean : " & F2S(Arithmetic_Mean(V, Wh), Aft => Aft, Exp => 0));
     if Minimum(V) >= 0.0 then
       Put_Line("      Geometric Mean  : " & F2S(Geometric_Mean(V, Wh), Aft => Aft, Exp => 0));
@@ -144,8 +164,10 @@ procedure Statistics_Test is
   end Put_Statistics;
 
   procedure Put_Statistics(P: in PFloats; Aft: Natural := 4) is
+    N: Positive;
     Pe, Wh: PFloats;
   begin
+    N := P'Length;
     -- Alloc weights
     Wh := Alloc(P'First, P'Last);
     -- Unweighted
@@ -172,15 +194,22 @@ procedure Statistics_Test is
       Put_Line("      Percentile " & I2S(25 * K) & " : " & F2Se0(Pe(25 * K), Aft => Aft));
     end loop;
     Free(Pe);
-    Pe := Ranks(P);
-    Put("      Ranks (min  of tied) : "); Put(Pe.all);
-    Free(Pe);
-    Pe := Ranks(P, Mean_Of_Tied => True);
-    Put("      Ranks (mean of tied) : "); Put(Pe.all);
-    Free(Pe);
+    if N <= Bound_1 then
+      Pe := Ranks(P);
+      Put("      Ranks (min  of tied) : "); Put(Pe.all);
+      Free(Pe);
+      Pe := Ranks(P, Mean_Of_Tied => True);
+      Put("      Ranks (mean of tied) : "); Put(Pe.all);
+      Free(Pe);
+    end if;
     -- Weighted (all equal)
     Wh.all := (others => 2.0);
-    Put("    Weighted: "); Put(Wh.all);
+    Put("    Weighted: ");
+    if N <= Bound_1 then
+      Put(Wh.all);
+    else
+      New_Line;
+    end if;
     Put_Line("      Arithmetic Mean : " & F2S(Arithmetic_Mean(P, Wh), Aft => Aft, Exp => 0));
     if Minimum(P) >= 0.0 then
       Put_Line("      Geometric Mean  : " & F2S(Geometric_Mean(P, Wh), Aft => Aft, Exp => 0));
@@ -198,8 +227,13 @@ procedure Statistics_Test is
     end loop;
     -- Weighted (not equal)
     Wh.all := (others => 2.0);
-    Wh(Wh'First) := 1.0;
-    Put("    Weighted: "); Put(Wh.all);
+    Wh(Wh'First..((Wh'First + Wh'Last) / 2)) := (others => 1.0);
+    Put("    Weighted: ");
+    if N <= Bound_1 then
+      Put(Wh.all);
+    else
+      New_Line;
+    end if;
     Put_Line("      Arithmetic Mean : " & F2S(Arithmetic_Mean(P, Wh), Aft => Aft, Exp => 0));
     if Minimum(P) >= 0.0 then
       Put_Line("      Geometric Mean  : " & F2S(Geometric_Mean(P, Wh), Aft => Aft, Exp => 0));
@@ -222,57 +256,109 @@ procedure Statistics_Test is
   end Put_Statistics;
 
   procedure Put_Statistics(V1, V2: in Floats; Aft: Natural := 4) is
+    N: Positive;
     A, B: Float;
     Wh: Floats(V1'Range);
   begin
+    N := V1'Length;
+    if N >= Bound_1 then
+      Set_Bootstrap_Size(100);
+    end if;
     -- Unweighted
     Put_Line("    Unweighted:");
     Put_Line("      Covariance : " & F2S(Covariance(V1, V2), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Pearson)  : " & F2S(Correlation(V1, V2), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Spearman) : " & F2S(Spearman_Correlation(V1, V2), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Pearson , Jackknife)        : " & F2S(Pearson_Correlation_Error(V1, V2, Cet => Jackknife), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Pearson , Bootstrap)        : " & F2S(Pearson_Correlation_Error(V1, V2, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    Put_Line("      Correlation (Kendall)  : " & F2S(Kendall_Correlation(V1, V2), Aft => Aft, Exp => 0));
+    if N <= Bound_1 then
+      Put_Line("      Correlation Error (Pearson , Jackknife)        : " & F2S(Pearson_Correlation_Error(V1, V2, Cet => Jackknife), Aft => Aft, Exp => 0));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("      Correlation Error (Pearson , Bootstrap)        : " & F2S(Pearson_Correlation_Error(V1, V2, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    end if;
     Put_Line("      Correlation Error (Pearson , Fisher_Transform) : " & F2S(Pearson_Correlation_Error(V1, V2, Cet => Fisher_Transform), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Spearman, Jackknife)        : " & F2S(Spearman_Correlation_Error(V1, V2, Cet => Jackknife), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Spearman, Bootstrap)        : " & F2S(Spearman_Correlation_Error(V1, V2, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    if N <= Bound_1 then
+      Put_Line("      Correlation Error (Spearman, Jackknife)        : " & F2S(Spearman_Correlation_Error(V1, V2, Cet => Jackknife), Aft => Aft, Exp => 0));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("      Correlation Error (Spearman, Bootstrap)        : " & F2S(Spearman_Correlation_Error(V1, V2, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    end if;
     Put_Line("      Correlation Error (Spearman, Fisher_Transform) : " & F2S(Spearman_Correlation_Error(V1, V2, Cet => Fisher_Transform), Aft => Aft, Exp => 0));
+    if N <= Bound_1 then
+      Put_Line("      Correlation Error (Kendall , Jackknife)        : " & F2S(Kendall_Correlation_Error(V1, V2, Cet => Jackknife), Aft => Aft, Exp => 0));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("      Correlation Error (Kendall , Bootstrap)        : " & F2S(Kendall_Correlation_Error(V1, V2, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    end if;
+    Put_Line("      Correlation Error (Kendall , Fisher_Transform) : " & F2S(Kendall_Correlation_Error(V1, V2, Cet => Fisher_Transform), Aft => Aft, Exp => 0));
     Simple_Linear_Regression(V1, V2, A, B);
     Put_Line("      Simple Linear Regression Y = a X + b :  a = " & F2S(A, Aft => Aft, Exp => 0) & "   b = " & F2S(B, Aft => Aft, Exp => 0));
     Simple_Linear_Regression(V2, V1, A, B);
     Put_Line("      Simple Linear Regression X = a Y + b :  a = " & F2S(A, Aft => Aft, Exp => 0) & "   b = " & F2S(B, Aft => Aft, Exp => 0));
     -- Weighted (all equal)
     Wh := (others => 2.0);
-    Put("    Weighted: "); Put(Wh);
+    Put("    Weighted: ");
+    if N <= Bound_1 then
+      Put(Wh);
+    else
+      New_Line;
+    end if;
     Put_Line("      Covariance : " & F2S(Covariance(V1, V2, Wh), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Pearson)  : " & F2S(Correlation(V1, V2, Wh), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Spearman) : " & F2S(Spearman_Correlation(V1, V2, Wh), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Pearson , Jackknife)        : " & F2S(Pearson_Correlation_Error(V1, V2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Pearson , Bootstrap)        : " & F2S(Pearson_Correlation_Error(V1, V2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    if N <= Bound_1 then
+      Put_Line("      Correlation Error (Pearson , Jackknife)        : " & F2S(Pearson_Correlation_Error(V1, V2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("      Correlation Error (Pearson , Bootstrap)        : " & F2S(Pearson_Correlation_Error(V1, V2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    end if;
     Put_Line("      Correlation Error (Pearson , Fisher_Transform) : " & F2S(Pearson_Correlation_Error(V1, V2, Wh, Cet => Fisher_Transform), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Spearman, Jackknife)        : " & F2S(Spearman_Correlation_Error(V1, V2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Spearman, Bootstrap)        : " & F2S(Spearman_Correlation_Error(V1, V2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    if N <= Bound_1 then
+      Put_Line("      Correlation Error (Spearman, Jackknife)        : " & F2S(Spearman_Correlation_Error(V1, V2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("      Correlation Error (Spearman, Bootstrap)        : " & F2S(Spearman_Correlation_Error(V1, V2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    end if;
     Put_Line("      Correlation Error (Spearman, Fisher_Transform) : " & F2S(Spearman_Correlation_Error(V1, V2, Wh, Cet => Fisher_Transform), Aft => Aft, Exp => 0));
     -- Weighted (not equal)
     Wh := (others => 2.0);
-    Wh(Wh'First) := 1.0;
-    Put("    Weighted: "); Put(Wh);
+    Wh(Wh'First..((Wh'First + Wh'Last) / 2)) := (others => 1.0);
+    Put("    Weighted: ");
+    if N <= Bound_1 then
+      Put(Wh);
+    else
+      New_Line;
+    end if;
     Put_Line("      Covariance : " & F2S(Covariance(V1, V2, Wh), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Pearson)  : " & F2S(Correlation(V1, V2, Wh), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Spearman) : " & F2S(Spearman_Correlation(V1, V2, Wh), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Pearson , Jackknife)        : " & F2S(Pearson_Correlation_Error(V1, V2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Pearson , Bootstrap)        : " & F2S(Pearson_Correlation_Error(V1, V2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    if N <= Bound_1 then
+      Put_Line("      Correlation Error (Pearson , Jackknife)        : " & F2S(Pearson_Correlation_Error(V1, V2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("      Correlation Error (Pearson , Bootstrap)        : " & F2S(Pearson_Correlation_Error(V1, V2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    end if;
     Put_Line("      Correlation Error (Pearson , Fisher_Transform) : " & F2S(Pearson_Correlation_Error(V1, V2, Wh, Cet => Fisher_Transform), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Spearman, Jackknife)        : " & F2S(Spearman_Correlation_Error(V1, V2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Spearman, Bootstrap)        : " & F2S(Spearman_Correlation_Error(V1, V2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    if N <= Bound_1 then
+      Put_Line("      Correlation Error (Spearman, Jackknife)        : " & F2S(Spearman_Correlation_Error(V1, V2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("      Correlation Error (Spearman, Bootstrap)        : " & F2S(Spearman_Correlation_Error(V1, V2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    end if;
     Put_Line("      Correlation Error (Spearman, Fisher_Transform) : " & F2S(Spearman_Correlation_Error(V1, V2, Wh, Cet => Fisher_Transform), Aft => Aft, Exp => 0));
   exception
     when Statistics_Error => Put_Line("    Statistics_Error exception raised");
   end Put_Statistics;
 
   procedure Put_Statistics(P1, P2: in PFloats; Aft: Natural := 4) is
+    N: Positive;
     Wh: PFloats;
     A, B: Float;
   begin
+    N := P1'Length;
+    if N >= Bound_1 then
+      Set_Bootstrap_Size(100);
+    end if;
     -- Alloc weights
     Wh := Alloc(P1'First, P1'Last);
     -- Unweighted
@@ -280,40 +366,82 @@ procedure Statistics_Test is
     Put_Line("      Covariance : " & F2S(Covariance(P1, P2), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Pearson)  : " & F2S(Correlation(P1, P2), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Spearman) : " & F2S(Spearman_Correlation(P1, P2), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Pearson , Jackknife)        : " & F2S(Pearson_Correlation_Error(P1, P2, Cet => Jackknife), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Pearson , Bootstrap)        : " & F2S(Pearson_Correlation_Error(P1, P2, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    Put_Line("      Correlation (Kendall)  : " & F2S(Kendall_Correlation(P1, P2), Aft => Aft, Exp => 0));
+    if N <= Bound_1 then
+      Put_Line("      Correlation Error (Pearson , Jackknife)        : " & F2S(Pearson_Correlation_Error(P1, P2, Cet => Jackknife), Aft => Aft, Exp => 0));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("      Correlation Error (Pearson , Bootstrap)        : " & F2S(Pearson_Correlation_Error(P1, P2, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    end if;
     Put_Line("      Correlation Error (Pearson , Fisher_Transform) : " & F2S(Pearson_Correlation_Error(P1, P2, Cet => Fisher_Transform), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Spearman, Jackknife)        : " & F2S(Spearman_Correlation_Error(P1, P2, Cet => Jackknife), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Spearman, Bootstrap)        : " & F2S(Spearman_Correlation_Error(P1, P2, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    if N <= Bound_1 then
+      Put_Line("      Correlation Error (Spearman, Jackknife)        : " & F2S(Spearman_Correlation_Error(P1, P2, Cet => Jackknife), Aft => Aft, Exp => 0));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("      Correlation Error (Spearman, Bootstrap)        : " & F2S(Spearman_Correlation_Error(P1, P2, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    end if;
     Put_Line("      Correlation Error (Spearman, Fisher_Transform) : " & F2S(Spearman_Correlation_Error(P1, P2, Cet => Fisher_Transform), Aft => Aft, Exp => 0));
+    if N <= Bound_1 then
+      Put_Line("      Correlation Error (Kendall , Jackknife)        : " & F2S(Kendall_Correlation_Error(P1, P2, Cet => Jackknife), Aft => Aft, Exp => 0));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("      Correlation Error (Kendall , Bootstrap)        : " & F2S(Kendall_Correlation_Error(P1, P2, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    end if;
+    Put_Line("      Correlation Error (Kendall , Fisher_Transform) : " & F2S(Kendall_Correlation_Error(P1, P2, Cet => Fisher_Transform), Aft => Aft, Exp => 0));
     Simple_Linear_Regression(P1, P2, A, B);
     Put_Line("      Simple Linear Regression Y = a X + b :  a = " & F2S(A, Aft => Aft, Exp => 0) & "   b = " & F2S(B, Aft => Aft, Exp => 0));
     Simple_Linear_Regression(P2, P1, A, B);
     Put_Line("      Simple Linear Regression X = a Y + b :  a = " & F2S(A, Aft => Aft, Exp => 0) & "   b = " & F2S(B, Aft => Aft, Exp => 0));
     -- Weighted (all equal)
     Wh.all := (others => 2.0);
-    Put("    Weighted: "); Put(Wh.all);
+    Put("    Weighted: ");
+    if N <= Bound_1 then
+      Put(Wh.all);
+    else
+      New_Line;
+    end if;
     Put_Line("      Covariance : " & F2S(Covariance(P1, P2, Wh), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Pearson)  : " & F2S(Correlation(P1, P2, Wh), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Spearman) : " & F2S(Spearman_Correlation(P1, P2, Wh), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Pearson , Jackknife)        : " & F2S(Pearson_Correlation_Error(P1, P2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Pearson , Bootstrap)        : " & F2S(Pearson_Correlation_Error(P1, P2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    if N <= Bound_1 then
+      Put_Line("      Correlation Error (Pearson , Jackknife)        : " & F2S(Pearson_Correlation_Error(P1, P2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("      Correlation Error (Pearson , Bootstrap)        : " & F2S(Pearson_Correlation_Error(P1, P2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    end if;
     Put_Line("      Correlation Error (Pearson , Fisher_Transform) : " & F2S(Pearson_Correlation_Error(P1, P2, Wh, Cet => Fisher_Transform), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Spearman, Jackknife)        : " & F2S(Spearman_Correlation_Error(P1, P2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Spearman, Bootstrap)        : " & F2S(Spearman_Correlation_Error(P1, P2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    if N <= Bound_1 then
+      Put_Line("      Correlation Error (Spearman, Jackknife)        : " & F2S(Spearman_Correlation_Error(P1, P2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("      Correlation Error (Spearman, Bootstrap)        : " & F2S(Spearman_Correlation_Error(P1, P2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    end if;
     Put_Line("      Correlation Error (Spearman, Fisher_Transform) : " & F2S(Spearman_Correlation_Error(P1, P2, Wh, Cet => Fisher_Transform), Aft => Aft, Exp => 0));
     -- Weighted (not equal)
     Wh.all := (others => 2.0);
-    Wh(Wh'First) := 1.0;
-    Put("    Weighted: "); Put(Wh.all);
+    Wh(Wh'First..((Wh'First + Wh'Last) / 2)) := (others => 1.0);
+    Put("    Weighted: ");
+    if N <= Bound_1 then
+      Put(Wh.all);
+    else
+      New_Line;
+    end if;
     Put_Line("      Covariance : " & F2S(Covariance(P1, P2, Wh), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Pearson)  : " & F2S(Correlation(P1, P2, Wh), Aft => Aft, Exp => 0));
     Put_Line("      Correlation (Spearman) : " & F2S(Spearman_Correlation(P1, P2, Wh), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Pearson , Jackknife)        : " & F2S(Pearson_Correlation_Error(P1, P2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Pearson , Bootstrap)        : " & F2S(Pearson_Correlation_Error(P1, P2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    if N <= Bound_1 then
+      Put_Line("      Correlation Error (Pearson , Jackknife)        : " & F2S(Pearson_Correlation_Error(P1, P2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("      Correlation Error (Pearson , Bootstrap)        : " & F2S(Pearson_Correlation_Error(P1, P2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    end if;
     Put_Line("      Correlation Error (Pearson , Fisher_Transform) : " & F2S(Pearson_Correlation_Error(P1, P2, Wh, Cet => Fisher_Transform), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Spearman, Jackknife)        : " & F2S(Spearman_Correlation_Error(P1, P2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
-    Put_Line("      Correlation Error (Spearman, Bootstrap)        : " & F2S(Spearman_Correlation_Error(P1, P2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    if N <= Bound_1 then
+      Put_Line("      Correlation Error (Spearman, Jackknife)        : " & F2S(Spearman_Correlation_Error(P1, P2, Wh, Cet => Jackknife), Aft => Aft, Exp => 0));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("      Correlation Error (Spearman, Bootstrap)        : " & F2S(Spearman_Correlation_Error(P1, P2, Wh, Cet => Bootstrap), Aft => Aft, Exp => 0));
+    end if;
     Put_Line("      Correlation Error (Spearman, Fisher_Transform) : " & F2S(Spearman_Correlation_Error(P1, P2, Wh, Cet => Fisher_Transform), Aft => Aft, Exp => 0));
     -- Free weights
     Free(Wh);
@@ -324,8 +452,11 @@ procedure Statistics_Test is
   P, P1, P2: PFloats;
   V1: Floats(1..7);
   V2: Floats(5..11);
+  N: Natural;
+  G: Generator;
 
 begin
+  Reset(G);
 
   Put_Line("Tiny data sets"); New_Line;
 
@@ -528,6 +659,7 @@ begin
 
   V1 := (1.0, -1.0, -3.0, 5.0, 2.0, 5.0, 4.0);
   V2 := (0.0, -1.0, -3.0, 7.0, 2.0, 5.0, 4.0);
+
   P1 := Alloc(V1'First, V1'Last);
   P2 := Alloc(V2'First, V2'Last);
   P1.all := V1;
@@ -554,10 +686,33 @@ begin
   Put(P2, Aft => 2); New_Line;
   Put_Statistics(P2, 6);
   New_Line;
-  Put_Line(" LSAT vs GPA:");
+  Put_Line("  LSAT vs GPA:");
   Put_Statistics(P1, P2, 6);
   Free(P1);
   Free(P2);
   New_Line;
+
+  N := 10;
+  for Rep in 1..5 loop
+    N := 10 * N;
+    Put_Line("Random data of length " & I2S(N)); New_Line;
+    P1 := Alloc(1, N);
+    P2 := Alloc(1, N);
+    for I in P1'Range loop
+      P1(I) := Round(Random_Uniform(G), 3);
+      P2(I) := Round(Random_Uniform(G), 4);
+    end loop;
+    Put("  DataX: ");
+    Put_Statistics(P1, 6);
+    New_Line;
+    Put("  DataY: ");
+    Put_Statistics(P2, 6);
+    New_Line;
+    Put_Line("  DataX vs DataY:");
+    Put_Statistics(P1, P2, 6);
+    Free(P1);
+    Free(P2);
+    New_Line;
+  end loop;
 
 end Statistics_Test;

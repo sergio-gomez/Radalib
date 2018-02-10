@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 25/08/2009
--- @revision 25/08/2009
+-- @revision 28/12/2017
 -- @brief Test of the way to Increase the Stack Size
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -30,7 +30,7 @@ procedure Increase_Stack_Size is
   N: Natural;
 
 begin
-  N := 10_000;
+  N := 5_000;
   Put_Line("Allocating a " & I2S(N) & "x" & I2S(N) & " matrix of floats in the heap, size " & I2S(4 * N * N) & " Bytes");
   Wh := Alloc(1, N, 0.0);
   Put_Line("  OK");

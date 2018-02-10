@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,22 +16,28 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 13/08/2005
--- @revision 07/12/2017
+-- @revision 21/01/2018
 -- @brief Implementation of Graphs algorithms
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
 
 generic
+  Zero_Value: Edge_Value;
+  No_Value: Edge_Value;
   with function "+"(Left, Right: in Edge_Value) return Edge_Value is <>;
   with function "<"(Left, Right: in Edge_Value) return Boolean is <>;
   with function ">"(Left, Right: in Edge_Value) return Boolean is <>;
 package Graphs.Algorithms is
+
+  package Linked_Lists_Of_Lists is new Linked_Lists(List);
+  use Linked_Lists_Of_Lists;
 
   type Components_Type is (Weak_Components, Strong_Components);
   type Optimum_Type is (Minimum, Maximum);
 
   Unknown_Components_Type_Error: exception;
   Unknown_Optimum_Type_Error: exception;
+  Incompatible_List_Of_Lists_Error: exception;
   Incompatible_List_Error: exception;
   Void_List_Error: exception;
 
@@ -80,7 +86,7 @@ package Graphs.Algorithms is
   -- raises  : Uninitialized_Graph_Error
   procedure Connected_Components(Gr: in Graph; Lol: out List_Of_Lists; Ct: in Components_Type := Weak_Components);
 
-  -- Purpose : Calculate the Weak Connected Components of a Graph according to a List of Lists
+  -- Purpose : Calculate the Weak Connected Components of a Graph within a List of Lists
   -- Note    : Strong connected components not available
   --
   -- Gr      : The Graph
@@ -88,6 +94,16 @@ package Graphs.Algorithms is
   -- Lol_Out : The output List of Lists of Connected Components
   -- raises  : Uninitialized_Graph_Error
   procedure Connected_Components(Gr: in Graph; Lol_In: in List_Of_Lists; Lol_Out: out List_Of_Lists);
+
+  -- Purpose : Update the Weak Connected Components of a Graph within a List
+  -- Note    : Strong connected components not available
+  -- Note    : If the List is connected, it becomes the only member of the output Queue
+  --
+  -- Gr      : The Graph
+  -- L       : The input List
+  -- Ls_Out  : The Linked List containing the new Connected Components of the List
+  -- raises  : Uninitialized_Graph_Error
+  procedure Update_List_Connected_Components(Gr: in Graph; L: in List; Ls_Out: out Linked_Lists_Of_Lists.Linked_List);
 
   -- Purpose : Isolate a List of Vertices from a Graph
   -- Note    : Edges with one end in the List and the other out of the List are removed
@@ -113,12 +129,15 @@ package Graphs.Algorithms is
   -- Note    : Empty Lists generate isolated Vertices in the Renormalized Graph
   -- Note    : Names of Renormalized Vertices are those of the first Element of the Lists with a '*' appended
   -- Note    : Tags of Renormalized Vertices are those of the first Element of the Lists
+  -- Note    : Resistance ignored if equals Zero_Value or No_Value
   --
   -- Gr      : The Graph
   -- Ren     : The Renormalizing List of Lists
   -- Gr_Ren  : The Renormalized Graph
+  -- R       : The Resistance
   -- raises  : Uninitialized_Graph_Error
-  procedure Renormalize_Graph(Gr: in Graph; Ren: in List_Of_Lists; Gr_Ren: out Graph);
+  -- raises  : Incompatible_List_Of_Lists_Error
+  procedure Renormalize_Graph(Gr: in Graph; Ren: in List_Of_Lists; Gr_Ren: out Graph; R: in Edge_Value := No_Value);
 
   -- Purpose : Unrenormalize a List of Lists according to a Renormalizing List of Lists
   --

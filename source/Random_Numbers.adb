@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,8 +16,8 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 02/03/2010
--- @revision 10/04/2013
--- @brief Several Random Number Generators
+-- @revision 21/01/2018
+-- @brief Several Random Generators
 
 package body Random_Numbers is
 
@@ -140,5 +140,45 @@ package body Random_Numbers is
     end if;
     return Weights'Last;
   end Random_Weighted;
+
+  ------------------------
+  -- Random_Permutation --
+  ------------------------
+
+  procedure Random_Permutation(G: in Generator; Permutation: in out Integers) is
+    N: Natural;
+    J, Val: Integer;
+  begin
+    N := Permutation'Length;
+    for I in Permutation'Range loop
+      Permutation(I) := I;
+    end loop;
+    for I in Permutation'First .. Permutation'Last - 1 loop
+      J := Random_Uniform(G, I, Permutation'Last);
+      Val := Permutation(I);
+      Permutation(I) := Permutation(J);
+      Permutation(J) := Val;
+    end loop;
+  end Random_Permutation;
+
+  ------------------------
+  -- Random_Permutation --
+  ------------------------
+
+  procedure Random_Permutation(G: in Generator; Permutation: in PIntegers) is
+    N: Natural;
+    J, Val: Integer;
+  begin
+    N := Permutation'Length;
+    for I in Permutation'Range loop
+      Permutation(I) := I;
+    end loop;
+    for I in Permutation'First .. Permutation'Last - 1 loop
+      J := Random_Uniform(G, I, Permutation'Last);
+      Val := Permutation(I);
+      Permutation(I) := Permutation(J);
+      Permutation(J) := Val;
+    end loop;
+  end Random_Permutation;
 
 end Random_Numbers;

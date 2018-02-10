@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,12 +16,11 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 18/11/2004
--- @revision 26/08/2016
+-- @revision 14/01/2018
 -- @brief Treatment of Graphs
 
 with Ada.Containers; use Ada.Containers;
 with Ada.Unchecked_Deallocation;
-with Utils; use Utils;
 
 package body Graphs is
 
@@ -988,7 +987,7 @@ package body Graphs is
 
   procedure Set_Name(V: in Vertex; Name: in String) is
   begin
-    V.Gr.Vertices(V.Index).Name := To_Unbounded_String(Name);
+    V.Gr.Vertices(V.Index).Name := S2U(Name);
   end Set_Name;
 
   --------------
@@ -1009,7 +1008,7 @@ package body Graphs is
 
   procedure Set_Tag(V: in Vertex; Tag: in String) is
   begin
-    V.Gr.Vertices(V.Index).Tag:= To_Unbounded_String(Tag);
+    V.Gr.Vertices(V.Index).Tag:= S2U(Tag);
   end Set_Tag;
 
   -------------
@@ -1117,7 +1116,7 @@ package body Graphs is
 
   function Get_Vertex(Gr: in Graph; Name: in String) return Vertex is
     Index: Positive;
-    Uname: Unbounded_String;
+    Uname: Ustring;
   begin
     if Gr = null then
       raise Uninitialized_Graph_Error;
@@ -1126,7 +1125,7 @@ package body Graphs is
     if Is_Empty(Gr.Names_Map) then
       Update_Names_Info(Gr);
     end if;
-    Uname := To_Unbounded_String(Name);
+    Uname := S2U(Name);
     if Contains(Gr.Names_Map, Uname) then
       Index := Element(Gr.Names_Map, Uname);
       return Vertex'(Gr, Index);

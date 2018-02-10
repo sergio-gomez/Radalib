@@ -5,8 +5,8 @@ gnatmake -O2 Graph_Eigenvalues.adb
 del /q *.ali
 del /q *.o
 echo -----------
-Graph_Eigenvalues.exe zachary_unwh.net
-Graph_Eigenvalues.exe zachary_unwh.net zachary_unwh-eig.txt
+Graph_Eigenvalues.exe test-zachary_unwh.net
+Graph_Eigenvalues.exe test-zachary_unwh.net test-zachary_unwh-eig.txt
 echo -----------
 del Graph_Eigenvalues.exe
 pause

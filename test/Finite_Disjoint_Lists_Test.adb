@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 10/10/2004
--- @revision 19/12/2014
+-- @revision 28/12/2017
 -- @brief Test of Finite_Disjoint_Lists package
 
 with Ada.Text_Io; use Ada.Text_Io;
@@ -27,7 +27,7 @@ with Finite_Disjoint_Lists.Algorithms; use Finite_Disjoint_Lists.Algorithms;
 
 procedure Finite_Disjoint_Lists_Test is
 
-  Fn: constant String := "finite_disjoint_lists_test.txt";
+  Fn: constant String := "test-finite_disjoint_lists.txt";
   Total: constant := 50;
   Num: Natural := 5;
 

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 06/04/2012
--- @revision 01/02/2016
+-- @revision 28/12/2017
 -- @brief Test of Trees packages
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -29,12 +29,12 @@ with Utils.IO; use Utils.IO;
 
 procedure Trees_Test is
 
-  Fn_Text      : constant String  := "trees_test-text.txt";
-  Fn_Newick    : constant String  := "trees_test-newick.txt";
-  Fn_Json      : constant String  := "trees_test-json.txt";
-  Fn_Html      : constant String  := "trees_test-json.html";
-  Fn_Html_Head : constant String  := "trees_test-json-html_head.txt";
-  Fn_Html_Tail : constant String  := "trees_test-json-html_tail.txt";
+  Fn_Text      : constant String  := "test-trees-text.txt";
+  Fn_Newick    : constant String  := "test-trees-newick.txt";
+  Fn_Json      : constant String  := "test-trees-json.txt";
+  Fn_Html      : constant String  := "test-trees-json.html";
+  Fn_Html_Head : constant String  := "test-trees-json-html_head.txt";
+  Fn_Html_Tail : constant String  := "test-trees-json-html_tail.txt";
 
   use Trees_Float.Nodes_Lists;
   use Trees_String.Nodes_Lists;

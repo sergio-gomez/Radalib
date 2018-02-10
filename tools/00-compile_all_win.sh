@@ -10,7 +10,8 @@ for i in *.adb ; do
   echo "---"
 done
 
-export LARGE_STACK="Communities_Detection.adb Mesoscales_Detection.adb Network_Properties.adb"
+# export LARGE_STACK="Communities_Detection.adb Mesoscales_Detection.adb Network_Properties.adb"
+export LARGE_STACK="Network_Properties.adb"
 
 for i in $LARGE_STACK ; do
   iexe=`echo $i | sed "s/[.]adb$/.exe/g"`

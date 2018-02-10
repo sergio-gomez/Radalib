@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 21/10/2009
--- @revision 26/10/2014
+-- @revision 28/12/2017
 -- @brief Test of use of Properties files in Utils package
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -24,8 +24,8 @@ with Utils; use Utils;
 with Utils.IO; use Utils.IO;
 
 procedure Utils_Properties_Test is
-  Fn_In : constant String := "utils_properties_test.txt";
-  Fn_Out: constant String := "utils_properties_test-out.txt";
+  Fn_In : constant String := "test-utils_properties.txt";
+  Fn_Out: constant String := "test-utils_properties-out.txt";
   Props: Properties;
   Names, Values: PUstrings;
   B: Boolean;

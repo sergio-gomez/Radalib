@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,10 +16,12 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 13/08/2005
--- @revision 07/12/2017
+-- @revision 21/01/2018
 -- @brief Implementation of Graphs algorithms
 
 with Utils; use Utils;
+with Utils_Generics; use Utils_Generics;
+
 with Stacks_Integer; use Stacks_Integer;
 with Finite_Disjoint_Lists.Algorithms; use Finite_Disjoint_Lists.Algorithms;
 with Minheaps;
@@ -61,7 +63,7 @@ package body Graphs.Algorithms is
   ----------------
 
   procedure Symmetrize(Gr: in Graph) is
-    Llt, Llf: Linked_List;
+    Llt, Llf: Linked_Edge_Recs.Linked_List;
     Ert, Erf: Edge_Rec;
     Tt, Tf: Positive;
   begin
@@ -329,6 +331,100 @@ package body Graphs.Algorithms is
     Sort_By_Size(Lol_Out);
   end Connected_Components;
 
+  --------------------------------------
+  -- Update_List_Connected_Components --
+  --------------------------------------
+
+  procedure Update_List_Connected_Components(Gr: in Graph; L: in List; Ls_Out: out Linked_Lists_Of_Lists.Linked_List) is
+
+    procedure Depth_First_Traversal(Lol: in List_Of_Lists; P: in Positive; U, L_Out: in List) is
+      St: Stack;
+      I: Positive;
+      E: Element;
+      El: Edges_List;
+      P_Nxt: Positive;
+    begin
+      Initialize(St);
+      Push(P, St);
+      while not Is_Empty(St) loop
+        I := Pop(St);
+        E := Get_Element(Lol, I);
+        if Belongs_To(E, U) then
+          Move(E, L_Out);
+          -- Links from
+          El := Edges_From(Get_Vertex(Gr, I));
+          Save(El);
+          Reset(El);
+          while Has_Next(El) loop
+            P_Nxt := Index_Of(Next(El));
+            if Belongs_To(Get_Element(Lol, P_Nxt), U) then
+              Push(P_Nxt, St);
+            end if;
+          end loop;
+          Restore(El);
+          if Gr.Directed then
+            -- Links to
+            El := Edges_To(Get_Vertex(Gr, I));
+            Save(El);
+            Reset(El);
+            while Has_Next(El) loop
+              P_Nxt := Index_Of(Next(El));
+              if Belongs_To(Get_Element(Lol, P_Nxt), U) then
+                Push(P_Nxt, St);
+              end if;
+            end loop;
+            Restore(El);
+          end if;
+        elsif not Belongs_To(E, L_Out) then
+          Move(L_Out, List_Of(E));
+        end if;
+      end loop;
+      Free(St);
+    end Depth_First_Traversal;
+
+    Lol: List_Of_Lists;
+    U_Old, U, L_Out: List;
+
+  begin
+    if Gr = null then
+      raise Uninitialized_Graph_Error;
+    end if;
+
+    Lol := List_Of_Lists_Of(L);
+
+    Initialize(Ls_Out);
+    Add_Last(L, Ls_Out);
+
+    if Number_Of_Elements(L) > 0 then
+      U := Unassigned_List(Lol);
+
+      -- Save previously unassigned Elements
+      U_Old := New_List(Lol);
+      Move(U, U_Old);
+
+      -- Unassign Elements in input List
+      Move(L, U);
+
+      -- Try to recover the input List
+      Depth_First_Traversal(Lol, Index_Of(Get_Element(U)), U, L);
+
+      -- If not Connected, find the rest of Components
+      while Number_Of_Elements(U) > 0 loop
+        Reset(U);
+        L_Out := New_List(Lol);
+        Depth_First_Traversal(Lol, Index_Of(Get_Element(U)), U, L_Out);
+        if Number_Of_Elements(L_Out) = 0 then
+          Remove(L_Out);
+        else
+          Add_Last(L_Out, Ls_Out);
+        end if;
+      end loop;
+
+      Remove(U_Old);
+    end if;
+
+  end Update_List_Connected_Components;
+
   ------------------
   -- Isolate_List --
   ------------------
@@ -469,20 +565,55 @@ package body Graphs.Algorithms is
   -- Renormalize_Graph --
   -----------------------
 
-  procedure Renormalize_Graph(Gr: in Graph; Ren: in List_Of_Lists; Gr_Ren: out Graph) is
+  procedure Renormalize_Graph(Gr: in Graph; Ren: in List_Of_Lists; Gr_Ren: out Graph; R: in Edge_Value := No_Value) is
+
+    function "*"(Left: in Natural; Right: in Edge_Value) return Edge_Value is
+      X, Y: Edge_Value;
+      N: Natural;
+    begin
+      X := Right;
+      N := Left;
+      if N = 0 or X = Zero_Value then
+        return Zero_Value;
+      end if;
+      Y := Zero_Value;
+      while N > 1 loop
+        if N mod 2 = 0 then
+          X := X + X;
+          N := N / 2;
+        else
+          Y := X + Y;
+          X := X + X;
+          N := (N - 1) / 2;
+        end if;
+      end loop;
+      return X + Y;
+    end "*";
+
+    type Edge_Values is array(Integer range <>) of Edge_Value;
+    type PEdge_Values is access Edge_Values;
+
+    function Alloc is new Alloc_1D_Array(Edge_Value, Edge_Values, PEdge_Values);
+    procedure Free is new Free_1D_Array(Edge_Value, Edge_Values, PEdge_Values);
+
     Directed: Boolean;
     N, N_Ren: Natural;
     L: List;
     El: Edges_List;
-    E, E_Ren: Edge;
+    E: Edge;
     Vi, Vj, Vi_Ren, Vj_Ren: Vertex;
     Vertex_To_List_Index: Pintegers;
     Wh: Edge_Value;
-    J, I_Ren, J_Ren: Positive;
+    Whs: PEdge_Values;
+    Whs_Exists: PBooleans;
+    I, J, I_Ren, J_Ren: Positive;
   begin
     pragma Warnings(Off, L);
     if Gr = null then
       raise Uninitialized_Graph_Error;
+    end if;
+    if Number_Of_Vertices(Gr) /= Number_Of_Elements(Ren) then
+      raise Incompatible_List_Of_Lists_Error;
     end if;
 
     Directed := Gr.Directed;
@@ -491,7 +622,7 @@ package body Graphs.Algorithms is
     Initialize(Gr_Ren, N_Ren, Directed);
 
     Vertex_To_List_Index := Alloc(1, N);
-    J_Ren := 1;
+    I_Ren := 1;
     Save(Ren);
     Reset(Ren);
     while Has_Next_List(Ren) loop
@@ -499,53 +630,82 @@ package body Graphs.Algorithms is
       Save(L);
       Reset(L);
       if Has_Next_Element(L) then
-        J := Index_Of(Get_Element(L));
-        Vj := Get_Vertex(Gr, J);
-        Vj_Ren := Get_Vertex(Gr_Ren, J_Ren);
+        I := Index_Of(Get_Element(L));
+        Vi := Get_Vertex(Gr, I);
+        Vi_Ren := Get_Vertex(Gr_Ren, I_Ren);
         if Number_Of_Elements(L) > 1 then
-          Set_Name(Vj_Ren, Get_Name(Vj) & "*");
+          Set_Name(Vi_Ren, Get_Name(Vi) & "*");
         else
-          Set_Name(Vj_Ren, Get_Name(Vj));
+          Set_Name(Vi_Ren, Get_Name(Vi));
         end if;
-        Set_Tag(Vj_Ren, Get_Tag(Vj));
+        Set_Tag(Vi_Ren, Get_Tag(Vi));
       end if;
       Reset(L);
       while Has_Next_Element(L) loop
-        J := Index_Of(Next_Element(L));
-        Vertex_To_List_Index(J) := J_Ren;
+        I := Index_Of(Next_Element(L));
+        Vertex_To_List_Index(I) := I_Ren;
       end loop;
       Restore(L);
-      J_Ren := J_Ren + 1;
+      I_Ren := I_Ren + 1;
     end loop;
     Restore(Ren);
 
-    for I in 1..N loop
-      Vi := Get_Vertex(Gr, I);
-      I_Ren := Vertex_To_List_Index(I);
-      Vi_Ren := Get_Vertex(Gr_Ren, I_Ren);
-      El := Edges_From(Vi);
-      Save(El);
-      Reset(El);
-      while Has_Next(El) loop
-        E := Next(El);
-        Vj := To(E);
-        J := Index_Of(Vj);
-        J_Ren := Vertex_To_List_Index(J);
-        Vj_Ren := Get_Vertex(Gr_Ren, J_Ren);
-        Wh := E.Value;
-        if Directed or else I_Ren <= J_Ren then
-          E_Ren := Get_Edge_Or_No_Edge(Vi_Ren, Vj_Ren);
-          if E_Ren = No_Edge then
-            Add_Edge(Vi_Ren, Vj_Ren, Wh);
-          else
-            Wh := Wh + E_Ren.Value;
-            Set_Value(E_Ren, Wh);
+    Whs := Alloc(1, N_Ren);
+    Whs_Exists := Alloc(1, N_Ren);
+
+    I_Ren := 1;
+    Save(Ren);
+    Reset(Ren);
+    while Has_Next_List(Ren) loop
+      L := Next_List(Ren);
+      Whs_Exists.all := (others => False);
+      Save(L);
+      Reset(L);
+      while Has_Next_Element(L) loop
+        I := Index_Of(Next_Element(L));
+        Vi := Get_Vertex(Gr, I);
+        El := Edges_From(Vi);
+        Save(El);
+        Reset(El);
+        while Has_Next(El) loop
+          E := Next(El);
+          Vj := To(E);
+          J := Index_Of(Vj);
+          J_Ren := Vertex_To_List_Index(J);
+          if Directed or else I_Ren <= J_Ren then
+            Wh := E.Value;
+            if Whs_Exists(J_Ren) then
+              Whs(J_Ren) := Whs(J_Ren) + Wh;
+            else
+              Whs(J_Ren) := Wh;
+              Whs_Exists(J_Ren) := True;
+            end if;
           end if;
+        end loop;
+        Restore(El);
+      end loop;
+      Restore(L);
+      if R /= No_Value and R /= Zero_Value then
+        if Whs_Exists(I_Ren) then
+          Whs(I_Ren) := Whs(I_Ren) + Number_Of_Elements(L) * R;
+        else
+          Whs_Exists(I_Ren) := True;
+          Whs(I_Ren) := Number_Of_Elements(L) * R;
+        end if;
+      end if;
+      Vi_Ren := Get_Vertex(Gr_Ren, I_Ren);
+      for Jr in 1 .. N_Ren loop
+        if Whs_Exists(Jr) then
+          Vj_Ren := Get_Vertex(Gr_Ren, Jr);
+          Add_Edge(Vi_Ren, Vj_Ren, Whs(Jr));
         end if;
       end loop;
-      Restore(El);
+      I_Ren := I_Ren + 1;
     end loop;
+    Restore(Ren);
 
+    Free(Whs);
+    Free(Whs_Exists);
     Free(Vertex_To_List_Index);
   end Renormalize_Graph;
 
@@ -627,7 +787,7 @@ package body Graphs.Algorithms is
     V, Vf, Vt: Vertex;
     El: Edges_List;
     E: Edge;
-    Min: Minheap;
+    H: Minheap;
     Lol: List_Of_Lists;
     Lf, Lt: List;
     Ef, Et: Element;
@@ -648,7 +808,7 @@ package body Graphs.Algorithms is
     end loop;
 
     Ne := Number_Of_Edges(Gr);
-    Initialize(Min, Ne);
+    Initialize(H, Ne);
     for I in 1..N loop
       Vf := Get_Vertex(Gr, I);
       El := Edges_From(Vf);
@@ -659,15 +819,15 @@ package body Graphs.Algorithms is
         Vt := To(E);
         T := Index_Of(Vt);
         if (Gr.Directed and I /= T) or else I < T then
-          Add(E, Min);
+          Add(E, H);
         end if;
       end loop;
       Restore(El);
     end loop;
 
     Initialize(Lol, N, Isolated_Initialization);
-    while not Is_Empty(Min) loop
-      E := Delete_Min(Min);
+    while not Is_Empty(H) loop
+      E := Delete_Min(H);
       Vf := From(E);
       Vt := To(E);
       F := Index_Of(Vf);
@@ -685,7 +845,7 @@ package body Graphs.Algorithms is
     end loop;
 
     Free(Lol);
-    Free(Min);
+    Free(H);
   end Spanning_Tree;
 
 end Graphs.Algorithms;

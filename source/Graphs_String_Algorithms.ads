@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 21/03/2008
--- @revision 25/02/2011
+-- @revision 29/12/2017
 -- @brief Instantiation of Graphs.Algorithms to String Edge Values
 
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
@@ -25,4 +25,4 @@ with Graphs_String;
 with Graphs.Algorithms;
 
 package Graphs_String_Algorithms is
-  new Graphs_String.Algorithms;
+  new Graphs_String.Algorithms(Zero_Value => S2U("0"), No_Value => S2U("No_Value"));

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/10/2014
--- @revision 14/01/2015
+-- @revision 28/12/2017
 -- @brief Test of Graphs.Multilayer and Multilayer_IO packages
 
 with Ada.Text_Io; use Ada.Text_Io;
@@ -101,10 +101,10 @@ procedure Multilayer_Test is
     Put_Line("------");
   end Put;
 
-  Fn_In1 : constant String := "multiplex_in1.txt";
-  Fn_In2 : constant String := "multiplex_in2.txt";
-  Fn_Out1: constant String := "multiplex_out1d.txt";
-  Fn_Out2: constant String := "multiplex_out1u.txt";
+  Fn_In1 : constant String := "test-multiplex_in1.txt";
+  Fn_In2 : constant String := "test-multiplex_in2.txt";
+  Fn_Out1: constant String := "test-multiplex_out1d.txt";
+  Fn_Out2: constant String := "test-multiplex_out1u.txt";
   Mpx: Multiplex;
   Gr: Graph;
   Index: PIntegers;

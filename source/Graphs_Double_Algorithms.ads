@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,11 +16,12 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 16/08/2006
--- @revision 28/08/2009
+-- @revision 29/12/2017
 -- @brief Instantiation of Graphs.Algorithms to Double Edge Values
 
+with Utils; use Utils;
 with Graphs_Double;
 with Graphs.Algorithms;
 
 package Graphs_Double_Algorithms is
-  new Graphs_Double.Algorithms;
+  new Graphs_Double.Algorithms(Zero_Value => 0.0, No_Value => Double'First);

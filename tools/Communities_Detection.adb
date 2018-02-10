@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/05/2008
--- @revision 29/07/2017
+-- @revision 20/01/2018
 -- @brief Modularity optimization by combination of different heuristics
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -39,7 +39,7 @@ procedure Communities_Detection is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2017 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2018 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
@@ -51,12 +51,10 @@ procedure Communities_Detection is
     Put_Line("==   - weighted modularity with positive and negative links (WS) ==");
     Put_Line("==   - other measures                                            ==");
     Put_Line("== Implements several algorithms, which can be combined:         ==");
-    Put_Line("==   - exhaustive search (h)                                     ==");
-    Put_Line("==   - tabu search (t)                                           ==");
-    Put_Line("==   - extremal optimization (e)                                 ==");
-    Put_Line("==   - spectral optimization (s)                                 ==");
-    Put_Line("==   - fast algorithm (f)                                        ==");
-    Put_Line("==   - fine-tuning by reposition (r) or bootstrapping (b)        ==");
+    Put_Line("==   - exhaustive search (h)       - louvain (l)                 ==");
+    Put_Line("==   - tabu search (t)             - fast algorithm (f)          ==");
+    Put_Line("==   - extremal (e)                - reposition (r)              ==");
+    Put_Line("==   - spectral (s)                - bootstrapping (b)           ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;
@@ -91,42 +89,42 @@ begin
     Put_Line("   Logging Levels      :  N | S | P | V");
     Put_Line("                            also lowercase symbols");
     Put_Line("                            also case-insensitive full names (None, ...)");
-    Put_Line("                            N = None");
-    Put_Line("                            S = Summary");
-    Put_Line("                            P = Progress");
-    Put_Line("                            V = Verbose");
+    Put_Line("                              n = None              p = Progress");
+    Put_Line("                              s = Summary           v = Verbose");
     New_Line;
     Put_Line("   Modularity Types    :  UN | UUN | WN | WS | WUN | WLA | WULA | WLUN | WNN | WLR");
     Put_Line("                            also lowercase symbols");
     Put_Line("                            also case-insensitive full names (Unweighted_Newman, ...)");
-    Put_Line("                            UN   = Unweighted_Newman");
-    Put_Line("                            UUN  = Unweighted_Uniform_Nullcase");
-    Put_Line("                            WN   = Weighted_Newman");
-    Put_Line("                            WS   = Weighted_Signed");
-    Put_Line("                            WUN  = Weighted_Uniform_Nullcase");
-    Put_Line("                            WLA  = Weighted_Local_Average");
-    Put_Line("                            WULA = Weighted_Uniform_Local_Average");
-    Put_Line("                            WLUN = Weighted_Links_Unweighted_Nullcase");
-    Put_Line("                            WNN  = Weighted_No_Nullcase");
-    Put_Line("                            WLR  = Weighted_Link_Rank");
+    Put_Line("                              UN   = Unweighted_Newman");
+    Put_Line("                              UUN  = Unweighted_Uniform_Nullcase");
+    Put_Line("                              WN   = Weighted_Newman");
+    Put_Line("                              WS   = Weighted_Signed");
+    Put_Line("                              WUN  = Weighted_Uniform_Nullcase");
+    Put_Line("                              WLA  = Weighted_Local_Average");
+    Put_Line("                              WULA = Weighted_Uniform_Local_Average");
+    Put_Line("                              WLUN = Weighted_Links_Unweighted_Nullcase");
+    Put_Line("                              WNN  = Weighted_No_Nullcase");
+    Put_Line("                              WLR  = Weighted_Link_Rank");
     New_Line;
-    Put_Line("   Heuristics String   :  [htsefrb]+");
+    Put_Line("   Heuristics String   :  [htseflrb!:.+-]+");
     Put_Line("                            also uppercase symbols");
     Put_Line("                            also single case-insensitive full names (Exhaustive, ...)");
-    Put_Line("                            h = Exhaustive");
-    Put_Line("                            t = Tabu");
-    Put_Line("                            s = Spectral");
-    Put_Line("                            e = Extremal");
-    Put_Line("                            f = Fast");
-    Put_Line("                            r = Reposition");
-    Put_Line("                            b = Bootstrapping");
+    Put_Line("                            heuristics");
+    Put_Line("                              h = Exhaustive        l = Louvain");
+    Put_Line("                              t = Tabu              f = Fast");
+    Put_Line("                              s = Spectral          r = Reposition");
+    Put_Line("                              e = Extremal          b = Bootstrapping");
+    Put_Line("                            initializations");
+    Put_Line("                              ! = Ini_Best          . = Ini_Isolated");
+    Put_Line("                              : = Ini_Prev          + = Ini_Together");
+    Put_Line("                              - = Ini_Default ");
     New_Line;
     Put_Line("   Repetitions         :  positive integer");
-    Put_Line("                            does not apply to [hfr] algorithms");
+    Put_Line("                            does not apply to [hlfr] algorithms");
     New_Line;
-    Put_Line("   Resistance          :  resistance of nodes to join communities in the form of a common self-loop");
+    Put_Line("   Resistance          :  resistance of nodes to join communities, as a common self-loop");
     Put_Line("                            positive or negative real number");
-    Put_Line("                            0 | 0.0 | default => no resistance, i.e. do not add self-loops");
+    Put_Line("                            0 | 0.0 | default => no resistance, do not add self-loops");
     New_Line;
     Put_Line("   Penalty Coefficient :  relative importance of null-case term");
     Put_Line("                            non-negative real number");
@@ -135,7 +133,7 @@ begin
     Put_Line("   Network name        :  name of the input network file in Pajek format (*.net)");
     New_Line;
     Put_Line("   Lol Best Filename   :  file for the best partition found in Lol format");
-    Put_Line("                            if file exists before running, the partition in the file becomes the initial partition");
+    Put_Line("                            if file exists, the partition becomes the initial partition");
     return;
   elsif Argument_Count = 6 then
     Log_Name       := S2U(Argument(1));
@@ -223,6 +221,6 @@ begin
 exception
   when Unknown_Logging_Error    => Put_Line("Error: unknown Logging Level '" & U2S(Log_Name) & "'");
   when Unknown_Modularity_Error => Put_Line("Error: unknown Modularity Type '" & U2S(Mod_Name) & "'");
-  when Unknown_Heuristic_Error  => Put_Line("Error: unknown Heuristic Type '" & U2S(Heuristics) & "'");
+  when Unknown_Heuristic_Error  => Put_Line("Error: unknown Heuristic description '" & U2S(Heuristics) & "'");
 end Communities_Detection;
 

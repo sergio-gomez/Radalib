@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 08/11/2007
--- @revision 26/10/2014
+-- @revision 28/01/2018
 -- @brief Statistics of Numerical Arrays
 
 with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
@@ -29,7 +29,7 @@ generic
   with procedure Free(P: in out PNums) is <>;
 package Statistics is
 
-  type Correlation_Type is (Pearson, Spearman);
+  type Correlation_Type is (Pearson, Spearman, Kendall);
   type Correlation_Error_Type is (Jackknife, Bootstrap, Fisher_Transform, Auto);
 
   Default_Bootstrap_Size: constant Positive := 1000;
@@ -202,6 +202,7 @@ package Statistics is
   function Covariance(P1, P2, Wh: in PNums) return Num;
 
   -- Purpose : Obtain the (weighted) Correlation of two Arrays
+  -- Note    : Weights ignored for Kendall Correlation
   --
   -- V1      : The First Array
   -- V2      : The Second Array
@@ -241,7 +242,17 @@ package Statistics is
   function Spearman_Correlation(V1, V2, Wh: in Nums) return Num;
   function Spearman_Correlation(P1, P2, Wh: in PNums) return Num;
 
+  -- Purpose : Obtain the Kendall Rank Correlation of two Arrays
+  --
+  -- V1      : The First Array
+  -- V2      : The Second Array
+  -- return  : The Kendall Correlation
+  -- raises  : Statistics_Error
+  function Kendall_Correlation(V1, V2: in Nums) return Num;
+  function Kendall_Correlation(P1, P2: in PNums) return Num;
+
   -- Purpose : Obtain the (weighted) Correlation Error of two Arrays
+  -- Note    : Weights ignored for Kendall Correlation Error
   --
   -- V1      : The First Array
   -- V2      : The Second Array
@@ -283,6 +294,16 @@ package Statistics is
   function Spearman_Correlation_Error(P1, P2: in PNums; Cet: in Correlation_Error_Type := Auto) return Num;
   function Spearman_Correlation_Error(V1, V2, Wh: in Nums; Cet: in Correlation_Error_Type := Auto) return Num;
   function Spearman_Correlation_Error(P1, P2, Wh: in PNums; Cet: in Correlation_Error_Type := Auto) return Num;
+
+  -- Purpose : Obtain the Kendall Correlation Error of two Arrays
+  --
+  -- V1      : The First Array
+  -- V2      : The Second Array
+  -- Cet     : The Correlation Error type
+  -- return  : The Kendall Correlation Error
+  -- raises  : Statistics_Error
+  function Kendall_Correlation_Error(V1, V2: in Nums; Cet: in Correlation_Error_Type := Auto) return Num;
+  function Kendall_Correlation_Error(P1, P2: in PNums; Cet: in Correlation_Error_Type := Auto) return Num;
 
   -- Purpose : Obtain the Simple Linear regression of two Arrays
   -- Note    : Fitting of:  Y = Slope X + Intercept

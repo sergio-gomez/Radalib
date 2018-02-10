@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,12 +16,14 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 18/11/2004
--- @revision 26/08/2016
+-- @revision 14/01/2018
 -- @brief Treatment of Graphs
 
 with Ada.Strings.Unbounded;
 with Ada.Strings.Unbounded.Hash;
 with Ada.Containers.Hashed_Maps;
+
+with Utils; use Utils;
 with Linked_Lists;
 
 generic
@@ -505,8 +507,8 @@ private
   type Vertex_Rec is record
     From: Linked_List;
     To: Linked_List;
-    Name: Ada.Strings.Unbounded.Unbounded_String := Ada.Strings.Unbounded.Null_Unbounded_String;
-    Tag: Ada.Strings.Unbounded.Unbounded_String := Ada.Strings.Unbounded.Null_Unbounded_String;
+    Name: Ustring := Null_Ustring;
+    Tag: Ustring := Null_Ustring;
     Marked: Boolean := False;
   end record;
 

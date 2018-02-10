@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -14,22 +14,22 @@
 
 -- @filename Modularities_Spectral.ads
 -- @author Alberto Fernandez
+-- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/02/2007
--- @revision 26/10/2014
+-- @revision 20/01/2018
 -- @brief Spectral Modularity Optimization
 
 with Ada.Numerics.Float_Random;        use Ada.Numerics.Float_Random;
-with Ada.Numerics.Generic_Elementary_Functions;
-with Ada.Strings.Unbounded;            use Ada.Strings.Unbounded;
 
 with Utils;                            use Utils;
 with Finite_Disjoint_Lists;            use Finite_Disjoint_Lists;
 with Graphs_Double;                    use Graphs_Double;
 with Graphs_Double_Modularities_D;     use Graphs_Double_Modularities_D;
+with Graphs_Double_Algorithms;         use Graphs_Double_Algorithms;
+
 with Linked_Lists;
 with Stacks;
-
 with Vectors;
 
 generic
@@ -37,33 +37,29 @@ generic
   Number_Of_Repetitions: Positive;
 
   with procedure Improvement_Action(
-    Log_Name: in Unbounded_String;
+    Log_Name: in Ustring;
     Lol: in List_Of_Lists;
-    Q: in Modularity_Rec);
+    Q: in Modularity_Rec;
+    Us: in Ustring := Null_Ustring);
 
   with procedure Repetition_Action(
-    Log_Name: in Unbounded_String;
+    Log_Name: in Ustring;
     Lol: in List_Of_Lists;
     Q: in Modularity_Rec);
 
 package Modularities_Spectral is
 
-  -------------------------------------------------------------------------
-
   procedure Spectral_Modularity(
     MT: in Modularity_Type;
     Gr: in Graph;
-    Log_Name: in Unbounded_String;
+    Log_Name: in Ustring;
+    Lol_Ini: in List_Of_Lists;
     Lol_Best: out List_Of_Lists;
     Q_Best: out Modularity_Rec;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0);
 
-  -------------------------------------------------------------------------
-
 private
-
-  -------------------------------------------------------------------------
 
   type Network is record
     L: List;
@@ -71,38 +67,65 @@ private
     Gr: Graph;
   end record;
 
-  -------------------------------------------------------------------------
-
-  package Double_Elementary_Functions is
-    new Ada.Numerics.Generic_Elementary_Functions(Long_Float);
-  use Double_Elementary_Functions;
-
   package Stacks_Of_Networks is new Stacks(Network);
   use Stacks_Of_Networks;
 
-  package Vectors_Of_Double is new Vectors(Long_Float);
+  package Vectors_Of_Double is new Vectors(Double);
   use Vectors_Of_Double;
 
-  package Lists_Of_Indices is new Linked_Lists(Positive);
-  use Lists_Of_Indices;
-
-  package Lists_Of_Lists is new Linked_Lists(List);
-  use Lists_Of_Lists;
+  use Linked_Lists_Of_Lists;
 
   package Lists_Of_Modularities is new Linked_Lists(Modularity_Rec);
   use Lists_Of_Modularities;
 
-  -------------------------------------------------------------------------
-
-  procedure Execute_Repetition(
-    MT: in Modularity_Type;
+  procedure Calculate_Strengths(
     Gr: in Graph;
-    Log_Name: in Unbounded_String;
+    MT: in Modularity_Type;
+    MI: in Modularity_Info;
+    W_From: out Vector;
+    W_To: out Vector);
+
+  procedure Calculate_Strengths(
+    Gr: in Graph;
+    MT: in Modularity_Type;
+    MI: in Modularity_Info;
+    L: in List;
+    W2: out Double;
+    W_From: out Vector;
+    W_To: out Vector);
+
+  procedure Adjacency_Row(
+    Gr: in Graph;
+    MT: in Modularity_Type;
+    I: in Positive;
+    Ai: out Vector);
+
+  procedure Adjacency_Column(
+    Gr: in Graph;
+    MT: in Modularity_Type;
+    I: in Positive;
+    Ai: out Vector);
+
+  procedure Multiply_Modularity_Matrix(
+    Gr: in Graph;
+    MT: in Modularity_Type;
+    MI_Ini: in Modularity_Info;
+    Net: in Network;
+    MI: in Modularity_Info;
+    Val_Bound: in Double;
+    X: in Vector;
+    Y: out Vector);
+
+  procedure Power_Iteration(
     Gen: in out Generator;
-    Lol_Best: out List_Of_Lists;
-    Q_Best: out Modularity_Rec;
-    R: in Double := No_Resistance;
-    Pc: in Double := 1.0);
+    Gr: in Graph;
+    MT: in Modularity_Type;
+    MI: in Modularity_Info;
+    Net: in Network;
+    MI_Sub: in Modularity_Info;
+    Val_Bound: in Double;
+    Val: out Double;
+    Y_Norm: out Vector);
 
   procedure Index_Vector(
     Gen: in out Generator;
@@ -114,68 +137,33 @@ private
     R: in Double := No_Resistance;
     Pc: in Double := 1.0);
 
-  procedure Power_Iteration(
-    Gen: in out Generator;
-    Gr: in Graph;
-    MI: in Modularity_Info;
-    Net: in Network;
-    MI_Sub: in Modularity_Info;
-    Val_Bound: in Long_Float;
-    Val: out Long_Float;
-    Y_Norm: out Vector);
-
-  procedure Multiply_Modularity_Matrix(
-    Gr: in Graph;
-    MI_Ini: in Modularity_Info;
-    Net: in Network;
-    MI: in Modularity_Info;
-    Val_Bound: in Long_Float;
-    X: in Vector;
-    Y: out Vector);
-
-  procedure Strength_Vector(
-    Gr: in Graph;
-    MI: in Modularity_Info;
-    L: in List;
-    W: out Vector);
-
-  procedure Adjacency_Row(
-    Gr: in Graph;
-    I: in Positive;
-    Ai: out Vector);
-
-  procedure Get_Indices(
-    L: in List;
-    L_Ind: out Lists_Of_Indices.Linked_List);
-
   procedure Divide_List(
     Lol: in out List_Of_Lists;
     L: in out List;
     U: in Vector;
     Sub_L1, Sub_L2: out List);
 
-  procedure Connected_Components(
-    Gr_Ini: in Graph;
-    Lol: in out List_Of_Lists;
-    L_Ind: in Lists_Of_Indices.Linked_List;
-    L_L: out Lists_Of_Lists.Linked_List);
-
-  procedure Connected_List(
-    L_Conn: in List;
-    Lol: in out List_Of_Lists;
-    L: out List);
-
   procedure Modularities(
     MT: in Modularity_Type;
     MI: in out Modularity_Info;
-    L_L: in Lists_Of_Lists.Linked_List;
-    L_Q: out Lists_Of_Modularities.Linked_List;
-    Sub_Q: out Long_Float);
+    Ls: in Linked_Lists_Of_Lists.Linked_List;
+    Lq: out Lists_Of_Modularities.Linked_List;
+    Sub_Q: out Double);
 
   procedure Merge_Lists(
     Lol: in out List_Of_Lists;
-    L_L: in out Lists_Of_Lists.Linked_List);
+    Ls: in out Linked_Lists_Of_Lists.Linked_List;
+    L: out List);
 
-  -------------------------------------------------------------------------
+  procedure Execute_Repetition(
+    MT: in Modularity_Type;
+    Gr: in Graph;
+    Log_Name: in Ustring;
+    Gen: in out Generator;
+    Lol_Ini: in List_Of_Lists;
+    Lol_Best: out List_Of_Lists;
+    Q_Best: out Modularity_Rec;
+    R: in Double := No_Resistance;
+    Pc: in Double := 1.0);
 
 end Modularities_Spectral;

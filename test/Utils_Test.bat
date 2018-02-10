@@ -5,7 +5,7 @@ gnatmake -O2 Utils_Test.adb
 del /q *.ali
 del /q *.o
 echo -----------
-Utils_Test.exe ..\test\utils_test.txt
+Utils_Test.exe ..\test\test-utils.txt
 echo -----------
 del Utils_Test.exe
 pause

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 10/10/2004
--- @revision 16/05/2011
+-- @revision 28/12/2017
 -- @brief Test of Friends of Friends Clustering
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -35,7 +35,7 @@ begin
   Put_Line("=== fof_cubes_isolated.txt ===");
   Put_Line("==============================");
   New_Line;
-  Read_Data("fof_cubes_isolated.txt", 200, Data);
+  Read_Data("test-fof_cubes_isolated.txt", 200, Data);
   Make_Fof(Data, 0.2);
   Make_Fof(Data, 0.5);
   Make_Fof(Data, 0.99);
@@ -49,7 +49,7 @@ begin
   Put_Line("=== fof_cubes_connected.txt ===");
   Put_Line("===============================");
   New_Line;
-  Read_Data("fof_cubes_connected.txt", 208, Data);
+  Read_Data("test-fof_cubes_connected.txt", 208, Data);
   Make_Fof(Data, 0.2);
   Make_Fof(Data, 0.5);
   Make_Fof(Data, 0.99);

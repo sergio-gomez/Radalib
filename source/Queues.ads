@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -60,7 +60,7 @@ package Queues is
   -- raises  : Void_Queue_Error
   procedure Dequeue(Q: in Queue);
 
-  -- Purpose : Dequeue the Head Item of a Queue
+  -- Purpose : Get and Dequeue the Head Item of a Queue
   --
   -- Q       : The Queue
   -- return  : The head item

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,20 +16,22 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 20/11/2004
--- @revision 26/02/2011
+-- @revision 14/01/2018
 -- @brief Test of Graphs Algorithms package
 
-with Ada.Text_Io; use Ada.Text_Io;
-with Ada.Float_Text_Io; use Ada.Float_Text_Io;
-with Ada.Integer_Text_Io; use Ada.Integer_Text_Io;
+with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 with Graphs_Integer; use Graphs_Integer;
 with Graphs_Integer_Algorithms; use Graphs_Integer_Algorithms;
-with Graphs_Integer_Modularities; use Graphs_Integer_Modularities;
+with Graphs_Integer_Modularities_D; use Graphs_Integer_Modularities_D;
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
 with Finite_Disjoint_Lists.IO; use Finite_Disjoint_Lists.IO;
 with Utils; use Utils;
+with Linked_Lists;
 
 procedure Graphs_Algorithms_Test is
+
+  use Linked_Lists_Of_Lists;
 
   procedure Put(Gr: in Graph) is
     Vf, Vt: Vertex;
@@ -83,9 +85,37 @@ procedure Graphs_Algorithms_Test is
     Put_Line("---------");
   end Put;
 
+  procedure Put(L: in List) is
+  begin
+    Put(" [");
+    Save(L);
+    Reset(L);
+    while Has_Next_Element(L) loop
+      Put(I2S(Index_Of(Next_Element(L))));
+      if Has_Next_Element(L) then
+        Put(",");
+      end if;
+    end loop;
+    Restore(L);
+    Put("]");
+  end Put;
+
+  procedure Put(Ls: in Linked_List) is
+  begin
+    Save(Ls);
+    Reset(Ls);
+    while Has_Next(Ls) loop
+      Put(Next(Ls));
+    end loop;
+    Restore(Ls);
+  end Put;
+
+
   Gr, Sub_Gr, Gr_Mst, Gr_Ren: Graph;
   Lol, Ren, Lol_Ren: List_Of_Lists;
   L: List;
+  Ls: Linked_List;
+  R: Integer;
 
 begin
 
@@ -134,15 +164,15 @@ begin
     Initialize(Ren, 10);
     L := New_List(Ren);
     Move(Get_Element(Ren, 1), L);
-    Move(Get_Element(Ren, 2), L);
     Move(Get_Element(Ren, 3), L);
     Move(Get_Element(Ren, 4), L);
     L := New_List(Ren);
     Move(Get_Element(Ren, 5), L);
     Move(Get_Element(Ren, 6), L);
     Move(Get_Element(Ren, 7), L);
-    L := New_List(Ren);
     Move(Get_Element(Ren, 8), L);
+    L := New_List(Ren);
+    Move(Get_Element(Ren, 2), L);
     Move(Get_Element(Ren, 9), L);
     Move(Get_Element(Ren, 10), L);
     Put(Ren);
@@ -151,6 +181,33 @@ begin
     Put_Line("Weak conected components of previous graph within previous lol");
     Connected_Components(Gr, Ren, Lol);
     Put(Lol);
+    Put_Line("------");
+
+    Put_Line("Same but one component at a time");
+    Clear(Ren);
+    L := New_List(Ren);
+    Move(Get_Element(Ren, 1), L);
+    Move(Get_Element(Ren, 3), L);
+    Move(Get_Element(Ren, 4), L);
+    Update_List_Connected_Components(Gr, L, Ls);
+    Put("1st list divided in " & I2S(Size(Ls)) & " lists:"); Put(Ls); New_Line;
+    Free(Ls);
+    L := New_List(Ren);
+    Move(Get_Element(Ren, 5), L);
+    Move(Get_Element(Ren, 6), L);
+    Move(Get_Element(Ren, 7), L);
+    Move(Get_Element(Ren, 8), L);
+    Update_List_Connected_Components(Gr, L, Ls);
+    Put("2nd list divided in " & I2S(Size(Ls)) & " lists:"); Put(Ls); New_Line;
+    Free(Ls);
+    L := New_List(Ren);
+    Move(Get_Element(Ren, 2), L);
+    Move(Get_Element(Ren, 9), L);
+    Move(Get_Element(Ren, 10), L);
+    Update_List_Connected_Components(Gr, L, Ls);
+    Put("3rd list divided in " & I2S(Size(Ls)) & " lists:"); Put(Ls); New_Line;
+    Free(Ls);
+    Put(Ren);
     Put_Line("------");
 
     Free(Ren);
@@ -253,17 +310,38 @@ begin
     Put(Lol);
     Put_Line("------");
 
-    Put("Modularity(Gr    , Lol    ) := ");
-    Put(Modularity(Gr, Lol, Weighted_Newman), Fore => 0, Aft => 6, Exp => 0); New_Line;
-    Put("Modularity(Gr_Ren, Lol_Ren) := ");
-    Put(Modularity(Gr_Ren, Lol_Ren, Weighted_Newman), Fore => 0, Aft => 6, Exp => 0); New_Line;
-    Put_Line("------");
+    for Mt in Modularity_Type loop
+      Put("Modularity(Gr    , Lol    , " & Capitalize(Modularity_Type'Image(Mt)) & ") := ");
+      Put_Line(D2S(Modularity(Gr, Lol, Mt), Aft => 6, Exp => 0));
+      Put("Modularity(Gr_Ren, Lol_Ren, " & Capitalize(Modularity_Type'Image(Mt)) & ") := ");
+      Put_Line(D2S(Modularity(Gr_Ren, Lol_Ren, Mt), Aft => 6, Exp => 0));
+      Put_Line("------");
+    end loop;
 
+    Free(Gr_Ren);
+
+    Put_Line("The graph again");
+    Put(Gr);
+
+    R := 10;
+    Put_Line("Renormalized graph with resistance " & I2S(R));
+    Renormalize_Graph(Gr, Ren, Gr_Ren, R);
+    Put(Gr_Ren);
+
+    for Mt in Modularity_Type loop
+      Put("Modularity(Gr    , Lol    , " & Capitalize(Modularity_Type'Image(Mt)) & ") := ");
+      Put_Line(D2S(Modularity(Gr, Lol, Mt, Double(R)), Aft => 6, Exp => 0));
+      Put("Modularity(Gr_Ren, Lol_Ren, " & Capitalize(Modularity_Type'Image(Mt)) & ") := ");
+      Put_Line(D2S(Modularity(Gr_Ren, Lol_Ren, Mt, No_Resistance), Aft => 6, Exp => 0));
+      Put_Line("------");
+    end loop;
+
+
+
+    Free(Lol);
     Free(Lol_Ren);
     Free(Ren);
-    Free(Lol);
     Free(Gr);
-    Free(Gr_Ren);
 
   end loop;
 

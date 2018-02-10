@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 04/04/2002
--- @revision 20/01/2015
+-- @revision 28/12/2017
 -- @brief Test of Eps Plots
 
 with Ada.Text_Io; use Ada.Text_Io;
@@ -30,7 +30,7 @@ with Utils; use Utils;
 procedure Eps_Plots_Test is
 
   procedure Eps_Plots_Test_01 is
-    Eps_File: constant String := "eps_plots_test_01.eps";
+    Eps_File: constant String := "test-eps_plots_01.eps";
     Plot: Teps_Plot;
     Inum: constant := 3;
     Jnum: constant := 2;
@@ -114,7 +114,7 @@ procedure Eps_Plots_Test is
 
 
   procedure Eps_Plots_Test_02 is
-    Eps_File: constant String := "eps_plots_test_02.eps";
+    Eps_File: constant String := "test-eps_plots_02.eps";
     Plot: Teps_Plot;
     Inum: constant := 2;
     Jnum: constant := 3;
@@ -234,7 +234,7 @@ procedure Eps_Plots_Test is
 
 
   procedure Eps_Plots_Test_03 is
-    Eps_File: constant String := "eps_plots_test_03.eps";
+    Eps_File: constant String := "test-eps_plots_03.eps";
     Plot: Teps_Plot;
     Inum: constant := 3;
     Jnum: constant := 2;
@@ -333,7 +333,7 @@ procedure Eps_Plots_Test is
 
 
   procedure Eps_Plots_Test_04 is
-    Eps_File: constant String := "eps_plots_test_04.eps";
+    Eps_File: constant String := "test-eps_plots_04.eps";
     Plot: Teps_Plot;
     Inum: constant := 1;
     Jnum: constant := 1;
@@ -407,7 +407,7 @@ procedure Eps_Plots_Test is
 
 
   procedure Eps_Plots_Test_05 is
-    Eps_File: constant String := "eps_plots_test_05.eps";
+    Eps_File: constant String := "test-eps_plots_05.eps";
     Plot: Teps_Plot;
     Inum: constant := 11;
     Jnum: constant := 11;
@@ -481,7 +481,7 @@ procedure Eps_Plots_Test is
 
 
   procedure Eps_Plots_Test_06 is
-    Eps_File:  constant String := "eps_plots_test_06.eps";
+    Eps_File:  constant String := "test-eps_plots_06.eps";
     Size:      constant T2dim  := (Cm2Pt(10.0), Cm2Pt(10.0));
     World_Min: constant T2dim  := (0.0, 0.0);
     World_Max: constant T2dim  := (10.0, 10.0);
@@ -554,7 +554,7 @@ procedure Eps_Plots_Test is
 
 
   procedure Eps_Plots_Test_07 is
-    Eps_File:  constant String := "eps_plots_test_07.eps";
+    Eps_File:  constant String := "test-eps_plots_07.eps";
     Size:      constant T2dim  := (Cm2Pt(7.0), Cm2Pt(3.0));
     World_Min: constant T2dim  := (0.5, 0.5);
     World_Max: constant T2dim  := (7.5, 3.5);

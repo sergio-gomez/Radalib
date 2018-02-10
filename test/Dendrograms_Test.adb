@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 10/05/2013
--- @revision 13/10/2016
+-- @revision 28/12/2017
 -- @brief Test of Dendrograms packages
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -35,11 +35,11 @@ procedure Dendrograms_Test is
   use Trees_Dendrograms;
   use Trees_Dendrograms.Nodes_Lists;
 
-  Fn_Text1 : constant String := "dendrograms_test-text_1.txt";
-  Fn_Text2 : constant String := "dendrograms_test-text_2.txt";
-  Fn_Newick: constant String := "dendrograms_test-newick.txt";
-  Fn_Json  : constant String := "dendrograms_test-json.txt";
-  Fn_Dist  : constant String := "dendrograms_test-dist.txt";
+  Fn_Text1 : constant String := "test-dendrograms-text_1.txt";
+  Fn_Text2 : constant String := "test-dendrograms-text_2.txt";
+  Fn_Newick: constant String := "test-dendrograms-newick.txt";
+  Fn_Json  : constant String := "test-dendrograms-json.txt";
+  Fn_Dist  : constant String := "test-dendrograms-dist.txt";
 
   -- Show Data
   procedure Put_Data(Data: in PDoubless; Col_Name, Row_Name: in PUstrings; No_Value: in Double; Aft: in Field := Default_Double_Aft) is

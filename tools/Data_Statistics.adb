@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/05/2013
--- @revision 26/02/2016
+-- @revision 29/01/2018
 -- @brief Statistics of a Data set
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -34,7 +34,7 @@ procedure Data_Statistics is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2017 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2018 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
@@ -44,7 +44,7 @@ procedure Data_Statistics is
     Put_Line("== - means: arithmetic, geometric, harmonic                      ==");
     Put_Line("== - variance, standard deviation, skewness, kurtosis            ==");
     Put_Line("== - covariance, central moments                                 ==");
-    Put_Line("== - Pearson and Spearman correlation, and correlation errors    ==");
+    Put_Line("== - Pearson, Spearman and Kendall correlations,                 ==");
     Put_Line("== - linear regression                                           ==");
     Put_Line("===================================================================");
     New_Line(2);
@@ -138,9 +138,12 @@ procedure Data_Statistics is
 
   -- Calculate pair statistics
   procedure Calculate_Statistics(Fn: in Ustring; P1, P2: in PDoubles; Name1, Name2: in Ustring; Aft: Natural) is
+    Bound_1: constant Positive := 100;
+    Bound_2: constant Positive := 10_000;
     Ft: File_Type;
     Ft_Prev: File_Access;
     A, B: Double;
+    N: Natural;
   begin
     if Fn /= Null_Ustring then
       Open_Or_Create(Ft, U2S(Fn));
@@ -148,17 +151,38 @@ procedure Data_Statistics is
       Set_Output(Ft);
     end if;
 
+    N := P1'Length;
+    if N >= Bound_1 then
+      Set_Bootstrap_Size(100);
+    end if;
+
     Put_Line(U2S(Name1) & " vs " & U2S(Name2) & ":");
 
     Put_Line("  Covariance : " & D2Sea(Covariance(P1, P2), Aft => Aft));
     Put_Line("  Correlation (Pearson)  : " & D2Sea(Pearson_Correlation(P1, P2), Aft => Aft));
     Put_Line("  Correlation (Spearman) : " & D2Sea(Spearman_Correlation(P1, P2), Aft => Aft));
-    Put_Line("  Correlation Error (Pearson , Jackknife)        : " & D2Sea(Pearson_Correlation_Error(P1, P2, Cet => Jackknife), Aft => Aft));
-    Put_Line("  Correlation Error (Pearson , Bootstrap)        : " & D2Sea(Pearson_Correlation_Error(P1, P2, Cet => Bootstrap), Aft => Aft));
+    Put_Line("  Correlation (Kendall)  : " & D2Sea(Kendall_Correlation(P1, P2), Aft => Aft));
+    if N <= Bound_1 then
+      Put_Line("  Correlation Error (Pearson , Jackknife)        : " & D2Sea(Pearson_Correlation_Error(P1, P2, Cet => Jackknife), Aft => Aft));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("  Correlation Error (Pearson , Bootstrap)        : " & D2Sea(Pearson_Correlation_Error(P1, P2, Cet => Bootstrap), Aft => Aft));
+    end if;
     Put_Line("  Correlation Error (Pearson , Fisher_Transform) : " & D2Sea(Pearson_Correlation_Error(P1, P2, Cet => Fisher_Transform), Aft => Aft));
-    Put_Line("  Correlation Error (Spearman, Jackknife)        : " & D2Sea(Spearman_Correlation_Error(P1, P2, Cet => Jackknife), Aft => Aft));
-    Put_Line("  Correlation Error (Spearman, Bootstrap)        : " & D2Sea(Spearman_Correlation_Error(P1, P2, Cet => Bootstrap), Aft => Aft));
+    if N <= Bound_1 then
+      Put_Line("  Correlation Error (Spearman, Jackknife)        : " & D2Sea(Spearman_Correlation_Error(P1, P2, Cet => Jackknife), Aft => Aft));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("  Correlation Error (Spearman, Bootstrap)        : " & D2Sea(Spearman_Correlation_Error(P1, P2, Cet => Bootstrap), Aft => Aft));
+    end if;
     Put_Line("  Correlation Error (Spearman, Fisher_Transform) : " & D2Sea(Spearman_Correlation_Error(P1, P2, Cet => Fisher_Transform), Aft => Aft));
+    if N <= Bound_1 then
+      Put_Line("  Correlation Error (Kendall , Jackknife)        : " & D2Sea(Kendall_Correlation_Error(P1, P2, Cet => Jackknife), Aft => Aft));
+    end if;
+    if N <= Bound_2 then
+      Put_Line("  Correlation Error (Kendall , Bootstrap)        : " & D2Sea(Kendall_Correlation_Error(P1, P2, Cet => Bootstrap), Aft => Aft));
+    end if;
+    Put_Line("  Correlation Error (Kendall , Fisher_Transform) : " & D2Sea(Kendall_Correlation_Error(P1, P2, Cet => Fisher_Transform), Aft => Aft));
     Simple_Linear_Regression(P1, P2, A, B);
     Put_Line("  Simple Linear Regression Y = a X + b :  a = " & D2Sea(A, Aft => Aft) & "   b = " & D2Sea(B, Aft => Aft));
     Simple_Linear_Regression(P2, P1, A, B);

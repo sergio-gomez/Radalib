@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,11 +16,10 @@
 -- @author Javier Borge
 -- @version 1.0
 -- @date 20/11/2007
--- @revision 26/10/2014
+-- @revision 21/01/2018
 -- @brief Extremal Modularity Optimization implementation (after J. Duch and A. Arenas)
 
 with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 with Utils; use Utils;
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
@@ -33,12 +32,13 @@ generic
   Number_Of_Repetitions: Positive;
 
   with procedure Improvement_Action(
-    Log_Name: in Unbounded_String;
+    Log_Name: in Ustring;
     Lol: in List_Of_Lists;
-    Q: in Modularity_Rec);
+    Q: in Modularity_Rec;
+    Us: in Ustring := Null_Ustring);
 
   with procedure Repetition_Action(
-    Log_Name: in Unbounded_String;
+    Log_Name: in Ustring;
     Lol: in List_Of_Lists;
     Q: in Modularity_Rec);
 
@@ -47,7 +47,7 @@ package Modularities_Extremal is
   procedure Extremal_Modularity(
     MT: in Modularity_Type;
     Gr: in Graph;
-    Log_Name : in Unbounded_String;
+    Log_Name : in Ustring;
     Lol_Ini : in List_Of_Lists;
     Lol_Best: out List_Of_Lists;
     Q_Best: out Modularity_Rec;
@@ -63,43 +63,47 @@ private
   -------------------------------------------------------------------------
 
   procedure Randomly_Divide_List(
-    Lol: in out List_Of_Lists;
     Gen: in out Generator;
-    Modul: in out List;
+    Module: in List;
     L1, L2: out List);
 
   procedure Lowest_Fitness_Node_Movement(
     Gr: in Graph;
     Mi: in Modularity_Info;
+    Mt: in Modularity_Type;
     Sub_L1, Sub_L2: in List;
     Gen: in out Generator;
     Tau: in Float := 1.6);
 
-  procedure Copy_Lols_Lists(
-    Source_L, Destination_L: in List;
-    Destination_Lol: in List_Of_Lists);
+  procedure Copy_List(
+    L: in List;
+    Lol: in List_Of_Lists;
+    L_Copy: in List);
 
   procedure Break_And_Enqueue(
     Gr: in Graph;
-    Lol_Best: in List_Of_Lists;
-    Sub_L1, Sub_L2: in List;
+    Mi: in Modularity_Info;
+    Mt: in Modularity_Type;
+    L: in List;
+    Lol: in List_Of_Lists;
     Q: in Queue);
 
   procedure Optimization_Process(
     Gr: in Graph;
     Mi: in Modularity_Info;
     Mt: in Modularity_Type;
-    Modul: in List;
+    Module: in out List;
     Lol_Best: in List_Of_Lists;
     Q: in Queue;
-    Q_Ini: in Long_Float;
+    Q_Ini: in Double;
     Gen: in out Generator);
 
   procedure Execute_Repetition(
     MT: in Modularity_Type;
     Gr: in Graph;
-    Log_Name: in Unbounded_String;
+    Log_Name: in Ustring;
     Gen: in out Generator;
+    Lol_Ini : in List_Of_Lists;
     Lol_Best: in List_Of_Lists;
     Q_Best: out Modularity_Rec;
     R: in Double := No_Resistance;

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -17,10 +17,8 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/02/2007
--- @revision 26/10/2014
+-- @revision 14/01/2018
 -- @brief Main access to Modularity Optimization Algorithms
-
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 with Utils; use Utils;
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
@@ -52,12 +50,13 @@ package Modularity_Optimization is
   -------------------------------------------------------------------------
 
   procedure Default_Improvement_Action(
-    Log_Name: in Unbounded_String;
+    Log_Name: in Ustring;
     Lol: in List_Of_Lists;
-    Q: in Modularity_Rec);
+    Q: in Modularity_Rec;
+    Us: in Ustring := Null_Ustring);
 
   procedure Default_Repetition_Action(
-    Log_Name: in Unbounded_String;
+    Log_Name: in Ustring;
     Lol: in List_Of_Lists;
     Q: in Modularity_Rec);
 
@@ -70,11 +69,12 @@ package Modularity_Optimization is
     with function Maximum_Of_Nonimprovements(
       Num_Vertices: Natural) return Natural is Default_Maximum_Of_Nonimprovements;
     with procedure Improvement_Action(
-      Log_Name: in Unbounded_String;
+      Log_Name: in Ustring;
       Lol: in List_Of_Lists;
-      Q: in Modularity_Rec) is Default_Improvement_Action;
+      Q: in Modularity_Rec;
+      Us: in Ustring := Null_Ustring) is Default_Improvement_Action;
     with procedure Repetition_Action(
-      Log_Name: in Unbounded_String;
+      Log_Name: in Ustring;
       Lol: in List_Of_Lists;
       Q: in Modularity_Rec) is Default_Repetition_Action;
   procedure Generic_Tabu_Modularity_Optimization(
@@ -86,7 +86,7 @@ package Modularity_Optimization is
     Num_Repetitions: in Positive := 1;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0;
-    Log_Name: in Unbounded_String := Null_Unbounded_String);
+    Log_Name: in Ustring := Null_Ustring);
 
   procedure Tabu_Modularity_Optimization(
     Gr: in Graph;
@@ -97,17 +97,18 @@ package Modularity_Optimization is
     Num_Repetitions: in Positive := 1;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0;
-    Log_Name: in Unbounded_String := Null_Unbounded_String);
+    Log_Name: in Ustring := Null_Ustring);
 
   -------------------------------------------------------------------------
 
   generic
     with procedure Improvement_Action(
-      Log_Name: in Unbounded_String;
+      Log_Name: in Ustring;
       Lol: in List_Of_Lists;
-      Q: in Modularity_Rec) is Default_Improvement_Action;
+      Q: in Modularity_Rec;
+      Us: in Ustring := Null_Ustring) is Default_Improvement_Action;
     with procedure Repetition_Action(
-      Log_Name: in Unbounded_String;
+      Log_Name: in Ustring;
       Lol: in List_Of_Lists;
       Q: in Modularity_Rec) is Default_Repetition_Action;
   procedure Generic_Tabu_Modularity_Bootstrapping(
@@ -120,7 +121,7 @@ package Modularity_Optimization is
     Num_Nonimprovements: in Natural := 0;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0;
-    Log_Name: in Unbounded_String := Null_Unbounded_String);
+    Log_Name: in Ustring := Null_Ustring);
 
   procedure Tabu_Modularity_Bootstrapping(
     Gr: in Graph;
@@ -132,48 +133,52 @@ package Modularity_Optimization is
     Num_Nonimprovements: in Natural := 0;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0;
-    Log_Name: in Unbounded_String := Null_Unbounded_String);
+    Log_Name: in Ustring := Null_Ustring);
 
   -------------------------------------------------------------------------
 
   generic
     with procedure Improvement_Action(
-      Log_Name: in Unbounded_String;
+      Log_Name: in Ustring;
       Lol: in List_Of_Lists;
-      Q: in Modularity_Rec) is Default_Improvement_Action;
+      Q: in Modularity_Rec;
+      Us: in Ustring := Null_Ustring) is Default_Improvement_Action;
     with procedure Repetition_Action(
-      Log_Name: in Unbounded_String;
+      Log_Name: in Ustring;
       Lol: in List_Of_Lists;
       Q: in Modularity_Rec) is Default_Repetition_Action;
   procedure Generic_Spectral_Modularity_Optimization(
     Gr: in Graph;
+    Lol_Ini: in List_Of_Lists;
     Lol_Best: out List_Of_Lists;
     Q_Best: out Modularity_Rec;
     MT: in Modularity_Type := Weighted_Newman;
     Num_Repetitions: in Positive := 1;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0;
-    Log_Name: in Unbounded_String := Null_Unbounded_String);
+    Log_Name: in Ustring := Null_Ustring);
 
   procedure Spectral_Modularity_Optimization(
     Gr: in Graph;
+    Lol_Ini: in List_Of_Lists;
     Lol_Best: out List_Of_Lists;
     Q_Best: out Modularity_Rec;
     MT: in Modularity_Type := Weighted_Newman;
     Num_Repetitions: in Positive := 1;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0;
-    Log_Name: in Unbounded_String := Null_Unbounded_String);
+    Log_Name: in Ustring := Null_Ustring);
 
   -------------------------------------------------------------------------
 
   generic
     with procedure Improvement_Action(
-      Log_Name: in Unbounded_String;
+      Log_Name: in Ustring;
       Lol: in List_Of_Lists;
-      Q: in Modularity_Rec) is Default_Improvement_Action;
+      Q: in Modularity_Rec;
+      Us: in Ustring := Null_Ustring) is Default_Improvement_Action;
     with procedure Repetition_Action(
-      Log_Name: in Unbounded_String;
+      Log_Name: in Ustring;
       Lol: in List_Of_Lists;
       Q: in Modularity_Rec) is Default_Repetition_Action;
   procedure Generic_Extremal_Modularity_Optimization(
@@ -185,7 +190,7 @@ package Modularity_Optimization is
     Num_Repetitions: in Positive := 1;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0;
-    Log_Name: in Unbounded_String := Null_Unbounded_String);
+    Log_Name: in Ustring := Null_Ustring);
 
   procedure Extremal_Modularity_Optimization(
     Gr: in Graph;
@@ -195,7 +200,7 @@ package Modularity_Optimization is
     Num_Repetitions: in Positive := 1;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0;
-    Log_Name: in Unbounded_String := Null_Unbounded_String);
+    Log_Name: in Ustring := Null_Ustring);
 
   procedure Extremal_Modularity_Optimization(
     Gr : in Graph;
@@ -206,17 +211,18 @@ package Modularity_Optimization is
     Num_Repetitions: in Positive := 1;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0;
-    Log_Name: in Unbounded_String := Null_Unbounded_String);
+    Log_Name: in Ustring := Null_Ustring);
 
   -------------------------------------------------------------------------
 
   generic
     with procedure Improvement_Action(
-      Log_Name: in Unbounded_String;
+      Log_Name: in Ustring;
       Lol: in List_Of_Lists;
-      Q: in Modularity_Rec) is Default_Improvement_Action;
+      Q: in Modularity_Rec;
+      Us: in Ustring := Null_Ustring) is Default_Improvement_Action;
     with procedure Repetition_Action(
-      Log_Name: in Unbounded_String;
+      Log_Name: in Ustring;
       Lol: in List_Of_Lists;
       Q: in Modularity_Rec) is Default_Repetition_Action;
   procedure Generic_Fast_Algorithm_Modularity_Optimization(
@@ -228,7 +234,7 @@ package Modularity_Optimization is
     Num_Repetitions: in Positive := 1;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0;
-    Log_Name: in Unbounded_String := Null_Unbounded_String);
+    Log_Name: in Ustring := Null_Ustring);
 
   procedure Fast_Algorithm_Modularity_Optimization(
     Gr : in Graph;
@@ -239,7 +245,7 @@ package Modularity_Optimization is
     Num_Repetitions: in Positive := 1;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0;
-    Log_Name: in Unbounded_String := Null_Unbounded_String);
+    Log_Name: in Ustring := Null_Ustring);
 
   procedure Fast_Algorithm_Modularity_Optimization(
     Gr : in Graph;
@@ -249,17 +255,18 @@ package Modularity_Optimization is
     Num_Repetitions: in Positive := 1;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0;
-    Log_Name: in Unbounded_String := Null_Unbounded_String);
+    Log_Name: in Ustring := Null_Ustring);
 
   -------------------------------------------------------------------------
 
   generic
     with procedure Improvement_Action(
-      Log_Name: in Unbounded_String;
+      Log_Name: in Ustring;
       Lol: in List_Of_Lists;
-      Q: in Modularity_Rec) is Default_Improvement_Action;
+      Q: in Modularity_Rec;
+      Us: in Ustring := Null_Ustring) is Default_Improvement_Action;
     with procedure Repetition_Action(
-      Log_Name: in Unbounded_String;
+      Log_Name: in Ustring;
       Lol: in List_Of_Lists;
       Q: in Modularity_Rec) is Default_Repetition_Action;
   procedure Generic_Reposition_Modularity_Optimization(
@@ -271,7 +278,7 @@ package Modularity_Optimization is
     Num_Repetitions: in Positive := 1;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0;
-    Log_Name: in Unbounded_String := Null_Unbounded_String);
+    Log_Name: in Ustring := Null_Ustring);
 
   procedure Reposition_Modularity_Optimization(
     Gr: in Graph;
@@ -282,6 +289,50 @@ package Modularity_Optimization is
     Num_Repetitions: in Positive := 1;
     R: in Double := No_Resistance;
     Pc: in Double := 1.0;
-    Log_Name: in Unbounded_String := Null_Unbounded_String);
+    Log_Name: in Ustring := Null_Ustring);
+
+  -------------------------------------------------------------------------
+
+  generic
+    with procedure Improvement_Action(
+      Log_Name: in Ustring;
+      Lol: in List_Of_Lists;
+      Q: in Modularity_Rec;
+      Us: in Ustring := Null_Ustring) is Default_Improvement_Action;
+    with procedure Repetition_Action(
+      Log_Name: in Ustring;
+      Lol: in List_Of_Lists;
+      Q: in Modularity_Rec) is Default_Repetition_Action;
+  procedure Generic_Louvain_Algorithm_Modularity_Optimization(
+    Gr : in Graph;
+    Lol_Ini: in List_Of_Lists;
+    Lol_Best: out List_Of_Lists;
+    Q_Best: out Modularity_Rec;
+    MT: in Modularity_Type := Weighted_Newman;
+    Num_Repetitions: in Positive := 1;
+    R: in Double := No_Resistance;
+    Pc: in Double := 1.0;
+    Log_Name: in Ustring := Null_Ustring);
+
+  procedure Louvain_Algorithm_Modularity_Optimization(
+    Gr : in Graph;
+    Lol_Ini: in List_Of_Lists;
+    Lol_Best: out List_Of_Lists;
+    Q_Best: out Modularity_Rec;
+    MT: in Modularity_Type := Weighted_Newman;
+    Num_Repetitions: in Positive := 1;
+    R: in Double := No_Resistance;
+    Pc: in Double := 1.0;
+    Log_Name: in Ustring := Null_Ustring);
+
+  procedure Louvain_Algorithm_Modularity_Optimization(
+    Gr : in Graph;
+    Lol_Best: out List_Of_Lists;
+    Q_Best: out Modularity_Rec;
+    MT: in Modularity_Type := Weighted_Newman;
+    Num_Repetitions: in Positive := 1;
+    R: in Double := No_Resistance;
+    Pc: in Double := 1.0;
+    Log_Name: in Ustring := Null_Ustring);
 
 end Modularity_Optimization;

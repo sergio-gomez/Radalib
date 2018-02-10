@@ -1,0 +1,9 @@
+---------
+Real partition
+Not best modularity
+---
+Number of elements: 34
+Number of lists: 2
+
+18: 9 10 15 16 19 21 23 24 25 26 27 28 29 30 31 32 33 34
+16: 1 2 3 4 5 6 7 8 11 12 13 14 17 18 20 22

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -81,12 +81,12 @@ procedure Pajek_IO_Test is
     Put_Line("------");
   end Put;
 
-  Fn_In_Net1: constant String  := "pajek_test_in1.net";
-  Fn_In_Net2: constant String  := "pajek_test_in2.net";
-  Fn_In_Clu : constant String  := "pajek_test_in.clu";
-  Fn_Out_Net1: constant String := "pajek_test_out1.net";
-  Fn_Out_Net2: constant String := "pajek_test_out2.net";
-  Fn_Out_Clu : constant String := "pajek_test_out.clu";
+  Fn_In_Net1: constant String  := "test-pajek_in1.net";
+  Fn_In_Net2: constant String  := "test-pajek_in2.net";
+  Fn_In_Clu : constant String  := "test-pajek_in.clu";
+  Fn_Out_Net1: constant String := "test-pajek_out1.net";
+  Fn_Out_Net2: constant String := "test-pajek_out2.net";
+  Fn_Out_Clu : constant String := "test-pajek_out.clu";
   Gr: Graph;
   Lol: List_Of_Lists;
 

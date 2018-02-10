@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,13 +16,15 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 08/11/2007
--- @revision 26/10/2014
+-- @revision 28/01/2018
 -- @brief Statistics of Numerical Arrays
 
 with Ada.Numerics.Generic_Elementary_Functions;
 
 with Random_Numbers; use Random_Numbers;
 with Queues_Integer; use Queues_Integer;
+with Utils; use Utils;
+with Arrays_Utils;
 with Minheaps;
 
 package body Statistics is
@@ -1364,6 +1366,8 @@ package body Statistics is
         return Pearson_Correlation(V1, V2);
       when Spearman =>
         return Spearman_Correlation(V1, V2);
+      when Kendall =>
+        return Kendall_Correlation(V1, V2);
     end case;
   end Correlation;
 
@@ -1374,6 +1378,8 @@ package body Statistics is
         return Pearson_Correlation(P1, P2);
       when Spearman =>
         return Spearman_Correlation(P1, P2);
+      when Kendall =>
+        return Kendall_Correlation(P1, P2);
     end case;
   end Correlation;
 
@@ -1384,6 +1390,8 @@ package body Statistics is
         return Pearson_Correlation(V1, V2, Wh);
       when Spearman =>
         return Spearman_Correlation(V1, V2, Wh);
+      when Kendall =>
+        return Kendall_Correlation(V1, V2);
     end case;
   end Correlation;
 
@@ -1394,6 +1402,8 @@ package body Statistics is
         return Pearson_Correlation(P1, P2, Wh);
       when Spearman =>
         return Spearman_Correlation(P1, P2, Wh);
+      when Kendall =>
+        return Kendall_Correlation(P1, P2);
     end case;
   end Correlation;
 
@@ -1519,6 +1529,306 @@ package body Statistics is
     return Corr;
   end Spearman_Correlation;
 
+  -------------------------
+  -- Kendall_Correlation --
+  -------------------------
+
+  function Kendall_Correlation(V1, V2: in Nums) return Num is
+    Off2: Integer;
+    Perm, Temp: PIntegers;
+
+    -- Utils for sorting
+    function Lower_Than(Left, Right: in Integer) return Boolean is
+    begin
+      return V1(Left) < V1(Right) or else (V1(Left) = V1(Right) and then V2(Off2 + Left) < V2(Off2 + Right));
+    end Lower_Than;
+
+    package Arrays_Index is new Arrays_Utils(Integer, Integers, Integerss,
+                                             PIntegers, PIntegerss, PsIntegers, PPsIntegers,
+                                             Alloc, Alloc, Alloc, Lower_Than);
+    use Arrays_Index;
+
+    -- MergeSort with counting of Exchanges
+    function Number_Of_Exchanges(First, Length: in Integer) return Longint is
+      N_Exch: Longint;
+      T, Length1, Length2, Middle, I, J, K, D: Integer;
+    begin
+      N_Exch := 0;
+      if Length = 1 then
+        return 0;
+      elsif Length = 2 then
+        if V2(Off2 + Perm(First)) <= V2(Off2 + Perm(First + 1)) then
+          return 0;
+        else
+          T := Perm(First);
+          Perm(First) := Perm(First + 1);
+          Perm(First + 1) := T;
+          return 1;
+        end if;
+      end if;
+      -- Recursive division
+      Length1 := Length / 2;
+      Length2 := Length - Length1;
+      Middle := First + Length1;
+      N_Exch := N_Exch + Number_Of_Exchanges(First, Length1);
+      N_Exch := N_Exch + Number_Of_Exchanges(Middle, Length2);
+      if V2(Off2 + Perm(Middle - 1)) < V2(Off2 + Perm(Middle)) then
+        return N_Exch;
+      end if;
+      -- Merge
+      I := 0;
+      J := 0;
+      K := 0;
+      while J < Length1 or else K < Length2 loop
+        if K >= Length2 or else (J < Length1 and then V2(Off2 + Perm(First + J)) <= V2(Off2 + Perm(Middle + K))) then
+          Temp(I) := Perm(First + J);
+          D := I - J;
+          J := J + 1;
+        else
+          Temp(I) := Perm(Middle + K);
+          D := (First + I) - (Middle + K);
+          K := K + 1;
+        end if;
+        if D > 0 then
+          N_Exch := N_Exch + Longint(D);
+        end if;
+        I := I + 1;
+      end loop;
+      Perm(First..(First + Length - 1)) := Temp(0..(Length - 1));
+      return N_Exch;
+    end Number_Of_Exchanges;
+
+    -- Cominatorial number
+    function Combi2(M: in Natural) return Longint is
+    begin
+      if M <= 1 then
+        return 0;
+      elsif M mod 2 = 0 then
+        return Longint(M / 2) * Longint(M - 1);
+      else
+        return Longint(M) * Longint((M - 1) / 2);
+      end if;
+    end Combi2;
+
+    N, First: Integer;
+    Joint_Ties, Ties_V1, Ties_V2, Exchanges, Total: Longint;
+    Denom, Tau: Num;
+  begin
+    if V1'Length < 1 or V1'Length /= V2'Length then
+      raise Statistics_Error;
+    end if;
+
+    N := V1'Length;
+    Off2 := V2'First - V1'First;
+
+    Perm := Alloc(V1'First, V1'Last);
+    Temp := Alloc(0, N - 1);
+
+    for I in Perm'Range loop
+      Perm(I) := I;
+    end loop;
+
+    Sort(Perm);
+
+    -- Calculate joint ties
+    First := V1'First;
+    Joint_Ties := 0;
+    for I in (First + 1)..V1'Last loop
+      if V1(Perm(First)) /= V1(Perm(I)) or else V2(Off2 + Perm(First)) /= V2(Off2 + Perm(I)) then
+        Joint_Ties := Joint_Ties + Combi2(I - First);
+        First := I;
+      end if;
+    end loop;
+    Joint_Ties := Joint_Ties + Combi2(V1'Last + 1 - First);
+
+    -- Calculate ties in V1
+    First := V1'First;
+    Ties_V1 := 0;
+    for I in (First + 1)..V1'Last loop
+      if V1(Perm(First)) /= V1(Perm(I)) then
+        Ties_V1 := Ties_V1 + Combi2(I - First);
+        First := I;
+      end if;
+    end loop;
+    Ties_V1 := Ties_V1 + Combi2(V1'Last + 1 - First);
+
+    -- Calculate exchanges while MergeSort
+    Exchanges := Number_Of_Exchanges(V1'First, N);
+
+    -- Calculate ties in V2
+    First := V1'First;
+    Ties_V2 := 0;
+    for I in (First + 1)..V1'Last loop
+      if V2(Off2 + Perm(First)) /= V2(Off2 + Perm(I)) then
+        Ties_V2 := Ties_V2 + Combi2(I - First);
+        First := I;
+      end if;
+    end loop;
+    Ties_V2 := Ties_V2 + Combi2(V1'Last + 1 - First);
+
+    -- Calculation of Kendell Tau
+    Total := Combi2(N);
+    if Total = Ties_V1 or Total = Ties_V2 then
+      Tau := 1.0;
+    else
+      Denom := Exp(0.5 * (Log(Num(Total - Ties_V1)) + Log(Num(Total - Ties_V2))));
+      Tau := Num(Total - (Ties_V1 + Ties_V2 - Joint_Ties) - 2 * Exchanges) / Denom;
+    end if;
+
+    Free(Temp);
+    Free(Perm);
+
+    return Tau;
+  end Kendall_Correlation;
+
+  function Kendall_Correlation(P1, P2: in PNums) return Num is
+    Off2: Integer;
+    Perm, Temp: PIntegers;
+
+    -- Utils for sorting
+    function Lower_Than(Left, Right: in Integer) return Boolean is
+    begin
+      return P1(Left) < P1(Right) or else (P1(Left) = P1(Right) and then P2(Off2 + Left) < P2(Off2 + Right));
+    end Lower_Than;
+
+    package Arrays_Index is new Arrays_Utils(Integer, Integers, Integerss,
+                                             PIntegers, PIntegerss, PsIntegers, PPsIntegers,
+                                             Alloc, Alloc, Alloc, Lower_Than);
+    use Arrays_Index;
+
+    -- MergeSort with counting of Exchanges
+    function Number_Of_Exchanges(First, Length: in Integer) return Longint is
+      N_Exch: Longint;
+      T, Length1, Length2, Middle, I, J, K, D: Integer;
+    begin
+      N_Exch := 0;
+      if Length = 1 then
+        return 0;
+      elsif Length = 2 then
+        if P2(Off2 + Perm(First)) <= P2(Off2 + Perm(First + 1)) then
+          return 0;
+        else
+          T := Perm(First);
+          Perm(First) := Perm(First + 1);
+          Perm(First + 1) := T;
+          return 1;
+        end if;
+      end if;
+      -- Recursive division
+      Length1 := Length / 2;
+      Length2 := Length - Length1;
+      Middle := First + Length1;
+      N_Exch := N_Exch + Number_Of_Exchanges(First, Length1);
+      N_Exch := N_Exch + Number_Of_Exchanges(Middle, Length2);
+      if P2(Off2 + Perm(Middle - 1)) < P2(Off2 + Perm(Middle)) then
+        return N_Exch;
+      end if;
+      -- Merge
+      I := 0;
+      J := 0;
+      K := 0;
+      while J < Length1 or else K < Length2 loop
+        if K >= Length2 or else (J < Length1 and then P2(Off2 + Perm(First + J)) <= P2(Off2 + Perm(Middle + K))) then
+          Temp(I) := Perm(First + J);
+          D := I - J;
+          J := J + 1;
+        else
+          Temp(I) := Perm(Middle + K);
+          D := (First + I) - (Middle + K);
+          K := K + 1;
+        end if;
+        if D > 0 then
+          N_Exch := N_Exch + Longint(D);
+        end if;
+        I := I + 1;
+      end loop;
+      Perm(First..(First + Length - 1)) := Temp(0..(Length - 1));
+      return N_Exch;
+    end Number_Of_Exchanges;
+
+    -- Cominatorial number
+    function Combi2(M: in Natural) return Longint is
+    begin
+      if M <= 1 then
+        return 0;
+      elsif M mod 2 = 0 then
+        return Longint(M / 2) * Longint(M - 1);
+      else
+        return Longint(M) * Longint((M - 1) / 2);
+      end if;
+    end Combi2;
+
+    N, First: Integer;
+    Joint_Ties, Ties_P1, Ties_P2, Exchanges, Total: Longint;
+    Denom, Tau: Num;
+  begin
+    if (P1 = null or P2 = null) or else (P1'Length < 1 or P1'Length /= P2'Length) then
+      raise Statistics_Error;
+    end if;
+
+    N := P1'Length;
+    Off2 := P2'First - P1'First;
+
+    Perm := Alloc(P1'First, P1'Last);
+    Temp := Alloc(0, N - 1);
+
+    for I in Perm'Range loop
+      Perm(I) := I;
+    end loop;
+
+    Sort(Perm);
+
+    -- Calculate joint ties
+    First := P1'First;
+    Joint_Ties := 0;
+    for I in (First + 1)..P1'Last loop
+      if P1(Perm(First)) /= P1(Perm(I)) or else P2(Off2 + Perm(First)) /= P2(Off2 + Perm(I)) then
+        Joint_Ties := Joint_Ties + Combi2(I - First);
+        First := I;
+      end if;
+    end loop;
+    Joint_Ties := Joint_Ties + Combi2(P1'Last + 1 - First);
+
+    -- Calculate ties in P1
+    First := P1'First;
+    Ties_P1 := 0;
+    for I in (First + 1)..P1'Last loop
+      if P1(Perm(First)) /= P1(Perm(I)) then
+        Ties_P1 := Ties_P1 + Combi2(I - First);
+        First := I;
+      end if;
+    end loop;
+    Ties_P1 := Ties_P1 + Combi2(P1'Last + 1 - First);
+
+    -- Calculate exchanges while MergeSort
+    Exchanges := Number_Of_Exchanges(P1'First, N);
+
+    -- Calculate ties in P2
+    First := P1'First;
+    Ties_P2 := 0;
+    for I in (First + 1)..P1'Last loop
+      if P2(Off2 + Perm(First)) /= P2(Off2 + Perm(I)) then
+        Ties_P2 := Ties_P2 + Combi2(I - First);
+        First := I;
+      end if;
+    end loop;
+    Ties_P2 := Ties_P2 + Combi2(P1'Last + 1 - First);
+
+    -- Calculation of Kendell Tau
+    Total := Combi2(N);
+    if Total = Ties_P1 or Total = Ties_P2 then
+      Tau := 1.0;
+    else
+      Denom := Exp(0.5 * (Log(Num(Total - Ties_P1)) + Log(Num(Total - Ties_P2))));
+      Tau := Num(Total - (Ties_P1 + Ties_P2 - Joint_Ties) - 2 * Exchanges) / Denom;
+    end if;
+
+    Free(Temp);
+    Free(Perm);
+
+    return Tau;
+  end Kendall_Correlation;
+
   -----------------------
   -- Correlation_Error --
   -----------------------
@@ -1535,6 +1845,8 @@ package body Statistics is
         Correlation_Calculation := Pearson_Correlation'Access;
       when Spearman =>
         Correlation_Calculation := Spearman_Correlation'Access;
+      when Kendall =>
+        Correlation_Calculation := Kendall_Correlation'Access;
     end case;
 
     Corr := Correlation_Calculation(V1, V2);
@@ -1623,6 +1935,8 @@ package body Statistics is
         Correlation_Calculation := Pearson_Correlation'Access;
       when Spearman =>
         Correlation_Calculation := Spearman_Correlation'Access;
+      when Kendall =>
+        Correlation_Calculation := Kendall_Correlation'Access;
     end case;
 
     Corr := Correlation_Calculation(P1, P2);
@@ -1710,20 +2024,11 @@ package body Statistics is
   end Correlation_Error;
 
   function Correlation_Error(V1, V2, Wh: in Nums; Ct: in Correlation_Type; Cet: in Correlation_Error_Type := Auto) return Num is
-    type Calculation is access function(V1, V2, Wh: in Nums) return Num;
-    Correlation_Calculation: Calculation;
     N: Natural;
     Cest: Correlation_Error_Subtype;
     Corr, Err: Num;
   begin
-    case Ct is
-      when Pearson =>
-        Correlation_Calculation := Pearson_Correlation'Access;
-      when Spearman =>
-        Correlation_Calculation := Spearman_Correlation'Access;
-    end case;
-
-    Corr := Correlation_Calculation(V1, V2, Wh);
+    Corr := Correlation(V1, V2, Wh, Ct);
 
     N := V1'Length;
     if N <= 2 then
@@ -1758,7 +2063,7 @@ package body Statistics is
               Vi2(I2) := V2(I2 - 1);
               Whi(Iw) := Wh(Iw - 1);
             end if;
-            Corri := Correlation_Calculation(Vi1, Vi2, Whi);
+            Corri := Correlation(Vi1, Vi2, Whi, Ct);
             if Corri /= Corr then
               Err := Err + (Corri - Corr) ** 2;
             end if;
@@ -1792,7 +2097,7 @@ package body Statistics is
               Vi2(I2) := V2(J2);
               Whi(Iw) := Wh(Jw);
             end loop;
-            Corrs(B) := Correlation_Calculation(Vi1, Vi2, Whi);
+            Corrs(B) := Correlation(Vi1, Vi2, Whi, Ct);
           end loop;
           Percentile := Percentiles(Corrs);
           Err := (Percentile(84) - Percentile(16)) / 2.0;
@@ -1806,20 +2111,11 @@ package body Statistics is
   end Correlation_Error;
 
   function Correlation_Error(P1, P2, Wh: in PNums; Ct: in Correlation_Type; Cet: in Correlation_Error_Type := Auto) return Num is
-    type Calculation is access function(P1, P2, Wh: in PNums) return Num;
-    Correlation_Calculation: Calculation;
     N: Natural;
     Cest: Correlation_Error_Subtype;
     Corr, Err: Num;
   begin
-    case Ct is
-      when Pearson =>
-        Correlation_Calculation := Pearson_Correlation'Access;
-      when Spearman =>
-        Correlation_Calculation := Spearman_Correlation'Access;
-    end case;
-
-    Corr := Correlation_Calculation(P1, P2, Wh);
+    Corr := Correlation(P1, P2, Wh, Ct);
 
     N := P1'Length;
     if N <= 2 then
@@ -1857,7 +2153,7 @@ package body Statistics is
               Pi2(I2) := P2(I2 - 1);
               Whi(Iw) := Wh(Iw - 1);
             end if;
-            Corri := Correlation_Calculation(Pi1, Pi2, Whi);
+            Corri := Correlation(Pi1, Pi2, Whi, Ct);
             if Corri /= Corr then
               Err := Err + (Corri - Corr) ** 2;
             end if;
@@ -1897,7 +2193,7 @@ package body Statistics is
               Pi2(I2) := P2(J2);
               Whi(Iw) := Wh(Jw);
             end loop;
-            Corrs(B) := Correlation_Calculation(Pi1, Pi2, Whi);
+            Corrs(B) := Correlation(Pi1, Pi2, Whi, Ct);
           end loop;
           Percentile := Percentiles(Corrs);
           Err := (Percentile(84) - Percentile(16)) / 2.0;
@@ -1962,6 +2258,20 @@ package body Statistics is
   begin
     return Correlation_Error(P1, P2, Wh, Spearman, Cet);
   end Spearman_Correlation_Error;
+
+  --------------------------------
+  -- Kendall_Correlation_Error --
+  --------------------------------
+
+  function Kendall_Correlation_Error(V1, V2: in Nums; Cet: in Correlation_Error_Type := Auto) return Num is
+  begin
+    return Correlation_Error(V1, V2, Kendall, Cet);
+  end Kendall_Correlation_Error;
+
+  function Kendall_Correlation_Error(P1, P2: in PNums; Cet: in Correlation_Error_Type := Auto) return Num is
+  begin
+    return Correlation_Error(P1, P2, Kendall, Cet);
+  end Kendall_Correlation_Error;
 
   ------------------------------
   -- Simple_Linear_Regression --

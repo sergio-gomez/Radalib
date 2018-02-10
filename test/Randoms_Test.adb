@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -12,11 +12,11 @@
 -- library (see LICENSE.txt); if not, see http://www.gnu.org/licenses/
 
 
--- @filename Random_Numbers_Test.adb
+-- @filename Randoms_Test.adb
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 03/03/2010
--- @revision 01/02/2012
+-- @revision 21/01/2018
 -- @brief Test of Random Numbers package
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -29,7 +29,7 @@ with Histograms; use Histograms;
 with Random_Numbers; use Random_Numbers;
 
 
-procedure Random_Numbers_Test is
+procedure Randoms_Test is
 
   procedure Put_Bin(Num: in Natural; Total: in Positive) is
   begin
@@ -65,12 +65,21 @@ procedure Random_Numbers_Test is
     Put_Line("---");
   end;
 
+  procedure Put(P: in Integers) is
+  begin
+    for I in P'Range loop
+      Put("  " & I2S(P(I)));
+    end loop;
+    New_Line;
+  end Put;
+
   G: Generator;
   H: Histogram;
   Num: Positive;
   Li, Ui: Integer;
   Lf, Uf, P: Float;
   Weights: PFloats;
+  Permutation: PIntegers;
 begin
   Reset(G);
 
@@ -83,6 +92,7 @@ begin
     Add(H, Random_Uniform(G, Li, Ui));
   end loop;
   Put(H, False);
+  Free(H);
 
   Put_Line("Uniform integers inverted range:"); New_Line;
   Num := 1_000_000;
@@ -93,6 +103,7 @@ begin
     Add(H, Random_Uniform(G, Ui, Li));
   end loop;
   Put(H, False);
+  Free(H);
 
   Put_Line("Uniform floats:"); New_Line;
   Num := 1_000_000;
@@ -103,6 +114,7 @@ begin
     Add(H, Random_Uniform(G, Lf, Uf));
   end loop;
   Put(H);
+  Free(H);
 
   Put_Line("Uniform floats inverted range:"); New_Line;
   Num := 1_000_000;
@@ -113,6 +125,7 @@ begin
     Add(H, Random_Uniform(G, Uf, Lf));
   end loop;
   Put(H);
+  Free(H);
 
   Put_Line("Bernoulli:"); New_Line;
   Num := 1_000_000;
@@ -128,6 +141,7 @@ begin
     end if;
   end loop;
   Put(H, False);
+  Free(H);
 
   Put_Line("Binomial integers:"); New_Line;
   Num := 1_000_000;
@@ -139,6 +153,7 @@ begin
     Add(H, Random_Binomial(G, Ui, P));
   end loop;
   Put(H, False);
+  Free(H);
 
   Put_Line("Nonuniform integers:"); New_Line;
   Num := 1_000_000;
@@ -151,6 +166,7 @@ begin
     Add(H, Random_Weighted(G, Weights));
   end loop;
   Put(H, False);
+  Free(H);
   Free(Weights);
 
   Put_Line("Nonuniform integers but with equal weights:"); New_Line;
@@ -164,6 +180,44 @@ begin
     Add(H, Random_Weighted(G, Weights));
   end loop;
   Put(H, False);
+  Free(H);
   Free(Weights);
 
-end Random_Numbers_Test;
+  Put_Line("Random permutations and histogram of first element:"); New_Line;
+  Num := 5;
+  Li := 1;
+  Ui := 9;
+  Permutation := Alloc(Li, Ui);
+  for I in 1..Num loop
+    Random_Permutation(G, Permutation);
+    Put(Permutation.all);
+  end loop;
+  Free(Permutation);
+  New_Line;
+
+  Num := 5;
+  Li := 3;
+  Ui := 7;
+  Permutation := Alloc(Li, Ui);
+  for I in 1..Num loop
+    Random_Permutation(G, Permutation.all);
+    Put(Permutation.all);
+  end loop;
+  Free(Permutation);
+  New_Line;
+
+  Num := 100_000;
+  Li := 3;
+  Ui := 7;
+  Permutation := Alloc(Li, Ui);
+  Initialize(H, Li, Ui - Li + 1, 1);
+  for I in 1..Num loop
+    Random_Permutation(G, Permutation);
+    Add(H, Permutation(Li));
+  end loop;
+  Put(H, False);
+  Free(H);
+  Free(Permutation);
+
+
+end Randoms_Test;

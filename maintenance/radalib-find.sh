@@ -4,5 +4,5 @@ cd ..
 
 for i in */*.ad?; do
   echo $i
-  grep -i "Strong_Components" $i
+  grep -i "Minheap" $i
 done

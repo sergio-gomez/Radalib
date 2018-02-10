@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,11 +16,10 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 22/10/2008
--- @revision 26/02/2016
+-- @revision 14/01/2018
 -- @brief Find the Correlation Network of a Data set
 
 with Ada.Command_Line; use Ada.Command_Line;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Text_Io; use Ada.Text_Io;
 with Ada.Exceptions; use Ada.Exceptions;
 
@@ -36,7 +35,7 @@ procedure Data_To_Correlations is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2017 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2018 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
@@ -78,11 +77,11 @@ procedure Data_To_Correlations is
 
   Correlations: Correlation_Type;
   Scaling: Scaling_Type;
-  Fn_In: Unbounded_String;
-  Fn_Out: Unbounded_String;
+  Fn_In: Ustring;
+  Fn_Out: Ustring;
   Aft: Field;
   F_In: File_Type;
-  U: Unbounded_String;
+  U: Ustring;
   Nr, Nc, I, J: Natural;
   Name_R1C1, Names_Col1, Names_Row1: Boolean := False;
   Data: PDoubless;
@@ -126,13 +125,13 @@ begin
     return;
   end if;
 
-  Put_Line(To_String(Fn_In) & "  ->  " & To_String(Fn_Out));
-  if not File_Exists(To_String(Fn_In)) then
+  Put_Line(U2S(Fn_In) & "  ->  " & U2S(Fn_Out));
+  if not File_Exists(U2S(Fn_In)) then
     Put_Line("Error: Input file not found!");
     return;
   end if;
 
-  Open(F_In, In_File, To_String(Fn_In));
+  Open(F_In, In_File, U2S(Fn_In));
 
   -- Determine network size and names location (none, columns or rows)
   Name_R1C1 := False;
@@ -269,7 +268,7 @@ begin
   exception
     when E: others =>
       Put(Exception_Information(E));
-      Put_Line(NLine & "Current position at " & To_String(Fn_In) & ": " & I2S(Integer(Line(F_In))) & ", " & I2S(Integer(Col(F_In))));
+      Put_Line(NLine & "Current position at " & U2S(Fn_In) & ": " & I2S(Integer(Line(F_In))) & ", " & I2S(Integer(Col(F_In))));
       Put_Line("Current data position: " & I2S(I) & ", " & I2S(J));
       return;
   end;
@@ -346,7 +345,7 @@ begin
   end case;
 
   -- Write network
-  Put_Graph(To_String(Fn_Out), Gr, Aft => Aft);
+  Put_Graph(U2S(Fn_Out), Gr, Aft => Aft);
 
   Free(Gr);
   Free(Data);

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 03/10/2006
--- @revision 26/02/2016
+-- @revision 27/01/2018
 -- @brief Fine Tuning of Mesoscales obtained with variable self-loops
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -40,7 +40,7 @@ procedure Mesoscales_Fine_Tuning is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2017 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2018 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
@@ -183,7 +183,7 @@ begin
     if Iter = 0 or else Lol_Best /= Lol_Best_Prev then
       Put_Line(F_Out_Lols, "--------");
       Put(F_Out_Lols, "Self-loop(" & I2S(Iter) & ") = ");
-      Put(F_Out_Lols, Loop_Wh, Fore => 0, Aft => 4, Exp => 0);
+      Put(F_Out_Lols, Loop_Wh, Fore => 0, Aft => 6, Exp => 0);
       New_Line(F_Out_Lols);
       Put(F_Out_Lols, "Q_Best = "); Put(F_Out_Lols, Q_Best, Fore => 0, Aft => 6, Exp => 0); New_Line(F_Out_Lols);
       Put_Line(F_Out_Lols, "---");

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 30/08/2006
--- @revision 13/10/2016
+-- @revision 28/12/2017
 -- @brief Test of the way to Call an External Application
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -30,7 +30,7 @@ procedure Call_External_Application is
   Success: Boolean := False;
   -- Windows
   Prog_Windows        : constant String := "C:\Windows\System32\cmd.exe";
-  Title_Windows       : constant String_Access := new String'("cmd -> hostname]");
+  Title_Windows       : constant String_Access := new String'("cmd -> hostname");
   Param1_Windows      : constant String_Access := new String'("/C C:\Windows\System32\hostname.exe");
   Params_List_Windows : constant String_List := (1 => Title_Windows, 2 => Param1_Windows);
   -- Others

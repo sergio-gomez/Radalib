@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2017 by
+-- Radalib, Copyright (c) 2018 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 5/03/2006
--- @revision 23/09/2015
+-- @revision 15/01/2018
 -- @brief Calculation of Modularities of Graphs
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
@@ -65,6 +65,8 @@ package Graphs.Modularities is
     Total: Num := 0.0;
   end record;
 
+  Null_Modularity_Rec: constant Modularity_Rec;
+
   -- Type to keep the main quantities used during Modularity calculations
   type Modularity_Info is private;
 
@@ -74,6 +76,7 @@ package Graphs.Modularities is
   Uninitialized_Modularity_Info_Error: exception;
   Incompatible_Modules_Error: exception;
   Incompatible_Modularity_Type_Error: exception;
+  Element_In_List_Error: exception;
 
 
   -- Purpose : Obtain a Modularity Type from its Name
@@ -177,6 +180,13 @@ package Graphs.Modularities is
   -- Mi      : The Modularity Info
   procedure Free(Mi: in out Modularity_Info);
 
+  -- Purpose : Get the Graph corresponding to the Modularity Info
+  --
+  -- Mi      : The Modularity Info
+  -- return  : The Graph
+  -- raises  : Uninitialized_Modularity_Info_Error
+  function Graph_Of(Mi: in Modularity_Info) return Graph;
+
   -- Purpose : Create a copy of a Modularity Info
   --
   -- Mi      : The Modularity Info
@@ -274,6 +284,90 @@ package Graphs.Modularities is
   -- return  : The Left Leading Eigenvector
   -- raises  : Uninitialized_Modularity_Info_Error
   function Left_Leading_Eigenvector(Mi: in Modularity_Info) return PNums;
+
+  -- Purpose : Save the Modularity contribution of all Nodes
+  -- Note    : Previously saved values are overwritten
+  --
+  -- Mi      : The Modularity Info
+  -- raises  : Uninitialized_Modularity_Info_Error
+  procedure Save_Modularity(Mi: in Modularity_Info);
+
+  -- Purpose : Save the Modularity contribution of a Module
+  -- Note    : Previously saved values are overwritten
+  --
+  -- Mi      : The Modularity Info
+  -- L       : The Module
+  -- raises  : Uninitialized_Modularity_Info_Error
+  -- raises  : Incompatible_Modules_Error
+  procedure Save_Modularity(Mi: in Modularity_Info; L: in List);
+
+  -- Purpose : Save the Modularity contribution of an Element
+  -- Note    : Previously saved value is overwritten
+  --
+  -- Mi      : The Modularity Info
+  -- E       : The Element
+  -- raises  : Uninitialized_Modularity_Info_Error
+  procedure Save_Modularity(Mi: in Modularity_Info; E: in Element);
+
+  -- Purpose : Restore the Saved Modularity contribution of all Nodes
+  -- Note    : Actual values are overwritten
+  --
+  -- Mi      : The Modularity Info
+  -- raises  : Uninitialized_Modularity_Info_Error
+  procedure Restore_Modularity(Mi: in Modularity_Info);
+
+  -- Purpose : Restore the Saved Modularity contribution of a Module
+  -- Note    : Actual values are overwritten
+  --
+  -- Mi      : The Modularity Info
+  -- L       : The Module
+  -- raises  : Uninitialized_Modularity_Info_Error
+  -- raises  : Incompatible_Modules_Error
+  procedure Restore_Modularity(Mi: in Modularity_Info; L: in List);
+
+  -- Purpose : Restore the Saved Modularity contribution of an Element
+  -- Note    : Actual value is overwritten
+  --
+  -- Mi      : The Modularity Info
+  -- E       : The Element
+  -- raises  : Uninitialized_Modularity_Info_Error
+  procedure Restore_Modularity(Mi: in Modularity_Info; E: in Element);
+
+  -- Purpose : Move Element to a new Module and Update Modularity
+  -- Note    : Nothing done if the Element already belongs to the Module
+  -- Note    : The origin module is not removed if it becomes empty
+  --
+  -- Mi      : The Modularity Info
+  -- E       : The Element
+  -- L       : The Destination Module
+  -- Mt      : The Modularity Type
+  -- raises  : Uninitialized_Modularity_Info_Error
+  -- raises  : Incompatible_Modules_Error
+  procedure Update_Modularity_Move_Element(Mi: in Modularity_Info; E: in Element; L: in List; Mt: in Modularity_Type);
+
+  -- Purpose : Update the Modularity contribution of a Module when an Element is Inserted
+  -- Note    : The insertion is not performed, it must be done after this call
+  --
+  -- Mi      : The Modularity Info
+  -- E       : The Inserted Element
+  -- L       : The Module
+  -- Mt      : The Modularity Type
+  -- raises  : Uninitialized_Modularity_Info_Error
+  -- raises  : Incompatible_Modules_Error
+  -- raises  : Element_In_List_Error
+  procedure Update_Modularity_Inserted_Element(Mi: in Modularity_Info; E: in Element; L: in List; Mt: in Modularity_Type);
+
+  -- Purpose : Update the Modularity contribution of a Module when an Element is Removed
+  -- Note    : The removal is not performed, it must be done before this call
+  --
+  -- Mi      : The Modularity Info
+  -- E       : The Removed Element
+  -- L       : The Module
+  -- Mt      : The Modularity Type
+  -- raises  : Uninitialized_Modularity_Info_Error
+  -- raises  : Incompatible_Modules_Error
+  -- raises  : Element_In_List_Error
+  procedure Update_Modularity_Removed_Element(Mi: in Modularity_Info; E: in Element; L: in List; Mt: in Modularity_Type);
 
   -- Purpose : Update the Modularity contribution of a Module
   --
@@ -406,11 +500,15 @@ private
   -- Modularity_Info --
   ---------------------
 
+  Null_Modularity_Rec: constant Modularity_Rec := (Reward  => Num'First,
+                                                   Penalty => Num'First,
+                                                   Total   => Num'First);
+
   No_Resistance: constant Num := Num'First;
 
   type Vertex_Info_Rec is record
     K: Natural := 0;
-    W, W_Pos, W_Neg: Num := 0.0;
+    Kr, W, W_Pos, W_Neg: Num := 0.0;
     Has_Self_Loop: Boolean := False;
     Self_Loop: Num := 0.0;
   end record;
@@ -429,8 +527,9 @@ private
     From: PVertex_Info_Recs;
     To: PVertex_Info_Recs;
     Lower_Q: Pmodularity_Recs;
+    Lower_Q_Saved: Pmodularity_Recs;
     Two_M: Natural := 0;
-    Two_W, Two_W_Pos, Two_W_Neg: Num := 0.0;
+    Two_Mr, Two_W, Two_W_Pos, Two_W_Neg: Num := 0.0;
     Two_La: Num := 0.0;
     Two_Ula: Num := 0.0;
     Self_Loops: Num := 0.0;
@@ -443,90 +542,58 @@ private
 
   type Modularity_Info is access Modularity_Info_Rec;
 
-  -- Purpose : Update the Unweighted Newman Modularity Contribution of a Module
+  -- Purpose : Update the Modularity Contribution of a Module
   --
   -- Mi      : The Modularity Info
   -- L       : The Module
-  -- raises  : Uninitialized_Modularity_Info_Error
-  -- raises  : Incompatible_Modules_Error
   procedure Update_Unweighted_Newman(Mi: in Modularity_Info; L: in List);
-
-  -- Purpose : Update the Unweighted Uniform Nullcase Modularity Contribution of a Module
-  --
-  -- Mi      : The Modularity Info
-  -- L       : The Module
-  -- raises  : Uninitialized_Modularity_Info_Error
-  -- raises  : Incompatible_Modules_Error
   procedure Update_Unweighted_Uniform_Nullcase(Mi: in Modularity_Info; L: in List);
-
-  -- Purpose : Update the Weighted Newman Modularity Contribution of a Module
-  --
-  -- Mi      : The Modularity Info
-  -- L       : The Module
-  -- raises  : Uninitialized_Modularity_Info_Error
-  -- raises  : Incompatible_Modules_Error
   procedure Update_Weighted_Newman(Mi: in Modularity_Info; L: in List);
-
-  -- Purpose : Update the Weighted Signed Modularity Contribution of a Module
-  --
-  -- Mi      : The Modularity Info
-  -- L       : The Module
-  -- raises  : Uninitialized_Modularity_Info_Error
-  -- raises  : Incompatible_Modules_Error
   procedure Update_Weighted_Signed(Mi: in Modularity_Info; L: in List);
-
-  -- Purpose : Update the Weighted Uniform Nullcase Modularity Contribution of a Module
-  --
-  -- Mi      : The Modularity Info
-  -- L       : The Module
-  -- raises  : Uninitialized_Modularity_Info_Error
-  -- raises  : Incompatible_Modules_Error
   procedure Update_Weighted_Uniform_Nullcase(Mi: in Modularity_Info; L: in List);
-
-  -- Purpose : Update the Weighted Local Average Modularity Contribution of a Module
-  --
-  -- Mi      : The Modularity Info
-  -- L       : The Module
-  -- raises  : Uninitialized_Modularity_Info_Error
-  -- raises  : Incompatible_Modules_Error
   procedure Update_Weighted_Local_Average(Mi: in Modularity_Info; L: in List);
-
-  -- Purpose : Update the Weighted Uniform Local Average Modularity Contribution of a Module
-  --
-  -- Mi      : The Modularity Info
-  -- L       : The Module
-  -- raises  : Uninitialized_Modularity_Info_Error
-  -- raises  : Incompatible_Modules_Error
   procedure Update_Weighted_Uniform_Local_Average(Mi: in Modularity_Info; L: in List);
-
-  -- Purpose : Update the Weighted Links Unweighted Nullcase Modularity Contribution of a Module
-  --
-  -- Mi      : The Modularity Info
-  -- L       : The Module
-  -- raises  : Uninitialized_Modularity_Info_Error
-  -- raises  : Incompatible_Modules_Error
   procedure Update_Weighted_Links_Unweighted_Nullcase(Mi: in Modularity_Info; L: in List);
-
-  -- Purpose : Update the Weighted No Nullcase Contribution of a Module
-  --
-  -- Mi      : The Modularity Info
-  -- L       : The Module
-  -- raises  : Uninitialized_Modularity_Info_Error
-  -- raises  : Incompatible_Modules_Error
   procedure Update_Weighted_No_Nullcase(Mi: in Modularity_Info; L: in List);
+  procedure Update_Weighted_Link_Rank(Mi: in Modularity_Info; L: in List);
 
-  -- Purpose : Update the Weighted Link Rank Contribution of a Module
+  -- Purpose : Update the Modularity Contribution of a Module when an Element is Inserted
+  -- Note    : The insertion is not performed, it must be done after this call
   --
   -- Mi      : The Modularity Info
+  -- E       : The Inserted Element
   -- L       : The Module
-  -- raises  : Uninitialized_Modularity_Info_Error
-  -- raises  : Incompatible_Modules_Error
-  procedure Update_Weighted_Link_Rank(Mi: in Modularity_Info; L: in List);
+  procedure Update_Inserted_Element_Unweighted_Newman(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Inserted_Element_Unweighted_Uniform_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Inserted_Element_Weighted_Newman(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Inserted_Element_Weighted_Signed(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Inserted_Element_Weighted_Uniform_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Inserted_Element_Weighted_Local_Average(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Inserted_Element_Weighted_Uniform_Local_Average(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Inserted_Element_Weighted_Links_Unweighted_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Inserted_Element_Weighted_No_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Inserted_Element_Weighted_Link_Rank(Mi: in Modularity_Info; E: in Element; L: in List);
+
+  -- Purpose : Update the Modularity Contribution of a Module when an Element is Removed
+  -- Note    : The removal is not performed, it must be done before this call
+  --
+  -- Mi      : The Modularity Info
+  -- E       : The Removed Element
+  -- L       : The Module
+  procedure Update_Removed_Element_Unweighted_Newman(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Removed_Element_Unweighted_Uniform_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Removed_Element_Weighted_Newman(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Removed_Element_Weighted_Signed(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Removed_Element_Weighted_Uniform_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Removed_Element_Weighted_Local_Average(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Removed_Element_Weighted_Uniform_Local_Average(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Removed_Element_Weighted_Links_Unweighted_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Removed_Element_Weighted_No_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Removed_Element_Weighted_Link_Rank(Mi: in Modularity_Info; E: in Element; L: in List);
 
   -- Purpose : Calculation of Random Walk Transitions Graph
   --
   -- Mi      : The Modularity Info
-  -- raises  : Uninitialized_Modularity_Info_Error
   procedure Transitions_Graph(Mi: in Modularity_Info);
 
   -- Gr      : The Graph

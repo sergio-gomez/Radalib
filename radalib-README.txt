@@ -1,7 +1,7 @@
 ===================================================================
-== Radalib 20171207-202220                                       ==
+== Radalib 20180129-002716                                       ==
 ==                                                               ==
-== Copyright (c) 2017 by                                         ==
+== Copyright (c) 2018 by                                         ==
 ==   Sergio Gomez             (sergio.gomez@urv.cat)             ==
 ==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==
 ==                                                               ==
@@ -100,11 +100,11 @@ Their contents are:
     platforms.
 
 
-The size of radalib at version radalib-20171207-190520 is:
+The size of radalib at version radalib-20180127-230551 is:
 
-Code   :   249 Ada files
-Files  :   654 files
-Source : 60450 lines of Ada code
+Code   :   253 Ada files
+Files  :   672 files
+Source : 63579 lines of Ada code
 
 
 -----------
@@ -199,10 +199,10 @@ The tools in Radalib are:
 - Communities_Detection
     Community detection in complex networks by optimization of modularity, using
     the following heuristics: (h) exhaustive, (t) tabu, (e) extremal, (s) spectral,
-    (f) fast, (r) fine-tuning by reposition, (b) fine-tuning based on tabu.
+    (l) louvain, (f) fast, (r) reposition, (b) fine-tuning based on tabu.
 
 - Communities_Network
-    Given a network and a community, returns the weighted network of communities.
+    Given a network and a partition, returns the weighted network of communities.
 
 - Compare_Partitions
     Calculate similarity and dissimilarity indices between two partitions.
@@ -299,7 +299,7 @@ The tools in Radalib are:
 License
 -------
 
-Radalib, Copyright (c) 2017 by
+Radalib, Copyright (c) 2018 by
 Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 
 This library is free software; you can redistribute it and/or modify it under the terms
