@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 01/04/2008
--- @revision 16/01/2018
+-- @revision 15/03/2018
 -- @brief Reposition Algorithm implementation
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;

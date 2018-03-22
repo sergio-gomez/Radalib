@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/12/2017
--- @revision 16/01/2018
+-- @revision 15/03/2018
 -- @brief Louvain Algorithm implementation
 
 with Ada.Containers.Ordered_Sets;
@@ -71,6 +71,7 @@ package body Modularities_Louvain is
     Li, Lj, Lj_Max: List;
     Ei: Finite_Disjoint_Lists.Element;
     Lol_Aux: List_Of_Lists;
+    Q_Aux: Modularity_Rec;
     El: Edges_List;
     E: Edge;
     Vi: Vertex;
@@ -143,15 +144,23 @@ package body Modularities_Louvain is
       end loop;
       -- Ensure connected communities if modularity improved
       if Increased then
+        Q := Total_Modularity(Mi);
         Connected_Components(Gr, Lol, Lol_Aux);
         if Number_Of_Lists(Lol_Aux) > Number_Of_Lists(Lol) then
-          Free(Lol);
-          Lol := Lol_Aux;
-          Update_Modularity(Mi, Lol, Mt);
+          Update_Modularity(Mi, Lol_Aux, Mt);
+          Q_Aux := Total_Modularity(Mi);
+          if Q_Aux.Total > Q.Total + Improvement_Tolerance then
+            Free(Lol);
+            Lol := Lol_Aux;
+            Q := Q_Aux;
+          else
+            Free(Lol_Aux);
+            Update_Modularity(Mi, Lol, Mt);
+            Q := Total_Modularity(Mi);
+          end if;
         else
           Free(Lol_Aux);
         end if;
-        Q := Total_Modularity(Mi);
         Us := S2U("Q = " & D2Se0(Q.Total, Aft => 6) &  "   comms = " & I2S(Number_Of_Lists(Lol)));
         Improvement_Action(Log_Name, Null_List_Of_Lists, Null_Modularity_Rec, Us);
       end if;

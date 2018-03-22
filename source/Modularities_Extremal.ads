@@ -16,7 +16,7 @@
 -- @author Javier Borge
 -- @version 1.0
 -- @date 20/11/2007
--- @revision 21/01/2018
+-- @revision 06/03/2018
 -- @brief Extremal Modularity Optimization implementation (after J. Duch and A. Arenas)
 
 with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;

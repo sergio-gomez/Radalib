@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/12/2017
--- @revision 16/01/2018
+-- @revision 15/03/2018
 -- @brief Louvain Algorithm implementation
 
 with Ada.Unchecked_Deallocation;

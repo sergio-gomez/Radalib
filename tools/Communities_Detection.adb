@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/05/2008
--- @revision 20/01/2018
+-- @revision 06/03/2018
 -- @brief Modularity optimization by combination of different heuristics
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -44,17 +44,19 @@ procedure Communities_Detection is
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
     Put_Line("===================================================================");
-    Put_Line("== Community detection in complex networks by                    ==");
-    Put_Line("== optimization of modularity:                                   ==");
-    Put_Line("==   - unweighted modularity (UN)                                ==");
-    Put_Line("==   - weighted modularity (WN)                                  ==");
-    Put_Line("==   - weighted modularity with positive and negative links (WS) ==");
-    Put_Line("==   - other measures                                            ==");
-    Put_Line("== Implements several algorithms, which can be combined:         ==");
-    Put_Line("==   - exhaustive search (h)       - louvain (l)                 ==");
-    Put_Line("==   - tabu search (t)             - fast algorithm (f)          ==");
-    Put_Line("==   - extremal (e)                - reposition (r)              ==");
-    Put_Line("==   - spectral (s)                - bootstrapping (b)           ==");
+    Put_Line("== Community detection by modularity optimization:               ==");
+    Put_Line("==   - unweighted (UN)          - uniform nullcase (UUN, WUN)    ==");
+    Put_Line("==   - weighted (WN)            - local average (WLA, WULA)      ==");
+    Put_Line("==   - weighted signed (WS)     - wh links unwh nullcase (WLUN)  ==");
+    Put_Line("==   - link rank (WLR)          - no nullcase (WNN)              ==");
+    Put_Line("== Algorithms, which can be combined:                            ==");
+    Put_Line("==   - exhaustive search (h)    - louvain (l)                    ==");
+    Put_Line("==   - tabu search (t)          - fast algorithm (f)             ==");
+    Put_Line("==   - extremal (e)             - reposition (r)                 ==");
+    Put_Line("==   - spectral (s)             - bootstrapping (b)              ==");
+    Put_Line("== Initialization modes:                                         ==");
+    Put_Line("==   - isolated (.)             - best (!)     - default (-)     ==");
+    Put_Line("==   - together (+)             - prev (:)                       ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;

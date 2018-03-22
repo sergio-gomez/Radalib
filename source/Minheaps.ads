@@ -17,7 +17,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 22/10/2007
--- @revision 21/01/2018
+-- @revision 06/03/2018
 -- @brief Treatment of Minheaps
 
 generic

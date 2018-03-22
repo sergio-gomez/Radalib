@@ -14,9 +14,10 @@
 
 -- @filename Dendrograms-Algorithms.ads
 -- @author Sergio Gomez
+-- @author Alberto Fernandez
 -- @version 1.0
 -- @date 11/05/2013
--- @revision 19/02/2016
+-- @revision 22/03/2018
 -- @brief Dendrograms Algorithms
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
@@ -37,24 +38,31 @@ package Dendrograms.Algorithms is
 
   type Clustering_Type is (Single_Linkage,
                            Complete_Linkage,
-                           Unweighted_Average,
-                           Weighted_Average,
-                           Unweighted_Centroid,
-                           Weighted_Centroid,
-                           Ward);
+                           Versatile_Linkage,
+                           Arithmetic_Linkage,
+                           Geometric_Linkage,
+                           Harmonic_Linkage,
+                           Ward,
+                           Centroid,
+                           Beta_Flexible);
+
+  type Weighting_Type  is (Weighted,
+                           Unweighted);
 
   type Deviation_Measure is (Cophenetic_Correlation,
                              Normalized_Mean_Squared_Error,
                              Normalized_Mean_Absolute_Error);
 
-  subtype Min_Max_Clustering is Clustering_Type range Single_Linkage..Complete_Linkage;
-  subtype Beta_Clustering    is Clustering_Type range Unweighted_Centroid..Ward;
+  subtype Min_Max_Clustering        is Clustering_Type range Single_Linkage..Complete_Linkage;
+  subtype Versatile_Clustering      is Clustering_Type range Versatile_Linkage..Harmonic_Linkage;
+  subtype Lance_Williams_Clustering is Clustering_Type range Ward..Beta_Flexible;
 
   subtype Dendrogram_Handler is Node_Handler;
 
   Unknown_Dendrogram_Type_Error: exception;
   Unknown_Proximity_Type_Error : exception;
   Unknown_Clustering_Type_Error: exception;
+  Unknown_Weighting_Type_Error : exception;
 
   Data_Error: exception;
   Tied_Pairs_Combinations_Overflow: exception;
@@ -100,13 +108,15 @@ package Dendrograms.Algorithms is
 
   -- Purpose : Obtain a Clustering Type from its Name
   -- Note    : Possible Names (case-insensitive):
-  -- Note    :    SL         | Single_Linkage
-  -- Note    :    CL         | Complete_Linkage
-  -- Note    :    UA | UPGMA | Unweighted_Average
-  -- Note    :    WA | WPGMA | Weighted_Average
-  -- Note    :    UC         | Unweighted_Centroid
-  -- Note    :    WC         | Weighted_Centroid
-  -- Note    :    WD         | Ward
+  -- Note    :    VL | Versatile_Linkage
+  -- Note    :    SL | Single_Linkage
+  -- Note    :    CL | Complete_Linkage
+  -- Note    :    AL | Arithmetic_Linkage
+  -- Note    :    GL | Geometric_Linkage
+  -- Note    :    HL | Harmonic_Linkage
+  -- Note    :    WD | Ward
+  -- Note    :    CD | Centroid
+  -- Note    :    BF | Beta_Flexible
   --
   -- Name    : The Clustering Type Name
   -- return  : The Clustering Type
@@ -115,17 +125,38 @@ package Dendrograms.Algorithms is
 
   -- Purpose : Obtain the Name of a Clustering Type
   -- Note    : Short and long names:
+  -- Note    :    VL | Versatile_Linkage
   -- Note    :    SL | Single_Linkage
   -- Note    :    CL | Complete_Linkage
-  -- Note    :    UA | Unweighted_Average
-  -- Note    :    WA | Weighted_Average
-  -- Note    :    UC | Unweighted_Centroid
-  -- Note    :    WC | Weighted_Centroid
+  -- Note    :    AL | Arithmetic_Linkage
+  -- Note    :    GL | Geometric_Linkage
+  -- Note    :    HL | Harmonic_Linkage
   -- Note    :    WD | Ward
+  -- Note    :    CD | Centroid
+  -- Note    :    BF | Beta_Flexible
   --
   -- Ct      : The Clustering Type
   -- return  : The Clustering Type Name
   function To_Name(Ct: in Clustering_Type; Short: in Boolean := False) return String;
+
+  -- Purpose : Obtain a Weighting Type from its Name
+  -- Note    : Possible Names (case-insensitive):
+  -- Note    :    W  | Weighted
+  -- Note    :    UW | Unweighted
+  --
+  -- Name    : The Weighting Type Name
+  -- return  : The Weighting Type
+  -- raises  : Unknown_Weighting_Type_Error
+  function Get_Weighting_Type(Name: in String) return Weighting_Type;
+
+  -- Purpose : Obtain the Name of a Weighting Type
+  -- Note    : Short and long names:
+  -- Note    :    W  | Weighted
+  -- Note    :    UW | Unweighted
+  --
+  -- Wt      : The Weighting Type
+  -- return  : The Weighting Type Name
+  function To_Name(Wt: in Weighting_Type; Short: in Boolean := False) return String;
 
   -- Purpose : Round Data to a given Precision
   -- Note    : The original Data remains unchanged
@@ -150,11 +181,13 @@ package Dendrograms.Algorithms is
   -- Data    : The Data
   -- Names   : The Names of the Elements
   -- Pt      : The Proximity Type
-  -- Ct      : The Clustering Type
   -- Precision:The number of Significant Digits for the calculations
+  -- Ct      : The Clustering Type
+  -- Wt      : The Weighting Type
+  -- Cp      : The Clustering Parameter, between -1 and +1, necessary for Versatile Linkage and Beta Flexible clusterings
   -- Md      : The Multidendrogram
   -- raises  : Data_Error
-  procedure Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural; Md: out Dendrogram);
+  procedure Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Precision: in Natural; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double; Md: out Dendrogram);
 
   -- Purpose : Perform Pair-Group Agglomerative Hierarchical Clustering to obtain all the corresponding Binary Dendrograms
   -- Note    : Data must be a squared symmetric matrix representing Distances or Similarities between a set of Elements
@@ -165,11 +198,13 @@ package Dendrograms.Algorithms is
   -- Data    : The Data
   -- Names   : The Names of the Elements
   -- Pt      : The Proximity Type
-  -- Ct      : The Clustering Type
   -- Precision:The number of Significant Digits for the calculations
+  -- Ct      : The Clustering Type
+  -- Wt      : The Weighting Type
+  -- Cp      : The Clustering Parameter, between -1 and +1, necessary for Versatile Linkage and Beta Flexible clusterings
   -- Bds     : The List of Binary Dendrograms
   -- raises  : Data_Error
-  procedure Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural; Bds: out List_Of_Dendrograms);
+  procedure Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Precision: in Natural; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double; Bds: out List_Of_Dendrograms);
 
   -- Purpose : Perform Pair-Group Agglomerative Hierarchical Clustering with execution of Handler for all the Binary Dendrograms
   -- Note    : The Binary Dendrograms are not stored
@@ -181,13 +216,15 @@ package Dendrograms.Algorithms is
   -- Data    : The Data
   -- Names   : The Names of the Elements
   -- Pt      : The Proximity Type
-  -- Ct      : The Clustering Type
   -- Precision:The number of Significant Digits for the calculations
+  -- Ct      : The Clustering Type
+  -- Wt      : The Weighting Type
+  -- Cp      : The Clustering Parameter, between -1 and +1, necessary for Versatile Linkage and Beta Flexible clusterings
   -- Handler : The Handler
   -- raises  : Data_Error
   generic
     with procedure Handler(Nod: in Node) is <>;
-  procedure Generic_Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural);
+  procedure Generic_Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Precision: in Natural; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double);
 
   -- Purpose : Perform Pair-Group Agglomerative Hierarchical Clustering with execution of Handler for all the Binary Dendrograms
   -- Note    : The Binary Dendrograms are not stored
@@ -199,11 +236,13 @@ package Dendrograms.Algorithms is
   -- Data    : The Data
   -- Names   : The Names of the Elements
   -- Pt      : The Proximity Type
-  -- Ct      : The Clustering Type
   -- Precision:The number of Significant Digits for the calculations
+  -- Ct      : The Clustering Type
+  -- Wt      : The Weighting Type
+  -- Cp      : The Clustering Parameter, between -1 and +1, necessary for Versatile Linkage and Beta Flexible clusterings
   -- Handler : The Handler
   -- raises  : Data_Error
-  procedure Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural; Handler: in Dendrogram_Handler);
+  procedure Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Precision: in Natural; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double; Handler: in Dendrogram_Handler);
 
   -- Purpose : Obtain the Ultrametrix Matrix corresponding to a Dendrogram
   -- Note    : Leaves must have distinct Ids in 1..N, where N is the number of Leaves, no check is made
@@ -279,6 +318,14 @@ package Dendrograms.Algorithms is
   -- return  : The Normalized Mean Absolute Error
   -- raises  : Data_Error
   function Get_Normalized_Mean_Absolute_Error(Orig, Um: in PDoubless) return Double;
+
+  -- Purpose : Convert the Clustering Parameter into the Exponent used in Versatile Linkage
+  -- Note    : Returns -Infinity (Double'First) or +Infinity (Double'Last) if Cp <= -1 or Cp >= +1
+  --
+  -- Pt      : The Proximity Type
+  -- Cp      : The Clustering Parameter, between -1 and +1
+  -- return  : The Exponent
+  function Versatile_Power(Pt: in Proximity_Type; Cp: in Double) return Double;
 
 
 private
@@ -416,8 +463,10 @@ private
   -- Clus_Prev:The Previous Clusters
   -- Pt      : The Proximity Type
   -- Ct      : The Clustering Type
+  -- Wt      : The Weighting Type
+  -- Cp      : The Clustering Parameter, between -1 and +1, necessary for Versatile Linkage and Beta Flexible clusterings
   -- return  : The Proximity
-  function Get_Clusters_Proximity(Prox: in PPsDoubles; Li, Lj: in List; Index_I, Index_J: in Positive; Clus, Clus_Prev: in PClusters; Pt: in Proximity_Type; Ct: in Clustering_Type) return Double;
+  function Get_Clusters_Proximity(Prox: in PPsDoubles; Li, Lj: in List; Index_I, Index_J: in Positive; Clus, Clus_Prev: in PClusters; Pt: in Proximity_Type; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double) return Double;
 
   -- Purpose : Set Lengths of Links and Heights of Leaves of a Dendrogram
   --
@@ -434,8 +483,10 @@ private
   -- Total_Clus: The Total Number of Clusters
   -- Prox    : The Proximities between Clusters
   -- Pt      : The Proximity Type
-  -- Ct      : The Clustering Type
   -- Precision:The number of Significant Digits for the calculations
-  procedure Join_Clusters(Lol: in List_Of_Lists; Clus, Clus_Prev: in PClusters; Total_Clus: in out Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural; Internal_Names: in Boolean);
+  -- Ct      : The Clustering Type
+  -- Wt      : The Weighting Type
+  -- Cp      : The Clustering Parameter, between -1 and +1, necessary for Versatile Linkage and Beta Flexible clusterings
+  procedure Join_Clusters(Lol: in List_Of_Lists; Clus, Clus_Prev: in PClusters; Total_Clus: in out Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Precision: in Natural; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double; Internal_Names: in Boolean);
 
 end Dendrograms.Algorithms;

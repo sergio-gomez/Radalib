@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 19/11/2008
--- @revision 27/01/2018
+-- @revision 06/03/2018
 -- @brief Search Mesoscales using Self-Loops
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -50,13 +50,13 @@ procedure Mesoscales_Detection is
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
     Put_Line("===================================================================");
-    Put_Line("== Mesoscales search in complex networks by optimization of      ==");
-    Put_Line("== modularity using common self-loops                            ==");
-    Put_Line("== Implements several algorithms for modularity optimization:    ==");
-    Put_Line("==   - exhaustive search (h)       - louvain (l)                 ==");
-    Put_Line("==   - tabu search (t)             - fast algorithm (f)          ==");
-    Put_Line("==   - extremal (e)                - reposition (r)              ==");
-    Put_Line("==   - spectral (s)                - bootstrapping (b)           ==");
+    Put_Line("== Mesoscales search by modularity optimization using            ==");
+    Put_Line("== resistance parameter (common self-loops)                      ==");
+    Put_Line("== Algorithms, which can be combined:                            ==");
+    Put_Line("==   - exhaustive search (h)    - louvain (l)                    ==");
+    Put_Line("==   - tabu search (t)          - fast algorithm (f)             ==");
+    Put_Line("==   - extremal (e)             - reposition (r)                 ==");
+    Put_Line("==   - spectral (s)             - bootstrapping (b)              ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;

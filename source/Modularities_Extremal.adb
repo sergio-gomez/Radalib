@@ -16,9 +16,9 @@
 -- @author Javier Borge
 -- @version 1.0
 -- @date 20/11/2007
--- @revision 21/01/2018
+-- @revision 06/03/2018
 -- @brief Extremal Modularity Optimization implementation (after J. Duch and A. Arenas)
-          with Ada.Text_IO; use Ada.Text_IO;
+
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 
 with Finite_Disjoint_Lists.Algorithms; use Finite_Disjoint_Lists.Algorithms;
@@ -83,7 +83,7 @@ package body Modularities_Extremal is
     H: Minheap;
     He: Minheap_Element;
     Rand, Aux: Float;
-    Node_Canvi: Natural;
+    Node_Canvi, Num: Natural;
     Degree: Float;
     Qi: Double;
     V: Vertex;
@@ -121,12 +121,14 @@ package body Modularities_Extremal is
     end loop;
     Restore(Sub_L2);
 
-    if H_Size > 0 then
+    Num := Number_Of_Elements(H);
+
+    if Num > 0 then
       Rand := Random(Gen);
-      Aux := Float(H_Size) ** (1.0 - Tau);
+      Aux := Float(Num) ** (1.0 - Tau);
       Rand := Rand * (1.0 - Aux);
       Rand := 1.0 - Rand;
-      Node_Canvi := Natural(Rand ** (1.0 / (1.0 - Tau)));
+      Node_Canvi := Min(Num, Natural(Rand ** (1.0 / (1.0 - Tau))));
     else
       Node_Canvi := 0;
     end if;

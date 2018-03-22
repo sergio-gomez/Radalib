@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 19/03/2010
--- @revision 26/02/2016
+-- @revision 06/03/2018
 -- @brief Obtain Links Information
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -47,33 +47,33 @@ procedure Links_Info is
   Max_Random_Links: constant Natural := 1_000_000;
   Default_Num_Random_Links: constant Natural := 0;
 
-  procedure Select_Random_Links(Num_Random_Links: in out Natural; Nun_Links: in Natural; Selected_Links: out PIntegers) is
+  procedure Select_Random_Links(Num_Random_Links: in out Natural; Num_Links: in Natural; Selected_Links: out PIntegers) is
     G: Generator;
     This_Link: PBooleans;
     I_Random: Positive;
   begin
-    if Num_Random_Links >= Nun_Links or Num_Random_Links > Max_Random_Links then
+    if Num_Random_Links >= Num_Links or Num_Random_Links > Max_Random_Links then
       Num_Random_Links := 0;
       Selected_Links := null;
     end if;
     if Num_Random_Links /= 0 then
-      This_Link := Alloc(1, Nun_Links);
+      This_Link := Alloc(1, Num_Links);
       Reset(G);
-      if Num_Random_Links <= Nun_Links / 2 then
+      if Num_Random_Links <= Num_Links / 2 then
         This_Link.all := (others => False);
         for I in 1..Num_Random_Links loop
-          I_Random := Random_Uniform(G, 1, Nun_Links);
+          I_Random := Random_Uniform(G, 1, Num_Links);
           while This_Link(I_Random) loop
-            I_Random := Random_Uniform(G, 1, Nun_Links);
+            I_Random := Random_Uniform(G, 1, Num_Links);
           end loop;
           This_Link(I_Random) := True;
         end loop;
       else
         This_Link.all := (others => True);
-        for I in 1..(Nun_Links - Num_Random_Links) loop
-          I_Random := Random_Uniform(G, 1, Nun_Links);
+        for I in 1..(Num_Links - Num_Random_Links) loop
+          I_Random := Random_Uniform(G, 1, Num_Links);
           while not This_Link(I_Random) loop
-            I_Random := Random_Uniform(G, 1, Nun_Links);
+            I_Random := Random_Uniform(G, 1, Num_Links);
           end loop;
           This_Link(I_Random) := False;
         end loop;

@@ -14,12 +14,14 @@
 
 -- @filename Dendrograms-Algorithms.adb
 -- @author Sergio Gomez
+-- @author Alberto Fernandez
 -- @version 1.0
 -- @date 11/05/2013
--- @revision 19/02/2016
+-- @revision 22/03/2018
 -- @brief Dendrograms Algorithms
 
 with Ada.Unchecked_Deallocation;
+with Ada.Numerics.Long_Elementary_Functions; use Ada.Numerics.Long_Elementary_Functions;
 with Finite_Disjoint_Lists.Algorithms; use Finite_Disjoint_Lists.Algorithms;
 
 package body Dendrograms.Algorithms is
@@ -92,20 +94,24 @@ package body Dendrograms.Algorithms is
 
   function Get_Clustering_Type(Name: in String) return Clustering_Type is
   begin
-    if    To_Uppercase(Name) = "SL" or To_Lowercase(Name) = "single_linkage"      then
+    if    To_Uppercase(Name) = "VL" or To_Lowercase(Name) = "versatile_linkage"  then
+      return Versatile_Linkage;
+    elsif To_Uppercase(Name) = "SL" or To_Lowercase(Name) = "single_linkage"     then
       return Single_Linkage;
-    elsif To_Uppercase(Name) = "CL" or To_Lowercase(Name) = "complete_linkage"    then
+    elsif To_Uppercase(Name) = "CL" or To_Lowercase(Name) = "complete_linkage"   then
       return Complete_Linkage;
-    elsif To_Uppercase(Name) = "UA" or To_Lowercase(Name) = "unweighted_average"  or To_Uppercase(Name) = "UPGMA" then
-      return Unweighted_Average;
-    elsif To_Uppercase(Name) = "WA" or To_Lowercase(Name) = "weighted_average"    or To_Uppercase(Name) = "WPGMA" then
-      return Weighted_Average;
-    elsif To_Uppercase(Name) = "UC" or To_Lowercase(Name) = "unweighted_centroid" then
-      return Unweighted_Centroid;
-    elsif To_Uppercase(Name) = "WC" or To_Lowercase(Name) = "weighted_centroid"   then
-      return Weighted_Centroid;
-    elsif To_Uppercase(Name) = "WD" or To_Lowercase(Name) = "ward"                then
+    elsif To_Uppercase(Name) = "AL" or To_Lowercase(Name) = "arithmetic_linkage" then
+      return Arithmetic_Linkage;
+    elsif To_Uppercase(Name) = "GL" or To_Lowercase(Name) = "geometric_linkage"  then
+      return Geometric_Linkage;
+    elsif To_Uppercase(Name) = "HL" or To_Lowercase(Name) = "harmonic_linkage"   then
+      return Harmonic_Linkage;
+    elsif To_Uppercase(Name) = "WD" or To_Lowercase(Name) = "ward"               then
       return Ward;
+    elsif To_Uppercase(Name) = "CD" or To_Lowercase(Name) = "centroid"           then
+      return Centroid;
+    elsif To_Uppercase(Name) = "BF" or To_Lowercase(Name) = "beta_flexible"      then
+      return Beta_Flexible;
     else
       raise Unknown_Clustering_Type_Error;
     end if;
@@ -119,16 +125,49 @@ package body Dendrograms.Algorithms is
   begin
     if Short then
       case Ct is
-        when Single_Linkage      => return "SL";
-        when Complete_Linkage    => return "CL";
-        when Unweighted_Average  => return "UA";
-        when Weighted_Average    => return "WA";
-        when Unweighted_Centroid => return "UC";
-        when Weighted_Centroid   => return "WC";
-        when Ward                => return "WD";
+        when Versatile_Linkage  => return "VL";
+        when Single_Linkage     => return "SL";
+        when Complete_Linkage   => return "CL";
+        when Arithmetic_Linkage => return "AL";
+        when Geometric_Linkage  => return "GL";
+        when Harmonic_Linkage   => return "HL";
+        when Ward               => return "WD";
+        when Centroid           => return "CD";
+        when Beta_Flexible      => return "BF";
       end case;
     else
       return Capitalize(Clustering_Type'Image(Ct));
+    end if;
+  end To_Name;
+
+  ------------------------
+  -- Get_Weighting_Type --
+  ------------------------
+
+  function Get_Weighting_Type(Name: in String) return Weighting_Type is
+  begin
+    if    To_Uppercase(Name) = "W"  or To_Lowercase(Name) = "weighted"   then
+      return Weighted;
+    elsif To_Uppercase(Name) = "UW" or To_Lowercase(Name) = "unweighted" then
+      return Unweighted;
+    else
+      raise Unknown_Weighting_Type_Error;
+    end if;
+  end Get_Weighting_Type;
+
+  -------------
+  -- To_Name --
+  -------------
+
+  function To_Name(Wt: in Weighting_Type; Short: in Boolean := False) return String is
+  begin
+    if Short then
+      case Wt is
+        when Weighted   => return "W";
+        when Unweighted => return "UW";
+      end case;
+    else
+      return Capitalize(Weighting_Type'Image(Wt));
     end if;
   end To_Name;
 
@@ -170,7 +209,7 @@ package body Dendrograms.Algorithms is
   -- Hierarchical_Clustering --
   -----------------------------
 
-  procedure Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural; Md: out Dendrogram) is
+  procedure Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Precision: in Natural; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double; Md: out Dendrogram) is
 
     No_Value: constant Double := Double'First;
 
@@ -236,7 +275,7 @@ package body Dendrograms.Algorithms is
       Find_Joining_Clusters(Clus, Num_Clus, Prox, Pt, Precision, Lol);
       Num_Clus := Number_Of_Lists(Lol);
 
-      Join_Clusters(Lol, Clus, Clus_Prev, Total_Clus, Prox, Pt, Ct, Precision, Internal_Names);
+      Join_Clusters(Lol, Clus, Clus_Prev, Total_Clus, Prox, Pt, Precision, Ct, Wt, Cp, Internal_Names);
       Free(Lol);
     end loop;
 
@@ -256,7 +295,7 @@ package body Dendrograms.Algorithms is
   -- Hierarchical_Clustering --
   -----------------------------
 
-  procedure Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural; Bds: out List_Of_Dendrograms) is
+  procedure Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Precision: in Natural; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double; Bds: out List_Of_Dendrograms) is
 
     procedure Save_Dendrogram(T: in Dendrogram) is
     begin
@@ -267,14 +306,14 @@ package body Dendrograms.Algorithms is
 
   begin
     Initialize(Bds);
-    Hierarchical_Clust(Data, Names, Pt, Ct, Precision);
+    Hierarchical_Clust(Data, Names, Pt, Precision, Ct, Wt, Cp);
   end Hierarchical_Clustering;
 
   -------------------------------------
   -- Generic_Hierarchical_Clustering --
   -------------------------------------
 
-  procedure Generic_Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural) is
+  procedure Generic_Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Precision: in Natural; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double) is
 
     procedure Recursive_Clustering(Clus: in PClusters; Num_Clus, Total_Clus: in Positive; Prox: in PPsDoubles; Internal_Names: in Boolean) is
       T: Dendrogram;
@@ -299,7 +338,7 @@ package body Dendrograms.Algorithms is
           Clus_New.all := Clus.all;
           Num_Cl   := Number_Of_Lists(Lol);
           Total_Cl := Total_Clus;
-          Join_Clusters(Lol, Clus_New, Clus, Total_Cl, Prox, Pt, Ct, Precision, Internal_Names);
+          Join_Clusters(Lol, Clus_New, Clus, Total_Cl, Prox, Pt, Precision, Ct, Wt, Cp, Internal_Names);
 
           Recursive_Clustering(Clus_New, Num_Cl, Total_Cl, Prox, Internal_Names);
           Free(Clus_New);
@@ -379,10 +418,10 @@ package body Dendrograms.Algorithms is
   -- Hierarchical_Clustering --
   -----------------------------
 
-  procedure Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural; Handler: in Dendrogram_Handler) is
+  procedure Hierarchical_Clustering(Data: in PDoubless; Names: in PUstrings; Pt: in Proximity_Type; Precision: in Natural; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double; Handler: in Dendrogram_Handler) is
     procedure Hierarchical_Clust is new Generic_Hierarchical_Clustering(Handler.all);
   begin
-    Hierarchical_Clust(Data, Names, Pt, Ct, Precision);
+    Hierarchical_Clust(Data, Names, Pt, Precision, Ct, Wt, Cp);
   end Hierarchical_Clustering;
 
   ----------------------------
@@ -1016,45 +1055,133 @@ package body Dendrograms.Algorithms is
     Set_Value(Nod, Nod_Inf);
   end Set_Cluster_Heterogeneity;
 
+  ---------------------
+  -- Versatile_Power --
+  ---------------------
+
+  function Versatile_Power(Pt: in Proximity_Type; Cp: in Double) return Double is
+    S1: constant Double := 0.1;  -- 0 < S1 = Sigmoid(1) < 1
+  begin
+    if    (Pt = Distance and Cp <= -1.0) or (Pt = Similarity and Cp >= +1.0) then
+      return Double'First;
+    elsif (Pt = Distance and Cp >= +1.0) or (Pt = Similarity and Cp <= -1.0) then
+      return Double'Last;
+    else
+      if Pt = Distance then
+        return Log((1.0 + Cp) / (1.0 - Cp)) / Log((1.0 + S1) / (1.0 - S1));
+      else
+        return Log((1.0 - Cp) / (1.0 + Cp)) / Log((1.0 + S1) / (1.0 - S1));
+      end if;
+    end if;
+  end Versatile_Power;
+
   ----------------------------
   -- Get_Clusters_Proximity --
   ----------------------------
 
-  function Get_Clusters_Proximity(Prox: in PPsDoubles; Li, Lj: in List; Index_I, Index_J: in Positive; Clus, Clus_Prev: in PClusters; Pt: in Proximity_Type; Ct: in Clustering_Type) return Double is
+  function Get_Clusters_Proximity(Prox: in PPsDoubles; Li, Lj: in List; Index_I, Index_J: in Positive; Clus, Clus_Prev: in PClusters; Pt: in Proximity_Type; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double) return Double is
 
-    function Alpha_ij(Ct: in Clustering_Type; S_I, S_Xi, S_X_I, S_J, S_Xj, S_X_J: Positive) return Double is
+    function Alpha_ij(Pt: in Proximity_Type; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double; S_I, S_Xi, S_X_I, S_J, S_Xj, S_X_J: Positive) return Double is
     begin
       case Ct is
-        when Single_Linkage      => return 0.0;
-        when Complete_Linkage    => return 0.0;
-        when Unweighted_Average  => return Double(S_Xi * S_Xj) / Double(S_X_I * S_X_J);
-        when Weighted_Average    => return 1.0 / Double(S_I * S_J);
-        when Unweighted_Centroid => return Double(S_Xi * S_Xj) / Double(S_X_I * S_X_J);
-        when Weighted_Centroid   => return 1.0 / Double(S_I * S_J);
-        when Ward                => return Double(S_Xi + S_Xj) / Double(S_X_I + S_X_J);
+        when Single_Linkage     => return 0.0;
+        when Complete_Linkage   => return 0.0;
+        when Versatile_Linkage  => return 0.0;
+        when Arithmetic_Linkage => return 0.0;
+        when Geometric_Linkage  => return 0.0;
+        when Harmonic_Linkage   => return 0.0;
+        when Ward               => return Double(S_Xi + S_Xj) / Double(S_X_I + S_X_J);
+        when Centroid           => if Wt = Weighted then
+                                     return 1.0 / Double(S_I * S_J);
+                                   else
+                                     return Double(S_Xi * S_Xj) / Double(S_X_I * S_X_J);
+                                   end if;
+        when Beta_Flexible      => if Wt = Weighted then
+                                     if Pt = Distance then
+                                       return (1.0 - Cp) / Double(S_I * S_J);
+                                     else
+                                       return (1.0 + Cp) / Double(S_I * S_J);
+                                     end if;
+                                   else
+                                     if Pt = Distance then
+                                       return (1.0 - Cp) * Double(S_Xi * S_Xj) / Double(S_X_I * S_X_J);
+                                     else
+                                       return (1.0 + Cp) * Double(S_Xi * S_Xj) / Double(S_X_I * S_X_J);
+                                     end if;
+                                   end if;
       end case;
     end Alpha_ij;
 
-    function Beta_ii(Ct: in Clustering_Type; S_I, S_Xi1, S_Xi2, S_X_I, S_X_J: Positive) return Double is
+    function Beta_ii(Pt: in Proximity_Type; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double; S_I, S_Xi1, S_Xi2, S_X_I, S_X_J: Positive; Sig_I, Sig_J: Natural) return Double is
     begin
       case Ct is
-        when Single_Linkage      => return 0.0;
-        when Complete_Linkage    => return 0.0;
-        when Unweighted_Average  => return 0.0;
-        when Weighted_Average    => return 0.0;
-        when Unweighted_Centroid => return - Double(S_Xi1 * S_Xi2) / Double(S_X_I * S_X_I);
-        when Weighted_Centroid   => return -1.0 / Double(S_I * S_I);
-        when Ward                => return - (Double(S_X_J) / Double(S_X_I)) * (Double(S_Xi1 + S_Xi2) / Double(S_X_I + S_X_J));
+        when Single_Linkage     => return 0.0;
+        when Complete_Linkage   => return 0.0;
+        when Versatile_Linkage  => return 0.0;
+        when Arithmetic_Linkage => return 0.0;
+        when Geometric_Linkage  => return 0.0;
+        when Harmonic_Linkage   => return 0.0;
+        when Ward               => return - (Double(S_X_J) / Double(S_X_I)) * (Double(S_Xi1 + S_Xi2) / Double(S_X_I + S_X_J));
+        when Centroid           => if Wt = Weighted then
+                                     return - 1.0 / Double(S_I * S_I);
+                                   else
+                                     return - Double(S_Xi1 * S_Xi2) / Double(S_X_I * S_X_I);
+                                   end if;
+        when Beta_Flexible      => if Wt = Weighted then
+                                     if Pt = Distance then
+                                       return + Cp / Double(Sig_I + Sig_J);
+                                     else
+                                       return - Cp / Double(Sig_I + Sig_J);
+                                     end if;
+                                   else
+                                     if Pt = Distance then
+                                       return + Cp * Double(S_Xi1 * S_Xi2) / Double(Sig_I + Sig_J);
+                                     else
+                                       return - Cp * Double(S_Xi1 * S_Xi2) / Double(Sig_I + Sig_J);
+                                     end if;
+                                   end if;
       end case;
     end Beta_ii;
 
-    function Beta_jj(Ct: in Clustering_Type; S_J, S_Xj1, S_Xj2, S_X_J, S_X_I: Positive) return Double renames Beta_ii;
+    function Beta_jj(Pt: in Proximity_Type; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double; S_J, S_Xj1, S_Xj2, S_X_J, S_X_I: Positive; Sig_J, Sig_I: Natural) return Double renames Beta_ii;
+
+    function Sigma_I(Li: in List; Clus_Prev: in PClusters; Wt: in Weighting_Type) return Natural is
+      I1, I2: Positive;
+      S_I, S_Xi1, S_Xi2: Positive;
+      Sig_I: Natural;
+    begin
+      if Wt = Weighted then
+        S_I := Number_Of_Elements(Li);
+        return S_I * (S_I - 1) / 2;
+      else
+        Sig_I := 0;
+        Save(Li);
+        Reset(Li);
+        while Has_Next_Element(Li) loop
+          I1 := Index_Of(Next_Element(Li));
+          S_Xi1 := Clus_Prev(I1).Num_Leaves;
+          Save(Li);
+          while Has_Next_Element(Li) loop
+            I2 := Index_Of(Next_Element(Li));
+            S_Xi2 := Clus_Prev(I2).Num_Leaves;
+            Sig_I := Sig_I + S_Xi1 * S_Xi2;
+          end loop;
+          Restore(Li);
+        end loop;
+        Restore(Li);
+        return Sig_I;
+      end if;
+    end Sigma_I;
+
+    function Sigma_J(Lj: in List; Clus_Prev: in PClusters; Wt: in Weighting_Type) return Natural renames Sigma_I;
 
     I, I1, I2, J, J1, J2: Positive;
     S_I, S_Xi, S_Xi1, S_Xi2, S_X_I: Positive;
     S_J, S_Xj, S_Xj1, S_Xj2, S_X_J: Positive;
     Dii, Djj, Dij, Dij_Min, Dij_Max: Double;
     D, D_I_I, D_I_J, D_J_J: Double;
+    P: Double;
+    Sig_I, Sig_J: Natural;
   begin
     S_I := Number_Of_Elements(Li);
     S_J := Number_Of_Elements(Lj);
@@ -1067,7 +1194,11 @@ package body Dendrograms.Algorithms is
     end if;
 
     -- Inter-cluster contribution
-    D_I_J := 0.0;
+    if (Ct = Geometric_Linkage) or (Ct = Versatile_Linkage and Cp = 0.0) then
+      D_I_J := 1.0;
+    else
+      D_I_J := 0.0;
+    end if;
     Dij_Min := Double'Last;
     Dij_Max := Double'First;
     Save(Li);
@@ -1081,24 +1212,40 @@ package body Dendrograms.Algorithms is
         J := Index_Of(Next_Element(Lj));
         S_Xj := Clus_Prev(J).Num_Leaves;
         Dij := Get_Proximity(Prox, Clus_Prev(I).Id, Clus_Prev(J).Id);
-        if Ct in Min_Max_Clustering then
+        if (Ct in Min_Max_Clustering) or (Ct = Versatile_Linkage and abs(Cp) >= 1.0) then
           if Dij < Dij_Min then
             Dij_Min := Dij;
           end if;
           if Dij > Dij_Max then
             Dij_Max := Dij;
           end if;
+        elsif (Ct = Geometric_Linkage) or (Ct = Versatile_Linkage and Cp = 0.0) then
+          if Wt = Weighted then
+            D_I_J := D_I_J * Dij;
+          else
+            D_I_J := D_I_J * (Dij ** (S_Xi * S_Xj));
+          end if;
+        elsif Ct in Versatile_Clustering then
+          P := Versatile_Power(Pt, Cp);
+          if Wt = Weighted then
+            D_I_J := D_I_J + (Dij ** P);
+          else
+            D_I_J := D_I_J + S_Xi * S_Xj * (Dij ** P);
+          end if;
         else
-          D_I_J := D_I_J + Alpha_ij(Ct, S_I, S_Xi, S_X_I, S_J, S_Xj, S_X_J) * Dij;
+          D_I_J := D_I_J + Alpha_ij(Pt, Ct, Wt, Cp, S_I, S_Xi, S_X_I, S_J, S_Xj, S_X_J) * Dij;
         end if;
       end loop;
       Restore(Lj);
     end loop;
     Restore(Li);
 
+    Sig_I := Sigma_I(Li, Clus_Prev, Wt);
+    Sig_J := Sigma_J(Lj, Clus_Prev, Wt);
+
     -- Intra-cluster contribution of First Cluster
     D_I_I := 0.0;
-    if S_I > 1 and Ct in Beta_Clustering then
+    if S_I > 1 and Ct in Lance_Williams_Clustering then
       Save(Li);
       Reset(Li);
       while Has_Next_Element(Li) loop
@@ -1109,7 +1256,7 @@ package body Dendrograms.Algorithms is
           I2 := Index_Of(Next_Element(Li));
           S_Xi2 := Clus_Prev(I2).Num_Leaves;
           Dii := Get_Proximity(Prox, Clus_Prev(I1).Id, Clus_Prev(I2).Id);
-          D_I_I := D_I_I + Beta_ii(Ct, S_I, S_Xi1, S_Xi2, S_X_I, S_X_J) * Dii;
+          D_I_I := D_I_I + Beta_ii(Pt, Ct, Wt, Cp, S_I, S_Xi1, S_Xi2, S_X_I, S_X_J, Sig_I, Sig_J) * Dii;
         end loop;
         Restore(Li);
       end loop;
@@ -1118,7 +1265,7 @@ package body Dendrograms.Algorithms is
 
     -- Intra-cluster contribution of Second Cluster
     D_J_J := 0.0;
-    if S_J > 1 and Ct in Beta_Clustering then
+    if S_J > 1 and Ct in Lance_Williams_Clustering then
       Save(Lj);
       Reset(Lj);
       while Has_Next_Element(Lj) loop
@@ -1129,7 +1276,7 @@ package body Dendrograms.Algorithms is
           J2 := Index_Of(Next_Element(Lj));
           S_Xj2 := Clus_Prev(J2).Num_Leaves;
           Djj := Get_Proximity(Prox, Clus_Prev(J1).Id, Clus_Prev(J2).Id);
-          D_J_J := D_J_J + Beta_jj(Ct, S_J, S_Xj1, S_Xj2, S_X_J, S_X_I) * Djj;
+          D_J_J := D_J_J + Beta_jj(Pt, Ct, Wt, Cp, S_J, S_Xj1, S_Xj2, S_X_J, S_X_I, Sig_J, Sig_I) * Djj;
         end loop;
         Restore(Lj);
       end loop;
@@ -1137,10 +1284,23 @@ package body Dendrograms.Algorithms is
     end if;
 
     -- Total contribution to Clusters Proximity
-    if (Pt = Distance and Ct = Single_Linkage) or (Pt = Similarity and Ct = Complete_Linkage) then
+    if    (Pt = Distance and Ct = Single_Linkage  ) or (Pt = Distance and Ct = Versatile_Linkage and Cp <= -1.0) or (Pt = Similarity and Ct = Complete_Linkage) or (Pt = Similarity and Ct = Versatile_Linkage and Cp >= +1.0) then
       D := Dij_Min;
-    elsif (Pt = Distance and Ct = Complete_Linkage) or (Pt = Similarity and Ct = Single_Linkage) then
+    elsif (Pt = Distance and Ct = Complete_Linkage) or (Pt = Distance and Ct = Versatile_Linkage and Cp >= +1.0) or (Pt = Similarity and Ct = Single_Linkage  ) or (Pt = Similarity and Ct = Versatile_Linkage and Cp <= -1.0) then
       D := Dij_Max;
+    elsif (Ct = Geometric_Linkage) or (Ct = Versatile_Linkage and Cp = 0.0) then
+      if Wt = Weighted then
+        D := D_I_J ** (1.0 / Double(S_I * S_J));
+      else
+        D := D_I_J ** (1.0 / Double(S_X_I * S_X_J));
+      end if;
+    elsif Ct in Versatile_Clustering then
+      P := Versatile_Power(Pt, Cp);
+      if Wt = Weighted then
+        D := (D_I_J / Double(S_I * S_J)) ** (1.0 / P);
+      else
+        D := (D_I_J / Double(S_X_I * S_X_J)) ** (1.0 / P);
+      end if;
     else
       D := D_I_I + D_I_J + D_J_J;
     end if;
@@ -1223,7 +1383,7 @@ package body Dendrograms.Algorithms is
   -- Join_Clusters --
   -------------------
 
-  procedure Join_Clusters(Lol: in List_Of_Lists; Clus, Clus_Prev: in PClusters; Total_Clus: in out Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Ct: in Clustering_Type; Precision: in Natural; Internal_Names: in Boolean) is
+  procedure Join_Clusters(Lol: in List_Of_Lists; Clus, Clus_Prev: in PClusters; Total_Clus: in out Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Precision: in Natural; Ct: in Clustering_Type; Wt: in Weighting_Type; Cp: in Double; Internal_Names: in Boolean) is
     Nod: Node;
     Nod_Inf: Node_Info;
     C, Ci, Cj: Natural;
@@ -1287,7 +1447,7 @@ package body Dendrograms.Algorithms is
         Lj := Next_List(Lol);
         Cj := Cj + 1;
         if Number_Of_Elements(Li) > 1 or Number_Of_Elements(Lj) > 1 then
-          D := Get_Clusters_Proximity(Prox, Li, Lj, Ci, Cj, Clus, Clus_Prev, Pt, Ct);
+          D := Get_Clusters_Proximity(Prox, Li, Lj, Ci, Cj, Clus, Clus_Prev, Pt, Ct, Wt, Cp);
           Set_Proximity(Prox, Clus(Ci).Id, Clus(Cj).Id, D);
         end if;
       end loop;

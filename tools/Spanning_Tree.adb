@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 25/02/2011
--- @revision 26/02/2016
+-- @revision 06/03/2018
 -- @brief Minimum or Maximum Spanning Tree
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -96,6 +96,7 @@ begin
   end if;
 
   Put_Line(U2S(Net_Name) & "  ->  " & U2S(Mst_Net_Name));
+  Put_Line(Capitalize(Graphs_Integer_Algorithms.Optimum_Type'Image(To_Optimum_Type(U2S(Optim_Name)))) & " spanning tree");
 
   Wh_Id := To_Type_Id(U2S(Wh_Id_Name));
 

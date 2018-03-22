@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/03/2008
--- @revision 26/02/2016
+-- @revision 06/03/2018
 -- @brief Compare Partitions
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -337,6 +337,7 @@ begin
   end if;
 
   if Ct_Name /= Null_Ustring then
+    Put_Line(U2S(Lol1_Name) & " + " & U2S(Lol2_Name) & " -> " & U2S(Ct_Name));
     if File_Exists(U2S(Ct_Name)) then
       Delete_File(U2S(Ct_Name));
     end if;

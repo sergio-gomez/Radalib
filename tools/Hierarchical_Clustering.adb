@@ -14,9 +14,10 @@
 
 -- @filename Hierarchical_Clustering.adb
 -- @author Sergio Gomez
+-- @author Alberto Fernandez
 -- @version 1.0
 -- @date 08/05/2013
--- @revision 26/02/2016
+-- @revision 22/03/2018
 -- @brief Agglomerative Hierarchical Clustering with MultiDendrograms and Binary Dendrograms
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -49,13 +50,21 @@ procedure Hierarchical_Clustering is
     Put_Line("== Agglomerative Hierarchical Clustering with MultiDendrograms   ==");
     Put_Line("== and Binary Dendrograms, for distances and similarities        ==");
     Put_Line("== Algorithms implemented:                                       ==");
-    Put_Line("==   - Single linkage                                            ==");
-    Put_Line("==   - Complete linkage                                          ==");
-    Put_Line("==   - Unweighted average                                        ==");
-    Put_Line("==   - Weighted average                                          ==");
-    Put_Line("==   - Unweighted centroid                                       ==");
-    Put_Line("==   - Weighted centroid                                         ==");
-    Put_Line("==   - Ward                                                      ==");
+    Put_Line("==   - (VL) Versatile linkage       - (HL) Harmonic linkage      ==");
+    Put_Line("==   - (SL) Single linkage          - (WD) Ward                  ==");
+    Put_Line("==   - (CL) Complete linkage        - (CD) Centroid              ==");
+    Put_Line("==   - (AL) Arithmetic linkage      - (BF) Beta flexible         ==");
+    Put_Line("==   - (GL) Geometric linkage                                    ==");
+    Put_Line("==                                                               ==");
+    Put_Line("== Equivalences between clustering algorithms:                   ==");
+    Put_Line("==   Arithmetic Linkage Unweighted  = UPGMA                      ==");
+    Put_Line("==   Versatile Linkage (param +1.0) = Complete Linkage           ==");
+    Put_Line("==   Versatile Linkage (param +0.1) = Arithmetic Linkage         ==");
+    Put_Line("==   Versatile Linkage (param  0.0) = Geometric Linkage          ==");
+    Put_Line("==   Versatile Linkage (param -0.1) = Harmonic Linkage           ==");
+    Put_Line("==   Versatile Linkage (param -1.0) = Single Linkage             ==");
+    Put_Line("==   Beta Flexible     (param  0.0) = Arithmetic Linkage         ==");
+    Put_Line("==                                                               ==");
     Put_Line("== MultiDendrograms generates always a unique dendrogram         ==");
     Put_Line("== For Binary Dendrograms, in case of ties, many dendrograms     ==");
     Put_Line("== may exist, and this tool can enumerate or count all of them,  ==");
@@ -216,6 +225,8 @@ procedure Hierarchical_Clustering is
   end Put_Ultrametric;
 
   -- Constants and variables
+  Default_Weighting_Type: constant Weighting_Type := Unweighted;
+  Default_Clustering_Parameter: constant Double := 0.0;
   Default_Dendrogram_Mode: constant Dendrogram_Mode := Sorted;
 
   Text_Sufix     : constant String  := "-tree.txt";
@@ -229,12 +240,14 @@ procedure Hierarchical_Clustering is
   Fn_In, Fn_Out: Ustring;
   Dt: Dendrogram_Type;
   Pt: Proximity_Type;
-  Ct: Clustering_Type;
   Precision: Natural := 0;
-  Dm: Dendrogram_Mode;
+  Ct: Clustering_Type;
+  Wt: Weighting_Type := Default_Weighting_Type;
+  Cp: Double := Default_Clustering_Parameter;
+  Dm: Dendrogram_Mode := Default_Dendrogram_Mode;
   Px: Ustring := Null_Ustring;
 
-  Auto_Precision: Boolean;
+  Auto_Precision: Boolean := True;
   Fn_Out_Text: Ustring;
   Fn_Out_Json: Ustring;
   Fn_Out_Newick: Ustring;
@@ -245,7 +258,8 @@ procedure Hierarchical_Clustering is
   Ft_Newick: File_Type;
   Ft_Measures: File_Type;
   Ft_Ultra: File_Type;
-  N: Natural;
+  I, N: Natural;
+  Ve: Double;
   Data, Um: PDoubless;
   Dendros: List_Of_Dendrograms;
   Col_Name, Row_Name, Names: PUstrings;
@@ -315,71 +329,52 @@ procedure Hierarchical_Clustering is
 begin
   Put_Info;
 
-  if Argument_Count = 5 then
+  if 5 <= Argument_Count and Argument_Count <= 10 then
     Fn_In  := S2U(Argument(1));
     Fn_Out := S2U(Argument(2));
     Dt := Get_Dendrogram_Type(Argument(3));
     Pt := Get_Proximity_Type(Argument(4));
-    Ct := Get_Clustering_Type(Argument(5));
-    Auto_Precision := True;
-    Dm := Default_Dendrogram_Mode;
-    Px := Null_Ustring;
-  elsif Argument_Count = 6 then
-    Fn_In  := S2U(Argument(1));
-    Fn_Out := S2U(Argument(2));
-    Dt := Get_Dendrogram_Type(Argument(3));
-    Pt := Get_Proximity_Type(Argument(4));
-    Ct := Get_Clustering_Type(Argument(5));
-    if Is_Integer(Argument(6)) then
-      Precision := S2I(Argument(6));
+    I := 5;
+    if Is_Integer(Argument(I)) then
+      Precision := S2I(Argument(I));
+      I := I + 1;
       Auto_Precision := False;
-      Dm := Default_Dendrogram_Mode;
-      Px := Null_Ustring;
-    else
-      Auto_Precision := True;
+    end if;
+    Ct := Get_Clustering_Type(Argument(I));
+    I := I + 1;
+    if I <= Argument_Count then
       begin
-        Dm := Get_Dendrogram_Mode(Argument(6));
-        Px := Null_Ustring;
+        Wt := Get_Weighting_Type(Argument(I));
+        I := I + 1;
+      exception
+        when others =>
+          Wt := Default_Weighting_Type;
+      end;
+    end if;
+    if I <= Argument_Count then
+      begin
+        Cp := S2D(Argument(I));
+        I := I + 1;
+      exception
+        when others =>
+          Cp := Default_Clustering_Parameter;
+      end;
+    end if;
+    if I <= Argument_Count then
+      begin
+        Dm := Get_Dendrogram_Mode(Argument(I));
+        I := I + 1;
       exception
         when others =>
           Dm := Default_Dendrogram_Mode;
-          Px := S2U(Argument(6));
       end;
     end if;
-  elsif Argument_Count = 7 then
-    Fn_In  := S2U(Argument(1));
-    Fn_Out := S2U(Argument(2));
-    Dt := Get_Dendrogram_Type(Argument(3));
-    Pt := Get_Proximity_Type(Argument(4));
-    Ct := Get_Clustering_Type(Argument(5));
-    if Is_Integer(Argument(6)) then
-      Precision := S2I(Argument(6));
-      Auto_Precision := False;
-      begin
-        Dm := Get_Dendrogram_Mode(Argument(7));
-        Px := Null_Ustring;
-      exception
-        when others =>
-          Dm := Default_Dendrogram_Mode;
-          Px := S2U(Argument(7));
-      end;
-    else
-      Auto_Precision := True;
-      Dm := Get_Dendrogram_Mode(Argument(6));
-      Px := S2U(Argument(7));
+    if I <= Argument_Count then
+      Px := S2U(Argument(I));
+      I := I + 1;
     end if;
-  elsif Argument_Count = 8 then
-    Fn_In  := S2U(Argument(1));
-    Fn_Out := S2U(Argument(2));
-    Dt := Get_Dendrogram_Type(Argument(3));
-    Pt := Get_Proximity_Type(Argument(4));
-    Ct := Get_Clustering_Type(Argument(5));
-    Precision := S2I(Argument(6));
-    Auto_Precision := False;
-    Dm := Get_Dendrogram_Mode(Argument(7));
-    Px := S2U(Argument(8));
   else
-    Put_Line("Usage:  " & Command_Name & "  proximities_name  output_prefix  dendrogram_type  proximity_type  clustering_type  [ precision ]  [ dendrogram_mode ]  [ internal_nodes_prefix ]");
+    Put_Line("Usage:  " & Command_Name & "  proximities_name  output_prefix  dendrogram_type  proximity_type  [ precision ]  clustering_type  [ weighting_type ]  [ clustering_parameter ]  [ dendrogram_mode ]  [ internal_nodes_prefix ]");
     New_Line;
     Put_Line("   proximities_name      :  name of the proximities file, either in matrix or list form");
     Put_Line("                              in matrix form, the names may be in first column, first row, or none");
@@ -391,7 +386,7 @@ begin
     New_Line;
     Put_Line("   dendrogram_type       :  MD | BD");
     Put_Line("                              also lowercase symbols");
-    Put_Line("                              also case-insensitive short and full names (Distance, ...)");
+    Put_Line("                              also case-insensitive short and full names (Multidendrogram, ...)");
     Put_Line("                              MD | Multidendrogram");
     Put_Line("                              BD | Binary_Dendrogram");
     New_Line;
@@ -401,19 +396,34 @@ begin
     Put_Line("                              D | DIST | Distance");
     Put_Line("                              S | SIM  | Similarity");
     New_Line;
-    Put_Line("   clustering_type       :  SL | CL | UA | WA | UC | WC | WD | UPGMA | WPGMA");
-    Put_Line("                              also lowercase symbols");
-    Put_Line("                              also case-insensitive short and full names (Single_Linkage, ...)");
-    Put_Line("                              SL = Single_Linkage");
-    Put_Line("                              CL = Complete_Linkage");
-    Put_Line("                              UA = UPGMA = Unweighted_Average");
-    Put_Line("                              WA = WPGMA = Weighted_Average");
-    Put_Line("                              UC = Unweighted_Centroid");
-    Put_Line("                              WC = Weighted_Centroid");
-    Put_Line("                              WD = Ward");
-    New_Line;
     Put_Line("   precision             :  Number of decimal significant digits of the data and for the calculations");
     Put_Line("                              if not specified, is that of the value with largest number of decimal digits");
+    New_Line;
+    Put_Line("   clustering_type       :  VL | SL | CL | AL | GL | HL | WD | CD | BF");
+    Put_Line("                              also lowercase symbols");
+    Put_Line("                              also case-insensitive short and full names (Versatile_Linkage, ...)");
+    Put_Line("                              VL = Versatile_Linkage");
+    Put_Line("                              SL = Single_Linkage");
+    Put_Line("                              CL = Complete_Linkage");
+    Put_Line("                              AL = Arithmetic_Linkage");
+    Put_Line("                              GL = Geometric_Linkage");
+    Put_Line("                              HL = Harmonic_Linkage");
+    Put_Line("                              WD = Ward");
+    Put_Line("                              CD = Centroid");
+    Put_Line("                              BF = Beta_Flexible");
+    New_Line;
+    Put_Line("   weighting_type        :  W | UW");
+    Put_Line("                              also lowercase symbols");
+    Put_Line("                              also case-insensitive short and full names (Weighted, ...)");
+    Put_Line("                              W  = Weighted");
+    Put_Line("                              UW = Unweighted");
+    Put_Line("                              default => " & To_Name(Default_Weighting_Type));
+    New_Line;
+    Put_Line("   clustering_parameter  :  Clustering parameter, between -1.0 and +1.0, necessary for");
+    Put_Line("                              VL = Versatile_Linkage");
+    Put_Line("                              BF = Beta_Flexible");
+    Put_Line("                              default => 0");
+    Put_Line("                              ignored for the other clustering types");
     New_Line;
     Put_Line("   dendrogram_mode       :  Sorted | Unsorted | Best | Count");
     Put_Line("                              also case-insensitive full names)");
@@ -470,12 +480,26 @@ begin
   end if;
 
   N := Data'Length(1);
-  Put_Line("  Proximity  type : " & To_Name(Pt));
-  Put_Line("  Clustering type : " & To_Name(Ct));
-  Put_Line("  Size            : " & I2S(N));
-  Put_Line("  Precision       : " & I2S(Precision));
+  Put_Line("  Proximity  type  : " & To_Name(Pt));
+  Put_Line("  Clustering type  : " & To_Name(Ct));
+  Put_Line("  Weighting  type  : " & To_Name(Wt));
+  if Ct = Beta_Flexible then
+    Put_Line("  Clustering param : " & D2Sea(Cp, Aft => 3));
+  elsif Ct = Versatile_Linkage then
+    Put("  Clustering param : " & D2Sea(Cp, Aft => 4));
+    Ve := Versatile_Power(Pt, Cp);
+    if Ve = Double'Last then
+      Put_Line(" -> Versatile exponent : +Infinity");
+    elsif Ve = Double'First then
+      Put_Line(" -> Versatile exponent : -Infinity");
+    else
+      Put_Line(" -> Versatile exponent : " & D2Sea(Ve, Aft => 4));
+    end if;
+  end if;
+  Put_Line("  Size             : " & I2S(N));
+  Put_Line("  Precision        : " & I2S(Precision));
   if Dt = Binary_Dendrogram then
-    Put_Line("  Dendrogram mode : " & To_Name(Dm));
+    Put_Line("  Dendrogram mode  : " & To_Name(Dm));
   end if;
 
   -- Prepare output files
@@ -500,10 +524,10 @@ begin
   -- Perform the Hierarchical Clustering
   case Dt is
     when Multidendrogram =>
-      Hierarchical_Clustering(Data, Names, Pt, Ct, Precision, Md);
+      Hierarchical_Clustering(Data, Names, Pt, Precision, Ct, Wt, Cp, Md);
       Add_Last(Md, Dendros);
     when Binary_Dendrogram =>
-      Hierarchical_Clust(Data, Names, Pt, Ct, Precision);
+      Hierarchical_Clust(Data, Names, Pt, Precision, Ct, Wt, Cp);
       if Num_Dendro >= Max_Num_Dendro then
         New_Line;
       end if;
@@ -514,14 +538,14 @@ begin
 
   case Dt is
     when Multidendrogram =>
-      Put_Line("  Result          : MultiDendrogram");
+      Put_Line("  Result           : MultiDendrogram");
     when Binary_Dendrogram =>
       if Num_Dendro = 1 then
-        Put_Line("  Result          : Binary Dendrogram");
+        Put_Line("  Result           : Binary Dendrogram");
       elsif Dm = Best then
-        Put_Line("  Result          : " & L2S(Num_Dendro) & " Binary Dendrograms, " & I2S(Num_Saved) & " with Highest Cophenetic Correlation");
+        Put_Line("  Result           : " & L2S(Num_Dendro) & " Binary Dendrograms, " & I2S(Num_Saved) & " with Highest Cophenetic Correlation");
       else
-        Put_Line("  Result          : " & L2S(Num_Dendro) & " Binary Dendrograms");
+        Put_Line("  Result           : " & L2S(Num_Dendro) & " Binary Dendrograms");
       end if;
   end case;
   New_Line;

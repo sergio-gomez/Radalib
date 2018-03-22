@@ -46,9 +46,9 @@ del test-zachary_unwh-lol.txt*
 Communities_Detection.exe  p  WN  lrfr  10  test-dolphins.net  test-dolphins-lol.txt
 del test-dolphins-lol.txt*
 
-echo ------------------------------------
-echo --- Heuristics & Initializations ---
-echo ------------------------------------
+echo --------------------------------------
+echo --- Heuristics and Initializations ---
+echo --------------------------------------
 Communities_Detection.exe  s  WN  ini_together 1  test-zachary_unwh.net  test-zachary_unwh-lol.txt
 del test-zachary_unwh-lol.txt*
 Communities_Detection.exe  s  WN  +.!          1  test-zachary_unwh.net  test-zachary_unwh-lol.txt

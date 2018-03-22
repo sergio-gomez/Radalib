@@ -17,7 +17,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/02/2007
--- @revision 17/01/2018
+-- @revision 05/03/2018
 -- @brief Tabu Modularity Optimization
 
 with Finite_Disjoint_Lists.Algorithms; use Finite_Disjoint_Lists.Algorithms;
@@ -30,7 +30,10 @@ package body Modularities_Tabu is
   -- Constants --
   ---------------
 
-  Improvement_Tolerance: constant := 1.0e-10;
+  Improvement_Tolerance    : constant := 1.0e-10;
+  Fast_Subset_Min_Net_Size : constant := 500;
+  Slow_Max_Net_Size        : constant := 1_500;
+  Fast_Min_Module_Size     : constant := 50;
 
   -------------------------
   -- Decrease_Tabu_Moves --
@@ -150,8 +153,7 @@ package body Modularities_Tabu is
   -----------------------
 
   procedure Modularity_Change(Mt: in Modularity_Type; Mi: in Modularity_Info; Fast: in Boolean;
-    Ei: in Element; Li, Lj: in List; Isolate: in Boolean; Delta_Q: out Double; New_Lol: out Boolean;
-    Mi_New: out Modularity_Info; Lol_New: out List_Of_Lists)
+    Ei: in Element; Li, Lj: in List; Isolate: in Boolean; Delta_Q: out Double; Disconnected: out Boolean)
   is
     use Linked_Lists_Of_Lists;
 
@@ -163,7 +165,7 @@ package body Modularities_Tabu is
   begin
     if Li = Lj and not Isolate then
       Delta_Q := 0.0;
-      New_Lol := False;
+      Disconnected := False;
       return;
     end if;
 
@@ -176,30 +178,34 @@ package body Modularities_Tabu is
       Lk := Lj;
     end if;
 
-    if not Fast then
+    Save_Modularity(Mi, Li);
+    Save_Modularity(Mi, Lk);
+    Q_Ini := Partial_Modularity(Mi, Li) + Partial_Modularity(Mi, Lk);
+
+    if (not Fast) or else Number_Of_Elements(Li) <= Fast_Min_Module_Size then
       Move(Ei, Lk);
       Update_List_Connected_Components(Gr, Li, Ls);
+      Move(Ei, Li);
 
-      New_Lol := (Size(Ls) > 1);
+      Disconnected := (Size(Ls) > 1);
 
-      if New_Lol then
-        Lol_New := Clone(Lol);
-      else
-        Move(Ei, Li);
+      if not Disconnected then
         Free(Ls);
       end if;
     else
-      New_Lol := False;
+      Disconnected := False;
     end if;
 
-    if New_Lol then
-      Q_Ini := Total_Modularity(Mi);
-      Mi_New := Clone(Mi);
-      Update_Modularity(Mi_New, Lk, Mt);
+    if Disconnected then
+      Update_Modularity_Inserted_Element(Mi, Ei, Lk, Mt);
+      Move(Ei, Lk);
+      Q_End := Partial_Modularity(Mi, Lk);
       Save(Ls);
       Reset(Ls);
       while Has_Next(Ls) loop
-        Update_Modularity(Mi_New, Next(Ls), Mt);
+        Lr := Next(Ls);
+        Update_Modularity(Mi, Lr, Mt);
+        Q_End := Q_End + Partial_Modularity(Mi, Lr);
       end loop;
       Reset(Ls);
       while Has_Next(Ls) loop
@@ -211,20 +217,15 @@ package body Modularities_Tabu is
       end loop;
       Restore(Ls);
       Free(Ls);
-      Move(Ei, Li);
-      Q_End := Total_Modularity(Mi_New);
-      Delta_Q := Q_End - Q_Ini;
     else
-      Save_Modularity(Mi, Li);
-      Save_Modularity(Mi, Lk);
       Update_Modularity_Move_Element(Mi, Ei, Lk, Mt);
       Q_End := Partial_Modularity(Mi, Li) + Partial_Modularity(Mi, Lk);
-      Restore_Modularity(Mi, Li);
-      Restore_Modularity(Mi, Lk);
-      Move(Ei, Li);
-      Q_Ini := Partial_Modularity(Mi, Li) + Partial_Modularity(Mi, Lk);
-      Delta_Q := Q_End - Q_Ini;
     end if;
+
+    Move(Ei, Li);
+    Restore_Modularity(Mi, Li);
+    Restore_Modularity(Mi, Lk);
+    Delta_Q := Q_End - Q_Ini;
 
     if Isolate then
       Remove(Lk);
@@ -245,12 +246,9 @@ package body Modularities_Tabu is
     Ei: Element;
     Li, Lj: List;
     Q_Actual, Dq, Dq_Best: Double;
-    Isolate, New_Lol, Used: Boolean;
-    Mi_New: Modularity_Info;
-    Lol_New: List_Of_Lists;
+    Isolate, Disconnected: Boolean;
   begin
     Best_Move.Idx := 0;
-    Best_Move.New_Lol := False;
     Q_Actual := Total_Modularity(Mi);
     Dq_Best := Double'First;
     if Subset then
@@ -271,33 +269,18 @@ package body Modularities_Tabu is
       Select_Move(Gen, Vi, Ei, Li, Lj, Isolate);
       if Lj /= Li or Isolate then
         -- Modularity change
-        Modularity_Change(Mt, Mi, Fast, Ei, Li, Lj, Isolate, Dq, New_Lol, Mi_New, Lol_New);
+        Modularity_Change(Mt, Mi, Fast, Ei, Li, Lj, Isolate, Dq, Disconnected);
         -- Remove from tabu list
         if Q_Actual + Dq > Q_Best + Improvement_Tolerance then
           Tabu_Moves(I) := 0;
         end if;
         -- Save best move
-        Used := False;
         if Tabu_Moves(I) = 0 then
           if Best_Move.Idx = 0 or else Dq > Dq_Best + Improvement_Tolerance then
-            if Best_Move.New_Lol then
-              Free(Best_Move.Mi_New);
-              Free(Best_Move.Lol_New);
-            end if;
-            if New_Lol then
-              Best_Move := (Idx => I, E => Ei, L_From => Li, L_To => Lj, Isolate => Isolate,
-                            New_Lol => New_Lol, Delta_Q => Dq, Mi_New => Mi_New, Lol_New => Lol_New);
-              Used := True;
-            else
-              Best_Move := (Idx => I, E => Ei, L_From => Li, L_To => Lj, Isolate => Isolate,
-                            New_Lol => False, Delta_Q => Dq, Mi_New => Mi, Lol_New => Lol);
-            end if;
+            Best_Move := (Idx => I, E => Ei, L_From => Li, L_To => Lj, Isolate => Isolate,
+                          Disconnected => Disconnected, Delta_Q => Dq);
             Dq_Best := Dq;
           end if;
-        end if;
-        if New_Lol and not Used then
-          Free(Mi_New);
-          Free(Lol_New);
         end if;
       end if;
     end loop;
@@ -311,8 +294,7 @@ package body Modularities_Tabu is
     Gen: in out Generator; Lol_Ini: in List_Of_Lists; Lol_Best: out List_Of_Lists;
     Q_Best: out Modularity_Rec; R: in Double := No_Resistance; Pc: in Double := 1.0)
   is
-    Fast_Subset_Min_Size: constant Natural := 500;
-    Slow_Max_Size       : constant Natural := 1_500;
+    use Linked_Lists_Of_Lists;
 
     Fast, Subset: Boolean;
     Mi: Modularity_Info;
@@ -322,7 +304,9 @@ package body Modularities_Tabu is
     Tabu_Moves: PIntegers;
     Tabu_Tenure: Natural;
     Best_Move: Movement;
-    Lk: List;
+    Ei: Element;
+    Li, Lk, Lr: List;
+    Ls: Linked_List;
   begin
     N := Number_Of_Vertices(Gr);
 
@@ -341,7 +325,7 @@ package body Modularities_Tabu is
     Max_Iters := Maximum_Of_Nonimprovements(N);
     Num_Steps := Get_Steps(N);
 
-    if N <= Fast_Subset_Min_Size then
+    if N <= Fast_Subset_Min_Net_Size then
       Fast := False;
       Subset := False;
     else
@@ -358,21 +342,30 @@ package body Modularities_Tabu is
       -- Proceed with best move
       if Best_Move.Idx > 0 then
         Tabu_Moves(Best_Move.Idx) := Tabu_Tenure;
+        Ei := Best_Move.E;
+        Li := Best_Move.L_From;
         -- Update partition using best move
-        if Best_Move.New_Lol then
-          Free(Mi);
-          Free(Lol_Actual);
-          Mi := Best_Move.Mi_New;
-          Lol_Actual := Best_Move.Lol_New;
+        if Best_Move.Isolate then
+          Lk := New_List(Lol_Actual);
         else
-          if Best_Move.Isolate then
-            Lk := New_List(Lol_Actual);
-          else
-            Lk := Best_Move.L_To;
-          end if;
-          Update_Modularity_Move_Element(Mi, Best_Move.E, Lk, Mt);
-          if Number_Of_Elements(Best_Move.L_From) = 0 then
-            Remove(Best_Move.L_From);
+          Lk := Best_Move.L_To;
+        end if;
+        if Best_Move.Disconnected then
+          Update_Modularity_Inserted_Element(Mi, Ei, Lk, Mt);
+          Move(Ei, Lk);
+          Update_List_Connected_Components(Gr, Li, Ls);
+          Save(Ls);
+          Reset(Ls);
+          while Has_Next(Ls) loop
+            Lr := Next(Ls);
+            Update_Modularity(Mi, Lr, Mt);
+          end loop;
+          Restore(Ls);
+          Free(Ls);
+        else
+          Update_Modularity_Move_Element(Mi, Ei, Lk, Mt);
+          if Number_Of_Elements(Li) = 0 then
+            Remove(Li);
           end if;
         end if;
         Q_Actual := Q_Actual + Best_Move.Delta_Q;
@@ -400,7 +393,7 @@ package body Modularities_Tabu is
           Subset := False;
           Iter := 0;
           Improvement_Action(Log_Name, Lol_Best, Q_Best);
-        elsif Fast and N <= Slow_Max_Size then
+        elsif Fast and N <= Slow_Max_Net_Size then
           Fast := False;
           Iter := 0;
           Improvement_Action(Log_Name, Lol_Best, Q_Best);

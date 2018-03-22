@@ -17,7 +17,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/02/2007
--- @revision 17/01/2018
+-- @revision 05/03/2018
 -- @brief Tabu Modularity Optimization
 
 with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
@@ -67,9 +67,7 @@ private
     L_To: List;
     Delta_Q: Double;
     Isolate: Boolean;
-    New_Lol: Boolean;
-    Mi_New: Modularity_Info;
-    Lol_New: List_Of_Lists;
+    Disconnected: Boolean;
   end record;
 
   procedure Decrease_Tabu_Moves(Tabu_Moves: in PIntegers);
@@ -93,9 +91,7 @@ private
     Li, Lj: in List;
     Isolate: in Boolean;
     Delta_Q: out Double;
-    New_Lol: out Boolean;
-    Mi_New: out Modularity_Info;
-    Lol_New: out List_Of_Lists);
+    Disconnected: out Boolean);
 
   procedure Examine_Neighbourhood(
     Mt: in Modularity_Type;

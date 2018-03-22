@@ -14,9 +14,10 @@
 
 -- @filename Dendrograms_Test.adb
 -- @author Sergio Gomez
+-- @author Alberto Fernandez
 -- @version 1.0
 -- @date 10/05/2013
--- @revision 28/12/2017
+-- @revision 14/03/2018
 -- @brief Test of Dendrograms packages
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -184,6 +185,8 @@ procedure Dendrograms_Test is
   Decimals, Precision: Natural;
   Pt: Proximity_Type;
   Ct: Clustering_Type;
+  Wt: Weighting_Type;
+  Cp: Double;
 
 begin
 
@@ -320,22 +323,24 @@ begin
     Rdata := Round_Data(Data, Precision);
     for Pt in Proximity_Type loop
       for Ct in Clustering_Type loop
-        Put_Line("------");
-        Put_Line(To_Name(Pt) & ", " & To_Name(Ct) & ", " & I2S(Precision));
-        Hierarchical_Clustering(Data, Col_Name, Pt => Pt, Ct => Ct, Precision => Precision, Md => Dendro);
+        for Wt in Weighting_Type loop
+          Put_Line("------");
+          Put_Line(To_Name(Pt) & ", " & To_Name(Ct) & ", " & To_Name(Wt) & ", " & I2S(Precision));
+          Hierarchical_Clustering(Data, Col_Name, Pt => Pt, Precision => Precision, Ct => Ct, Wt => Wt, Cp => 0.0, Md => Dendro);
 
-        Put_Dendrogram(Dendro, Precision => Precision, Format => Text_Tree);
-        New_Line;
-        Put_Dendrogram(Dendro, Precision => Precision, Format => Newick_Tree);
-        New_Line;
-        Put_Dendrogram_Plot_Info(Dendro, Include_Bands => True, Aft => Precision);
-        New_Line;
-        Put_Dendrogram_Structure(Dendro, Aft => 2);
-        New_Line;
-        Print_Deviation_Measures(Rdata, Dendro);
-        New_Line;
+          Put_Dendrogram(Dendro, Precision => Precision, Format => Text_Tree);
+          New_Line;
+          Put_Dendrogram(Dendro, Precision => Precision, Format => Newick_Tree);
+          New_Line;
+          Put_Dendrogram_Plot_Info(Dendro, Include_Bands => True, Aft => Precision);
+          New_Line;
+          Put_Dendrogram_Structure(Dendro, Aft => 2);
+          New_Line;
+          Print_Deviation_Measures(Rdata, Dendro);
+          New_Line;
 
-        Free(Dendro);
+          Free(Dendro);
+        end loop;
       end loop;
     end loop;
     Free(Rdata);
@@ -348,13 +353,15 @@ begin
   New_Line;
 
   Pt := Similarity;
-  Ct := Complete_Linkage;
   Precision := 1;
+  Ct := Complete_Linkage;
+  Wt := Unweighted;
+  Cp := 0.0;
 
   Rdata := Round_Data(Data, Precision);
-  Hierarchical_Clustering(Data, Col_Name, Pt => Pt, Ct => Ct, Precision => Precision, Bds => Dendros);
+  Hierarchical_Clustering(Data, Col_Name, Pt => Pt, Precision => Precision, Ct => Ct, Wt => Wt, Cp => Cp, Bds => Dendros);
 
-  Put_Line(To_Name(Pt) & ", " & To_Name(Ct) & ", " & I2S(Precision));
+  Put_Line(To_Name(Pt) & ", " & To_Name(Ct) & ", " & To_Name(Wt) & ", " & I2S(Precision));
   Put_Line(I2S(Size(Dendros)) & " Binary Dendrograms");
   New_Line;
 

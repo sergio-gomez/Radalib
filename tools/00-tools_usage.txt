@@ -3,17 +3,19 @@
 ===================================================================
 == Communities_Detection.exe                                     ==
 ===================================================================
-== Community detection in complex networks by                    ==
-== optimization of modularity:                                   ==
-==   - unweighted modularity (UN)                                ==
-==   - weighted modularity (WN)                                  ==
-==   - weighted modularity with positive and negative links (WS) ==
-==   - other measures                                            ==
-== Implements several algorithms, which can be combined:         ==
-==   - exhaustive search (h)       - louvain (l)                 ==
-==   - tabu search (t)             - fast algorithm (f)          ==
-==   - extremal (e)                - reposition (r)              ==
-==   - spectral (s)                - bootstrapping (b)           ==
+== Community detection by modularity optimization:               ==
+==   - unweighted (UN)          - uniform nullcase (UUN, WUN)    ==
+==   - weighted (WN)            - local average (WLA, WULA)      ==
+==   - weighted signed (WS)     - wh links unwh nullcase (WLUN)  ==
+==   - link rank (WLR)          - no nullcase (WNN)              ==
+== Algorithms, which can be combined:                            ==
+==   - exhaustive search (h)    - louvain (l)                    ==
+==   - tabu search (t)          - fast algorithm (f)             ==
+==   - extremal (e)             - reposition (r)                 ==
+==   - spectral (s)             - bootstrapping (b)              ==
+== Initialization modes:                                         ==
+==   - isolated (.)             - best (!)     - default (-)     ==
+==   - together (+)             - prev (:)                       ==
 ===================================================================
 
 
@@ -205,7 +207,7 @@ Usage:  Convert_Lol_To_Clu.exe  lol_file_name  clu_file_name  [ number_of_lines_
 == - means: arithmetic, geometric, harmonic                      ==
 == - variance, standard deviation, skewness, kurtosis            ==
 == - covariance, central moments                                 ==
-== - Pearson and Spearman correlation, and correlation errors    ==
+== - Pearson, Spearman and Kendall correlations,                 ==
 == - linear regression                                           ==
 ===================================================================
 
@@ -377,13 +379,21 @@ Usage:  Extract_Subgraphs.exe  net_name  clu_or_lol_name  out_name_prefix  [ num
 == Agglomerative Hierarchical Clustering with MultiDendrograms   ==
 == and Binary Dendrograms, for distances and similarities        ==
 == Algorithms implemented:                                       ==
-==   - Single linkage                                            ==
-==   - Complete linkage                                          ==
-==   - Unweighted average                                        ==
-==   - Weighted average                                          ==
-==   - Unweighted centroid                                       ==
-==   - Weighted centroid                                         ==
-==   - Ward                                                      ==
+==   - (VL) Versatile linkage       - (HL) Harmonic linkage      ==
+==   - (SL) Single linkage          - (WD) Ward                  ==
+==   - (CL) Complete linkage        - (CD) Centroid              ==
+==   - (AL) Arithmetic linkage      - (BF) Beta flexible         ==
+==   - (GL) Geometric linkage                                    ==
+==                                                               ==
+== Equivalences between clustering algorithms:                   ==
+==   Arithmetic Linkage Unweighted  = UPGMA                      ==
+==   Versatile Linkage (param +1.0) = Complete Linkage           ==
+==   Versatile Linkage (param +0.1) = Arithmetic Linkage         ==
+==   Versatile Linkage (param  0.0) = Geometric Linkage          ==
+==   Versatile Linkage (param -0.1) = Harmonic Linkage           ==
+==   Versatile Linkage (param -1.0) = Single Linkage             ==
+==   Beta Flexible     (param  0.0) = Arithmetic Linkage         ==
+==                                                               ==
 == MultiDendrograms generates always a unique dendrogram         ==
 == For Binary Dendrograms, in case of ties, many dendrograms     ==
 == may exist, and this tool can enumerate or count all of them,  ==
@@ -392,7 +402,7 @@ Usage:  Extract_Subgraphs.exe  net_name  clu_or_lol_name  out_name_prefix  [ num
 ===================================================================
 
 
-Usage:  Hierarchical_Clustering.exe  proximities_name  output_prefix  dendrogram_type  proximity_type  clustering_type  [ precision ]  [ dendrogram_mode ]  [ internal_nodes_prefix ]
+Usage:  Hierarchical_Clustering.exe  proximities_name  output_prefix  dendrogram_type  proximity_type  [ precision ]  clustering_type  [ weighting_type ]  [ clustering_parameter ]  [ dendrogram_mode ]  [ internal_nodes_prefix ]
 
    proximities_name      :  name of the proximities file, either in matrix or list form
                               in matrix form, the names may be in first column, first row, or none
@@ -404,7 +414,7 @@ Usage:  Hierarchical_Clustering.exe  proximities_name  output_prefix  dendrogram
 
    dendrogram_type       :  MD | BD
                               also lowercase symbols
-                              also case-insensitive short and full names (Distance, ...)
+                              also case-insensitive short and full names (Multidendrogram, ...)
                               MD | Multidendrogram
                               BD | Binary_Dendrogram
 
@@ -414,19 +424,34 @@ Usage:  Hierarchical_Clustering.exe  proximities_name  output_prefix  dendrogram
                               D | DIST | Distance
                               S | SIM  | Similarity
 
-   clustering_type       :  SL | CL | UA | WA | UC | WC | WD | UPGMA | WPGMA
-                              also lowercase symbols
-                              also case-insensitive short and full names (Single_Linkage, ...)
-                              SL = Single_Linkage
-                              CL = Complete_Linkage
-                              UA = UPGMA = Unweighted_Average
-                              WA = WPGMA = Weighted_Average
-                              UC = Unweighted_Centroid
-                              WC = Weighted_Centroid
-                              WD = Ward
-
    precision             :  Number of decimal significant digits of the data and for the calculations
                               if not specified, is that of the value with largest number of decimal digits
+
+   clustering_type       :  VL | SL | CL | AL | GL | HL | WD | CD | BF
+                              also lowercase symbols
+                              also case-insensitive short and full names (Versatile_Linkage, ...)
+                              VL = Versatile_Linkage
+                              SL = Single_Linkage
+                              CL = Complete_Linkage
+                              AL = Arithmetic_Linkage
+                              GL = Geometric_Linkage
+                              HL = Harmonic_Linkage
+                              WD = Ward
+                              CD = Centroid
+                              BF = Beta_Flexible
+
+   weighting_type        :  W | UW
+                              also lowercase symbols
+                              also case-insensitive short and full names (Weighted, ...)
+                              W  = Weighted
+                              UW = Unweighted
+                              default => Unweighted
+
+   clustering_parameter  :  Clustering parameter, between -1.0 and +1.0, necessary for
+                              VL = Versatile_Linkage
+                              BF = Beta_Flexible
+                              default => 0
+                              ignored for the other clustering types
 
    dendrogram_mode       :  Sorted | Unsorted | Best | Count
                               also case-insensitive full names)
@@ -526,13 +551,13 @@ Usage:  Matrix_To_Net.exe matrix_input_file  net_output_file  [ no_link_string ]
 ===================================================================
 == Mesoscales_Detection.exe                                      ==
 ===================================================================
-== Mesoscales search in complex networks by optimization of      ==
-== modularity using common self-loops                            ==
-== Implements several algorithms for modularity optimization:    ==
-==   - exhaustive search (h)       - louvain (l)                 ==
-==   - tabu search (t)             - fast algorithm (f)          ==
-==   - extremal (e)                - reposition (r)              ==
-==   - spectral (s)                - bootstrapping (b)           ==
+== Mesoscales search by modularity optimization using            ==
+== resistance parameter (common self-loops)                      ==
+== Algorithms, which can be combined:                            ==
+==   - exhaustive search (h)    - louvain (l)                    ==
+==   - tabu search (t)          - fast algorithm (f)             ==
+==   - extremal (e)             - reposition (r)                 ==
+==   - spectral (s)             - bootstrapping (b)              ==
 ===================================================================
 
 

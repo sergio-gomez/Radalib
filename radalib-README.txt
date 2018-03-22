@@ -1,5 +1,5 @@
 ===================================================================
-== Radalib 20180129-002716                                       ==
+== Radalib 20180322-230332                                       ==
 ==                                                               ==
 == Copyright (c) 2018 by                                         ==
 ==   Sergio Gomez             (sergio.gomez@urv.cat)             ==
@@ -104,7 +104,7 @@ The size of radalib at version radalib-20180127-230551 is:
 
 Code   :   253 Ada files
 Files  :   672 files
-Source : 63579 lines of Ada code
+Source : 64086 lines of Ada code
 
 
 -----------

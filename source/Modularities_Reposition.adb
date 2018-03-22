@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 01/04/2008
--- @revision 16/01/2018
+-- @revision 15/03/2018
 -- @brief Reposition Algorithm implementation
 
 with Ada.Containers.Ordered_Sets;
@@ -78,6 +78,7 @@ package body Modularities_Reposition is
     Elf, Elt: Edges_List;
     Fit, Fit_Worst, Dq_Best: Double;
     Lol_Aux: List_Of_Lists;
+    Q_Aux: Modularity_Rec;
     J_Sel: Positive;
     S: Set;
     Id: Natural;
@@ -162,16 +163,24 @@ package body Modularities_Reposition is
     end loop;
     if Changed then
       -- Ensure connected communities if modularity improved
+      Q_Actual := Total_Modularity(Mi);
       Connected_Components(Gr, Lol_Actual, Lol_Aux);
       if Number_Of_Lists(Lol_Aux) > Number_Of_Lists(Lol_Actual) then
-        Free(Lol_Actual);
-        Lol_Actual := Lol_Aux;
-        Update_Modularity(Mi, Lol_Actual, Mt);
+        Update_Modularity(Mi, Lol_Aux, Mt);
+        Q_Aux := Total_Modularity(Mi);
+        if Q_Aux.Total > Q_Actual.Total + Improvement_Tolerance then
+          Free(Lol_Actual);
+          Lol_Actual := Lol_Aux;
+          Q_Actual := Q_Aux;
+        else
+          Free(Lol_Aux);
+          Update_Modularity(Mi, Lol_Actual, Mt);
+          Q_Actual := Total_Modularity(Mi);
+        end if;
       else
         Free(Lol_Aux);
       end if;
       -- Save if best partition
-      Q_Actual := Total_Modularity(Mi);
       if Q_Actual.Total > Q_Best.Total + Improvement_Tolerance then
         Q_Best := Q_Actual;
         Free(Lol_Best);

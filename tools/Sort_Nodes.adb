@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 11/04/2013
--- @revision 26/02/2016
+-- @revision 06/03/2018
 -- @brief Sort nodes randomly or according to degree
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -109,7 +109,9 @@ begin
 
   Reset(G);
 
-  Put(U2S(Fn_Net) & " -> " & U2S(Fn_Out));
+  Put_Line(U2S(Fn_Net) & " -> " & U2S(Fn_Out));
+  Put_Line(Capitalize(Sort_Direction_Type'Image(Sort_Direction)) & " sort");
+
   Get_Graph(U2S(Fn_Net), Gr);
 
   N := Number_Of_Vertices(Gr);
