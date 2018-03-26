@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/10/2004
--- @revision 08/04/2012
+-- @revision 25/03/2018
 -- @brief Treatment of Linked Lists
 
 with Stacks;
@@ -344,19 +344,19 @@ package Linked_Lists is
 
   generic
     with function Lower(Left, Right: in Item) return Boolean is <>;
-  -- Purpose : Sort a Linked List using the Quicksort algorithm
+  -- Purpose : Sort a Linked List
   -- Note    : Current position and Saved positions are lost
   --
   -- Ll      : The Linked List
-  -- Lower   : The function to know whether the first Item is smaller than the second
+  -- Lower   : The function to know if first Item is sorted with respect to the second
   -- raises  : Uninitialized_Linked_List_Error
   procedure Generic_Sort(Ll: in Linked_List);
 
-  -- Purpose : Sort a Linked List using the Quicksort algorithm
+  -- Purpose : Sort a Linked List
   -- Note    : Current position and Saved positions are lost
   --
   -- Ll      : The Linked List
-  -- Lower   : The function to know whether the first Item is smaller than the second
+  -- Lower   : The function to know if first Item is sorted with respect to the second
   -- raises  : Uninitialized_Linked_List_Error
   procedure Sort(Ll: in Linked_List; Lower: in Comparator);
 
@@ -424,18 +424,17 @@ private
   --
   -- Left    : Left Node
   -- Num     : Number of Nodes
-  -- Lower   : The function to know whether the first Item is smaller than the second
+  -- Lower   : The function to know if first Item is sorted with respect to the second
   procedure Generic_Insertion_Sort(Left: in Pnode; Num: in Positive);
 
   generic
     with function Lower(Left, Right: in Item) return Boolean is <>;
-  -- Purpose : Sort a slice of a Linked List using the Quicksort algorithm
+  -- Purpose : Sort a Linked List using the Minheap algorithm
   -- Note    : All Nodes must exist, no check is performed
   --
   -- Left    : Left Node
-  -- Right   : Right Node
   -- Num     : Number of Nodes
-  -- Lower   : The function to know whether the first Item is smaller than the second
-  procedure Generic_Quick_Sort(Left, Right: in Pnode; Num: in Positive);
+  -- Lower   : The function to know if first Item is sorted with respect to the second
+  procedure Generic_Minheap_Sort(Ll: in Linked_List);
 
 end Linked_Lists;

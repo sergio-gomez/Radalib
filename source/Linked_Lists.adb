@@ -16,10 +16,11 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 3/11/2004
--- @revision 08/04/2012
+-- @revision 25/03/2018
 -- @brief Treatment of Linked Lists
 
 with Ada.Unchecked_Deallocation;
+with Minheaps;
 
 package body Linked_Lists is
 
@@ -863,16 +864,21 @@ package body Linked_Lists is
   ------------------
 
   procedure Generic_Sort(Ll: in Linked_List) is
-    procedure Quick_Sort is new Generic_Quick_Sort(Lower);
     procedure Insertion_Sort is new Generic_Insertion_Sort(Lower);
+    procedure Minheap_Sort is new Generic_Minheap_Sort(Lower);
+
+    Cutoff: constant := 50;
   begin
     if Ll = null then
       raise Uninitialized_Linked_List_Error;
     end if;
 
-    if Ll.Num >= 2 then
-      Quick_Sort(Ll.First, Ll.Last, Ll.Num);
+    if Ll.Num in 2..Cutoff then
       Insertion_Sort(Ll.First, Ll.Num);
+      Reset(Ll);
+      Clear(Ll.Saved);
+    elsif Ll.Num > Cutoff then
+      Minheap_Sort(Ll);
       Reset(Ll);
       Clear(Ll.Saved);
     end if;
@@ -962,63 +968,35 @@ package body Linked_Lists is
     end if;
   end Generic_Insertion_Sort;
 
-  ------------------------
-  -- Generic_Quick_Sort --
-  ------------------------
+  --------------------------
+  -- Generic_Minheap_Sort --
+  --------------------------
 
-  procedure Generic_Quick_Sort(Left, Right: in Pnode; Num: in Positive) is
-    Cutoff: constant := 10;
-    Pivot: Item;
-    I, J: Integer;
-    Ip, Jp: Pnode;
+  procedure Generic_Minheap_Sort(Ll: in Linked_List) is
+    package Minheap_Items is new Minheaps(Item, Lower);
+    use Minheap_Items;
 
-    procedure Median3;
-    pragma Inline(Median3);
-
-    procedure Median3 is
-      Center: Pnode := Left;
-    begin
-      for I in 1..(Num / 2) loop
-        Center := Center.Next;
-      end loop;
-      if Lower(Center.Value, Left.Value) then
-        Swap(Center, Left);
-      end if;
-      if Lower(Right.Value, Left.Value) then
-        Swap(Right, Left);
-      end if;
-      if Lower(Right.Value, Center.Value) then
-        Swap(Right, Center);
-      end if;
-      Pivot := Center.Value;
-      Swap(Center, Right.Prev);
-    end Median3;
-
+    H: Minheap;
+    P: Pnode;
   begin
-    if Num > Cutoff then
-      Median3;
-      I := 1;
-      J := Num;
-      Ip := Left;
-      Jp := Right;
-      loop
-        loop
-          I := I + 1;
-          Ip := Ip.Next;
-          exit when not Lower(Ip.Value, Pivot);
-        end loop;
-        loop
-          J := J - 1;
-          Jp := Jp.Prev;
-          exit when not Lower(Pivot, Jp.Value);
-        end loop;
-        exit when J <= I;
-        Swap(Ip, Jp);
-      end loop;
-      Swap(Ip, Right.Prev);
-      Generic_Quick_Sort(Left, Ip.Prev, I - 1);
-      Generic_Quick_Sort(Ip.Next, Right, Num - I);
+    if Ll = null then
+      raise Uninitialized_Linked_List_Error;
     end if;
-  end Generic_Quick_Sort;
+
+    if Ll.Num >= 2 then
+      Initialize(H, Ll.Num);
+      P := Ll.First;
+      while P /= null loop
+        Add(P.Value, H);
+        P := P.Next;
+      end loop;
+      P := Ll.First;
+      while not Is_Empty(H) loop
+        P.Value := Delete_Minimum(H);
+        P := P.Next;
+      end loop;
+      Free(H);
+    end if;
+  end Generic_Minheap_Sort;
 
 end Linked_Lists;

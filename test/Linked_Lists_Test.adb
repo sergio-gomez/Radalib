@@ -16,20 +16,25 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 3/11/2004
--- @revision 08/05/2013
+-- @revision 25/03/2018
 -- @brief Test of Linked_Lists package
 
 with Ada.Text_Io; use Ada.Text_Io;
 with Ada.Integer_Text_Io; use Ada.Integer_Text_Io;
 with Ada.Real_Time; use Ada.Real_Time;
 with Ada.Numerics.Discrete_Random;
+
+with Chrono_Utils; use Chrono_Utils;
+with Utils.IO; use Utils.IO;
 with Linked_Lists;
 
 procedure Linked_Lists_Test is
 
   Num: Natural := 15;
   T1, T2: Time;
+  Chrono: Chronometer;
 
+  -- Random numbers utils
   subtype Small_Range is Integer range 1..Num;
   package Small_Random is new Ada.Numerics.Discrete_Random(Small_Range);
   use Small_Random;
@@ -43,20 +48,43 @@ procedure Linked_Lists_Test is
   Gs: Small_Random.Generator;
   Gb: Big_Random.Generator;
 
+  -- Linked Lists
   package Int_Linked_Lists is new Linked_Lists(Integer);
   use Int_Linked_Lists;
 
   Ll, Cl, Jl: Linked_List;
-  E, F: Integer;
+  E: Integer;
 
-  function Lt(Left, Right: in Integer) return Boolean;
-  pragma Inline(Lt);
+  -- Sorting Linked Lists
+  function Lower(Left, Right: in Integer) return Boolean;
+  pragma Inline(Lower);
 
-  function Lt(Left, Right: in Integer) return Boolean is
+  function Lower(Left, Right: in Integer) return Boolean is
   begin
-    return Left < Right;
-  end Lt;
+    return Left <= Right;
+  end Lower;
 
+  function Sorted(Ll: in Linked_List) return Boolean is
+    A, B: Integer;
+  begin
+    if Size(Ll) >= 2 then
+      Save(Ll);
+      Reset(Ll);
+      A := Next(Ll);
+      while Has_Next(Ll) loop
+        B := Next(Ll);
+        if not Lower(A, B) then
+          Restore(Ll);
+          return False;
+        end if;
+        A := B;
+      end loop;
+      Restore(Ll);
+    end if;
+    return True;
+  end Sorted;
+
+  -- Put Linked Lists
   procedure Put(Ll: in Linked_List) is
     E: Integer;
   begin
@@ -70,6 +98,7 @@ procedure Linked_Lists_Test is
     Restore(Ll);
     New_Line;
   end Put;
+
 
 begin
 
@@ -190,22 +219,22 @@ begin
   end loop;
   Put(Ll);
 
-  Sort(Ll, Lt'Access);
+  Sort(Ll, Lower'Access);
   Put(Ll);
 
+  Put_Line("Removing duplicates:");
   Remove_Adjacent_Duplicates(Ll);
   Put(Ll);
 
   Put_Line("Clone and join:");
   Cl := Clone(Ll);
-  Add_First(0, Cl);
   Jl := Join(Ll, Cl);
   Put(Jl);
   Free(Cl);
   Free(Jl);
 
-  Num := 20_000;
-  Put("Sorting and array of size "); Put(Num, Width => 0); New_Line;
+  Num := 200;
+  Put("Sorting a random linked list of size "); Put(Num, Width => 0); New_Line;
   Clear(Ll);
   Reset(Gb);
   Put_Line("  Building...");
@@ -217,23 +246,18 @@ begin
   Put("    Elapsed time: "); Put(To_Duration(T2-T1), Fore=>0, Aft=>6, Exp=>0); New_Line;
   Put_Line("  Sorting...");
   T1 := Clock;
-  Sort(Ll, Lt'access);
+  Sort(Ll, Lower'access);
   T2 := Clock;
   Put("    Elapsed time: "); Put(To_Duration(T2-T1), Fore=>0, Aft=>6, Exp=>0); New_Line;
   Put_Line("  Checking...");
-  Reset(Ll);
-  for I in 1..Num loop
-    if Next(Ll) /= I then
-      Put_Line("    Error found!");
-      exit;
-    end if;
-    if I = Num then
-      Put_Line("    OK!");
-    end if;
-  end loop;
+  if Sorted(Ll) then
+    Put_Line("    OK!");
+  else
+    Put_Line("    Error found!");
+  end if;
 
   Num := 1_000_000;
-  Put("Sorting and array of size "); Put(Num, Width => 0); New_Line;
+  Put("Sorting a random linked list of size "); Put(Num, Width => 0); New_Line;
   Clear(Ll);
   Reset(Gb);
   Put_Line("  Building...");
@@ -245,7 +269,7 @@ begin
   Put("    Elapsed time: "); Put(To_Duration(T2-T1), Fore=>0, Aft=>6, Exp=>0); New_Line;
   Put_Line("  Sorting...");
   T1 := Clock;
-  Sort(Ll, Lt'access);
+  Sort(Ll, Lower'access);
   T2 := Clock;
   Put("    Elapsed time: "); Put(To_Duration(T2-T1), Fore=>0, Aft=>6, Exp=>0); New_Line;
   Put_Line("  Removing duplicates...");
@@ -255,18 +279,33 @@ begin
   Put("    Elapsed time: "); Put(To_Duration(T2-T1), Fore=>0, Aft=>6, Exp=>0); New_Line;
   Put("    New size: "); Put(Size(Ll), Width=>0); New_Line;
   Put_Line("  Checking...");
-  Reset(Ll);
-  E := Next(Ll);
-  while Has_Next(Ll) loop
-    F := Next(Ll);
-    if E >= F then
-      Put_Line("    Error found!");
-      exit;
-    end if;
-    if not Has_Next(Ll) then
-      Put_Line("    OK!");
+  if Sorted(Ll) then
+    Put_Line("    OK!");
+  else
+    Put_Line("    Error found!");
+  end if;
+
+  Put_Line("Sorting and checking large random linked lists:");
+  Put("  Proceeding: ");
+  Reset(Chrono);
+  for Factor in 1..20 loop
+    Clear(Ll);
+    Num := 100_000 * Factor;
+    for I in 1..Num loop
+      Add_First(1 + (Random(Gb) mod (5 * Num)), Ll);
+    end loop;
+    Start(Chrono);
+    Sort(Ll, Lower'Access);
+    Stop(Chrono);
+    if Sorted(Ll) then
+      Put(".");
+    else
+      Put("!");
     end if;
   end loop;
+  New_Line;
+  Put("  Sorting time: "); Put_Duration(Elapsed(Chrono), 6); New_Line;
+
 
   Free(Ll);
 

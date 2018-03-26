@@ -37,7 +37,7 @@ rm -f test-dolphins-list1-sg-0?.net
 rm -f test-dolphins-list2-sg.net
 
 # Hierarchical_Clustering
-rm -f test-hierarchical_toy_w???*-bd-??-*.txt test-hierarchical_toy_w???*-md-??-*.txt test-hierarchical_toy_w???-*.json
+rm -f test-hierarchical_toy_w???-bd-??*.txt test-hierarchical_toy_w???-md-??*.txt test-hierarchical_toy_w???-*.json
 
 # Links_Info
 rm -f test-zachary_unwh-links_info-*.txt

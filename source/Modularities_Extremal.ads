@@ -14,9 +14,10 @@
 
 -- @filename Modularities_Extremal.ads
 -- @author Javier Borge
+-- @author Sergio Gomez
 -- @version 1.0
 -- @date 20/11/2007
--- @revision 06/03/2018
+-- @revision 26/03/2018
 -- @brief Extremal Modularity Optimization implementation (after J. Duch and A. Arenas)
 
 with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
@@ -86,7 +87,8 @@ private
     Mt: in Modularity_Type;
     L: in List;
     Lol: in List_Of_Lists;
-    Q: in Queue);
+    Q: in Queue;
+    Q_Act: in out Double);
 
   procedure Optimization_Process(
     Gr: in Graph;

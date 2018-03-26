@@ -499,9 +499,9 @@ package body Modularities_Spectral is
             end if;
           end loop;
           Improvement_Action(Log_Name, Lol_Best, Total_Modularity(MI));
-         end if;
-         Free(Ls);
-         Free(Lq);
+        end if;
+        Free(Ls);
+        Free(Lq);
       end if;
     end loop;
     Free(St);

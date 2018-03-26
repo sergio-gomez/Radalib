@@ -14,9 +14,10 @@
 
 -- @filename Modularities_Extremal.adb
 -- @author Javier Borge
+-- @author Sergio Gomez
 -- @version 1.0
 -- @date 20/11/2007
--- @revision 06/03/2018
+-- @revision 26/03/2018
 -- @brief Extremal Modularity Optimization implementation (after J. Duch and A. Arenas)
 
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
@@ -155,14 +156,14 @@ package body Modularities_Extremal is
 
   procedure Copy_List(L: in List; Lol: in List_Of_Lists; L_Copy: in List) is
     I: Positive;
-    E_New: Element;
+    E_Lol: Element;
   begin
     Save(L);
     Reset(L);
     while Has_Next_Element(L) loop
       I := Index_Of(Next_Element(L));
-      E_New := Get_Element(Lol, I);
-      Move(E_New, L_Copy);
+      E_Lol := Get_Element(Lol, I);
+      Move(E_Lol, L_Copy);
     end loop;
     Restore(L);
   end Copy_List;
@@ -171,27 +172,60 @@ package body Modularities_Extremal is
   -- Break_And_Enqueue --
   -----------------------
 
-   procedure Break_And_Enqueue(Gr: in Graph; Mi: in Modularity_Info; Mt: in Modularity_Type;
-     L: in List; Lol: in List_Of_Lists; Q: in Queue)
-   is
-     use Linked_Lists_Of_Lists;
+  procedure Break_And_Enqueue(Gr: in Graph; Mi: in Modularity_Info; Mt: in Modularity_Type;
+    L: in List; Lol: in List_Of_Lists; Q: in Queue; Q_Act: in out Double)
+  is
+    use Linked_Lists_Of_Lists;
 
-     Ls: Linked_List;
-     Lc, L_Copy: List;
-   begin
-     Update_List_Connected_Components(Gr, L, Ls);
-     Reset(Ls);
-     while Has_Next(Ls) loop
-       Lc := Next(Ls);
-       L_Copy := New_List(Lol);
-       Copy_List(Lc, Lol, L_Copy);
-       Update_Modularity(Mi, Lc, Mt);
-       if Number_Of_Elements(Lc) > 1 then
-         Enqueue(L_Copy, Q);
-       end if;
-     end loop;
-     Free(Ls);
-   end Break_And_Enqueue;
+    Ls: Linked_List;
+    Lc, L_Copy: List;
+    Q_Aux: Double;
+  begin
+    Save_Modularity(Mi, L);
+    Update_List_Connected_Components(Gr, L, Ls);
+
+    if Size(Ls) = 1 then
+      L_Copy := New_List(Lol);
+      Copy_List(L, Lol, L_Copy);
+      if Number_Of_Elements(L) > 1 then
+        Enqueue(L_Copy, Q);
+      end if;
+    else
+      Reset(Ls);
+      while Has_Next(Ls) loop
+        Lc := Next(Ls);
+        Update_Modularity(Mi, Lc, Mt);
+      end loop;
+      Q_Aux := Total_Modularity(Mi);
+      if Q_Aux > Q_Act + Improvement_Tolerance then
+        Q_Act := Q_Aux;
+        Reset(Ls);
+        while Has_Next(Ls) loop
+          Lc := Next(Ls);
+          L_Copy := New_List(Lol);
+          Copy_List(Lc, Lol, L_Copy);
+          if Number_Of_Elements(Lc) > 1 then
+            Enqueue(L_Copy, Q);
+          end if;
+        end loop;
+      else
+        Reset(Ls);
+        while Has_Next(Ls) loop
+          Lc := Next(Ls);
+          if Lc /= L then
+            Move(Lc, L);
+            Remove(Lc);
+          end if;
+        end loop;
+        L_Copy := New_List(Lol);
+        Copy_List(L, Lol, L_Copy);
+        Enqueue(L_Copy, Q);
+        Restore_Modularity(Mi, L);
+      end if;
+    end if;
+
+    Free(Ls);
+  end Break_And_Enqueue;
 
   --------------------------
   -- Optimization_Process --
@@ -209,7 +243,7 @@ package body Modularities_Extremal is
     Q_Act, Q_Max: Double;
     Max_Nonimpr: Natural;
   begin
-    -- Initializations (nc, nonimpr)
+    -- Initializations
     Nc := Number_Of_Elements(Module);
     if Nc <= 100 then
       Max_Nonimpr := 10 * Nc;                         --       (0, 0) - (100, 1000)
@@ -230,6 +264,7 @@ package body Modularities_Extremal is
     E := Get_Element(Module);
     I := Index_Of(E);
     Module_Best := List_Of(Get_Element(Lol_Best, I));
+    Q_Max := Q_Ini;
 
     -- Random split
     Save_Modularity(Mi, Module);
@@ -266,8 +301,10 @@ package body Modularities_Extremal is
           Steps := Steps + 1;
         end if;
       end loop;
-      Break_And_Enqueue(Gr, Mi, Mt, L1, Lol, Q);
-      Break_And_Enqueue(Gr, Mi, Mt, L2, Lol, Q);
+      Update_Modularity(Mi, L1, Mt);
+      Update_Modularity(Mi, L2, Mt);
+      Break_And_Enqueue(Gr, Mi, Mt, L1, Lol, Q, Q_Max);
+      Break_And_Enqueue(Gr, Mi, Mt, L2, Lol, Q, Q_Max);
       Remove(Module);
       Remove(Module_Best);
     else
@@ -321,6 +358,7 @@ package body Modularities_Extremal is
       end if;
     end loop;
 
+    Remove_Empty(Lol_Best);
     Sort_Lists(Lol_Best);
 
     Free(Lol_Rep);
@@ -340,7 +378,7 @@ package body Modularities_Extremal is
     Lol_Rep: List_Of_Lists;
     Q_Rep: Modularity_Rec;
   begin
-    Reset(Gen);
+    Reset(Gen, 1234);
     Initialize(Lol_Best, Number_Of_Vertices(Gr), Together_Initialization);
     for NR in 1 .. Number_Of_Repetitions loop
       Lol_Rep := Clone(Lol_Ini);
