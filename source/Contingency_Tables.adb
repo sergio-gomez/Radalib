@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 1/04/2005
--- @revision 10/04/2015
+-- @revision 06/04/2018
 -- @brief Treatment of Contingency Tables
 
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
@@ -339,11 +339,10 @@ package body Contingency_Tables is
 
     S12 := Number_Of_Same_Class_Agreements(Ct);
 
-    E := Float(S1 * S2) / Float(Number_Of_Pairs(Ct));
-
     if S1 + S2 = 2 * S12 then
       return 1.0;
     else
+      E := Float(S1) * Float(S2) / Float(Number_Of_Pairs(Ct));
       return (Float(S12) - E) / (Float(S1 + S2) / 2.0 - E);
     end if;
   end Adjusted_Rand_Index;
@@ -478,8 +477,8 @@ package body Contingency_Tables is
       for I2 in 1..Ct.Ls2'Last loop
         N2 := Number_Of_Elements(Ct.Ls2(I2));
         M := Ct.Num12(I1, I2);
-        if M > 0 and M * N /= N1 * N2 then
-          S12 := S12 + Float(M) * Log(Float(M * N) / Float(N1 * N2), 2.0);
+        if M > 0 then
+          S12 := S12 + Float(M) * Log(Float(M) * Float(N) / (Float(N1) * Float(N2)), 2.0);
         end if;
       end loop;
     end loop;
@@ -674,7 +673,7 @@ package body Contingency_Tables is
         N2 := Number_Of_Elements(Ct.Ls2(I2));
         M := Ct.Num12(I1, I2);
         if M > 0 then
-          S12 := S12 - Float(M) * Log(Float(M * M) / Float(N1 * N2), 2.0);
+          S12 := S12 - Float(M) * Log(Float(M) * Float(M) / (Float(N1) * Float(N2)), 2.0);
         end if;
       end loop;
     end loop;

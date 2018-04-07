@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 1/04/2005
--- @revision 10/04/2015
+-- @revision 06/04/2018
 -- @brief Treatment of Contingency Tables
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
