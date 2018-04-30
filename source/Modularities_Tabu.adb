@@ -17,7 +17,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/02/2007
--- @revision 05/03/2018
+-- @revision 27/04/2018
 -- @brief Tabu Modularity Optimization
 
 with Finite_Disjoint_Lists.Algorithms; use Finite_Disjoint_Lists.Algorithms;
@@ -373,10 +373,13 @@ package body Modularities_Tabu is
         if Q_Actual > Q_Best.Total + Improvement_Tolerance then
           Free(Lol_Best);
           Connected_Components(Gr, Lol_Actual, Lol_Best);
-          Q_Best := Modularity(Mi, Lol_Best, Mt);
           if Number_Of_Lists(Lol_Actual) /= Number_Of_Lists(Lol_Best) then
+            Q_Best := Modularity(Mi, Lol_Best, Mt);
             Free(Lol_Actual);
             Lol_Actual := Clone(Lol_Best);
+            Q_Actual := Q_Best.Total;
+          else
+            Q_Best := Total_Modularity(Mi);
             Q_Actual := Q_Best.Total;
           end if;
           -- Log

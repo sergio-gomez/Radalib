@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/03/2008
--- @revision 06/03/2018
+-- @revision 08/04/2018
 -- @brief Compare Partitions
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -95,7 +95,7 @@ procedure Compare_Partitions is
   -- Write Info in Verbose format
   procedure Put_Info_Verbose(Ct: in Contingency_Table; Name1, Name2: in String; Show_Contingency_Table, Only_One: in Boolean; Num1, Num2: in Positive) is
     Lol1, Lol2: List_Of_Lists;
-    D1, D2, D: Natural;
+    D1, D2, D: Longint;
     Awi1, Awi2: Float;
   begin
     Get_Lists_Of_Lists(Ct, Lol1, Lol2);
@@ -113,26 +113,26 @@ procedure Compare_Partitions is
     Put_Line("Number of Lists(1) : " & I2S(Number_Of_Lists(Lol1)));
     Put_Line("Number of Lists(2) : " & I2S(Number_Of_Lists(Lol2)));
     New_Line;
-    Put_Line("Same Class Agreements : " & I2S(Number_Of_Same_Class_Agreements(Ct)));
-    Put_Line("Agreements            : " & I2S(Number_Of_Agreements(Ct)));
+    Put_Line("Same Class Agreements : " & L2S(Number_Of_Same_Class_Agreements(Ct)));
+    Put_Line("Agreements            : " & L2S(Number_Of_Agreements(Ct)));
     Number_Of_Disagreements(Ct, D1, D2);
     if D1 = 0 then
-      Put_Line("Disagreements(1)      : " & I2S(D1) & "       (Partition1 inside Partition2)");
+      Put_Line("Disagreements(1)      : " & L2S(D1) & "       (Partition1 inside Partition2)");
     else
-      Put_Line("Disagreements(1)      : " & I2S(D1));
+      Put_Line("Disagreements(1)      : " & L2S(D1));
     end if;
     if D2 = 0 then
-      Put_Line("Disagreements(2)      : " & I2S(D2) & "       (Partition2 inside Partition1)");
+      Put_Line("Disagreements(2)      : " & L2S(D2) & "       (Partition2 inside Partition1)");
     else
-      Put_Line("Disagreements(2)      : " & I2S(D2));
+      Put_Line("Disagreements(2)      : " & L2S(D2));
     end if;
     D := Number_Of_Disagreements(Ct);
     if D = 0 then
-      Put_Line("Disagreements         : " & I2S(D)  & "       (Partition1 = Partition2)");
+      Put_Line("Disagreements         : " & L2S(D)  & "       (Partition1 = Partition2)");
     else
-      Put_Line("Disagreements         : " & I2S(D));
+      Put_Line("Disagreements         : " & L2S(D));
     end if;
-    Put_Line("Pairs                 : " & I2S(Number_Of_Pairs(Ct)));
+    Put_Line("Pairs                 : " & L2S(Number_Of_Pairs(Ct)));
     New_Line;
     Put_Line("Jaccard Index         : " & F2S(Jaccard_Index(Ct), Aft => 4, Exp => 0));
     Put_Line("Rand Index            : " & F2S(Rand_Index(Ct), Aft => 4, Exp => 0));
@@ -206,7 +206,7 @@ procedure Compare_Partitions is
   -- Write Info Values in Table format
   procedure Put_Info_Table_Values(Ct: in Contingency_Table; Name1, Name2: in String; Only_One: in Boolean; Num1, Num2: in Positive) is
     Lol1, Lol2: List_Of_Lists;
-    D1, D2, D: Natural;
+    D1, D2, D: Longint;
     Awi1, Awi2: Float;
   begin
     Get_Lists_Of_Lists(Ct, Lol1, Lol2);
@@ -216,13 +216,13 @@ procedure Compare_Partitions is
       Put(Name1 & HTab & I2S(Num1) & HTab & Name2 & HTab & I2S(Num2));
     end if;
     Put(HTab & I2S(Number_Of_Lists(Lol1)) & HTab & I2S(Number_Of_Lists(Lol2)));
-    Put(HTab & I2S(Number_Of_Same_Class_Agreements(Ct)));
-    Put(HTab & I2S(Number_Of_Agreements(Ct)));
+    Put(HTab & L2S(Number_Of_Same_Class_Agreements(Ct)));
+    Put(HTab & L2S(Number_Of_Agreements(Ct)));
     Number_Of_Disagreements(Ct, D1, D2);
-    Put(HTab & I2S(D1) & HTab & I2S(D2));
+    Put(HTab & L2S(D1) & HTab & L2S(D2));
     D := D1 + D2;
-    Put(HTab & I2S(D));
-    Put(Htab & I2S(Number_Of_Pairs(Ct)));
+    Put(HTab & L2S(D));
+    Put(Htab & L2S(Number_Of_Pairs(Ct)));
     Put(Htab & F2Se0(Jaccard_Index(Ct), Aft => 4));
     Put(Htab & F2Se0(Rand_Index(Ct), Aft => 4));
     Put(Htab & F2Se0(Adjusted_Rand_Index(Ct), Aft => 4));

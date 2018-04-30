@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 1/04/2005
--- @revision 10/04/2015
+-- @revision 08/04/2018
 -- @brief Test of Contingency_Tables package
 
 with Ada.Text_Io; use Ada.Text_Io;
@@ -59,7 +59,7 @@ procedure Contingency_Tables_Test is
   procedure Put(Ct: in Contingency_Table) is
     Lol1, Lol2: List_Of_Lists;
     L1, L2: List;
-    D1, D2, D: Natural;
+    D1, D2, D: Longint;
     Awi1, Awi2: Float;
   begin
     Get_Lists_Of_Lists(Ct, Lol1, Lol2);
@@ -84,26 +84,26 @@ procedure Contingency_Tables_Test is
     end loop;
     Restore(Lol1);
     Put_Line("---");
-    Put_Line("Same Class Agreements : " & I2S(Number_Of_Same_Class_Agreements(Ct)));
-    Put_Line("Agreements            : " & I2S(Number_Of_Agreements(Ct)));
+    Put_Line("Same Class Agreements : " & L2S(Number_Of_Same_Class_Agreements(Ct)));
+    Put_Line("Agreements            : " & L2S(Number_Of_Agreements(Ct)));
     Number_Of_Disagreements(Ct, D1, D2);
     if D1 = 0 then
-      Put_Line("Disagreements(1)      : " & I2S(D1) & "       (Lol1 inside Lol2)");
+      Put_Line("Disagreements(1)      : " & L2S(D1) & "       (Lol1 inside Lol2)");
     else
-      Put_Line("Disagreements(1)      : " & I2S(D1));
+      Put_Line("Disagreements(1)      : " & L2S(D1));
     end if;
     if D2 = 0 then
-      Put_Line("Disagreements(2)      : " & I2S(D2) & "       (Lol2 inside Lol1)");
+      Put_Line("Disagreements(2)      : " & L2S(D2) & "       (Lol2 inside Lol1)");
     else
-      Put_Line("Disagreements(2)      : " & I2S(D2));
+      Put_Line("Disagreements(2)      : " & L2S(D2));
     end if;
     D := Number_Of_Disagreements(Ct);
     if D = 0 then
-      Put_Line("Disagreements         : " & I2S(D)  & "       (Lol1 = Lol2)");
+      Put_Line("Disagreements         : " & L2S(D)  & "       (Lol1 = Lol2)");
     else
-      Put_Line("Disagreements         : " & I2S(D));
+      Put_Line("Disagreements         : " & L2S(D));
     end if;
-    Put_Line("Pairs                 : " & I2S(Number_Of_Pairs(Ct)));
+    Put_Line("Pairs                 : " & L2S(Number_Of_Pairs(Ct)));
     Put_Line("---");
     Put_Line("Rand Index            : " & F2S(Rand_Index(Ct), Aft => 4, Exp => 0));
     Put_Line("Adjusted Rand Index   : " & F2S(Adjusted_Rand_Index(Ct), Aft => 4, Exp => 0));

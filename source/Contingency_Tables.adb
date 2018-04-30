@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 1/04/2005
--- @revision 06/04/2018
+-- @revision 08/04/2018
 -- @brief Treatment of Contingency Tables
 
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
@@ -89,14 +89,14 @@ package body Contingency_Tables is
   -- Combi2 --
   ------------
 
-  function Combi2(M: in Natural) return Natural is
+  function Combi2(M: in Natural) return Longint is
   begin
     if M <= 1 then
       return 0;
     elsif M mod 2 = 0 then
-      return (M / 2) * (M - 1);
+      return Longint(M / 2) * Longint(M - 1);
     else
-      return M * ((M - 1) / 2);
+      return Longint(M) * Longint((M - 1) / 2);
     end if;
   end Combi2;
 
@@ -194,6 +194,8 @@ package body Contingency_Tables is
 
   procedure Transpose(Ct: in Contingency_Table) is
     Lol: List_Of_Lists;
+    Ls: Plists;
+    N12: PContingencies;
   begin
     if Ct = null then
       raise Uninitialized_Contingency_Table_Error;
@@ -202,14 +204,26 @@ package body Contingency_Tables is
     Lol := Ct.Lol1;
     Ct.Lol1 := Ct.Lol2;
     Ct.Lol2 := Lol;
-    Update(Ct);
+
+    Ls := Ct.Ls1;
+    Ct.Ls1 := Ct.Ls2;
+    Ct.Ls2 := Ls;
+
+    N12 := Ct.Num12;
+    Ct.Num12 :=  new Contingencies(Ct.Ls1'Range, Ct.Ls2'Range);
+    for I1 in Ct.Num12'Range(1) loop
+      for I2 in Ct.Num12'Range(2) loop
+        Ct.Num12(I1, I2) := N12(I2, I1);
+      end loop;
+    end loop;
+    Dispose(N12);
   end Transpose;
 
   ---------------------
   -- Number_Of_Pairs --
   ---------------------
 
-  function Number_Of_Pairs(Ct: in Contingency_Table) return Natural is
+  function Number_Of_Pairs(Ct: in Contingency_Table) return Longint is
     N: Positive;
   begin
     if Ct = null then
@@ -224,8 +238,9 @@ package body Contingency_Tables is
   -- Number_Of_Same_Class_Agreements --
   -------------------------------------
 
-  function Number_Of_Same_Class_Agreements(Ct: in Contingency_Table) return Natural is
-    S12, M: Natural;
+  function Number_Of_Same_Class_Agreements(Ct: in Contingency_Table) return Longint is
+    M: Natural;
+    S12: Longint;
   begin
     if Ct = null then
       raise Uninitialized_Contingency_Table_Error;
@@ -246,7 +261,7 @@ package body Contingency_Tables is
   -- Number_Of_Agreements --
   --------------------------
 
-  function Number_Of_Agreements(Ct: in Contingency_Table) return Natural is
+  function Number_Of_Agreements(Ct: in Contingency_Table) return Longint is
   begin
     if Ct = null then
       raise Uninitialized_Contingency_Table_Error;
@@ -259,8 +274,9 @@ package body Contingency_Tables is
   -- Number_Of_Disagreements --
   -----------------------------
 
-  procedure Number_Of_Disagreements(Ct: in Contingency_Table; D1, D2: out Natural) is
-    S1, S2, S12, M: Natural;
+  procedure Number_Of_Disagreements(Ct: in Contingency_Table; D1, D2: out Longint) is
+    M: Natural;
+    S1, S2, S12: Longint;
   begin
     if Ct = null then
       raise Uninitialized_Contingency_Table_Error;
@@ -288,8 +304,8 @@ package body Contingency_Tables is
   -- Number_Of_Disagreements --
   -----------------------------
 
-  function Number_Of_Disagreements(Ct: in Contingency_Table) return Natural is
-    D1, D2: Natural;
+  function Number_Of_Disagreements(Ct: in Contingency_Table) return Longint is
+    D1, D2: Longint;
   begin
     if Ct = null then
       raise Uninitialized_Contingency_Table_Error;
@@ -318,7 +334,8 @@ package body Contingency_Tables is
   -------------------------
 
   function Adjusted_Rand_Index(Ct: in Contingency_Table) return Float is
-    S1, S2, S12, M: Natural;
+    M: Natural;
+    S1, S2, S12: Longint;
     E: Float;
   begin
     if Ct = null then
@@ -352,7 +369,7 @@ package body Contingency_Tables is
   -------------------
 
   function Jaccard_Index(Ct: in Contingency_Table) return Float is
-    A, D: Natural;
+    A, D: Longint;
   begin
     if Ct = null then
       raise Uninitialized_Contingency_Table_Error;
@@ -373,7 +390,7 @@ package body Contingency_Tables is
   ------------------------------
 
   procedure Asymmetric_Wallace_Index(Ct: in Contingency_Table; Awi1, Awi2: out Float) is
-    D1, D2, A: Natural;
+    D1, D2, A: Longint;
   begin
     if Ct = null then
       raise Uninitialized_Contingency_Table_Error;
@@ -399,7 +416,8 @@ package body Contingency_Tables is
   ---------------------------
 
   function Fowlkes_Mallows_Index(Ct: in Contingency_Table) return Float is
-    S1, S2, S12, M: Natural;
+    M: Natural;
+    S1, S2, S12: Longint;
   begin
     if Ct = null then
       raise Uninitialized_Contingency_Table_Error;

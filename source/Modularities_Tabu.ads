@@ -17,7 +17,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/02/2007
--- @revision 05/03/2018
+-- @revision 27/04/2018
 -- @brief Tabu Modularity Optimization
 
 with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;

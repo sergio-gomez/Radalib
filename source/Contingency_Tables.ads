@@ -16,10 +16,11 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 1/04/2005
--- @revision 06/04/2018
+-- @revision 08/04/2018
 -- @brief Treatment of Contingency Tables
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
+with Utils; use Utils;
 
 package Contingency_Tables is
 
@@ -93,7 +94,7 @@ package Contingency_Tables is
   -- Ct      : The Contingency Table
   -- return  : The Number of Pairs
   -- raises  : Uninitialized_Contingency_Table_Error
-  function Number_Of_Pairs(Ct: in Contingency_Table) return Natural;
+  function Number_Of_Pairs(Ct: in Contingency_Table) return Longint;
 
   -- Purpose : Get the Number of Same Class Agreements of a Contingency Table
   -- Note    : Unassigned Elements are considered as belonging to single element Lists
@@ -101,7 +102,7 @@ package Contingency_Tables is
   -- Ct      : The Contingency Table
   -- return  : The Number of Same Class Agreements
   -- raises  : Uninitialized_Contingency_Table_Error
-  function Number_Of_Same_Class_Agreements(Ct: in Contingency_Table) return Natural;
+  function Number_Of_Same_Class_Agreements(Ct: in Contingency_Table) return Longint;
 
   -- Purpose : Get the Number of Agreements of a Contingency Table
   -- Note    : Unassigned Elements are considered as belonging to single element Lists
@@ -109,7 +110,7 @@ package Contingency_Tables is
   -- Ct      : The Contingency Table
   -- return  : The Number of Agreements
   -- raises  : Uninitialized_Contingency_Table_Error
-  function Number_Of_Agreements(Ct: in Contingency_Table) return Natural;
+  function Number_Of_Agreements(Ct: in Contingency_Table) return Longint;
 
   -- Purpose : Get the Number of Disagreements of a Contingency Table
   -- Note    : Unassigned Elements are considered as belonging to single element Lists
@@ -118,7 +119,7 @@ package Contingency_Tables is
   -- D1      : The Number of Disagreements (same class in Lol1, different class in Lol2)
   -- D2      : The Number of Disagreements (same class in Lol2, different class in Lol1)
   -- raises  : Uninitialized_Contingency_Table_Error
-  procedure Number_Of_Disagreements(Ct: in Contingency_Table; D1, D2: out Natural);
+  procedure Number_Of_Disagreements(Ct: in Contingency_Table; D1, D2: out Longint);
 
   -- Purpose : Get the Number of Disagreements of a Contingency Table
   -- Note    : Unassigned Elements are considered as belonging to single element Lists
@@ -126,7 +127,7 @@ package Contingency_Tables is
   -- Ct      : The Contingency Table
   -- return  : The Number of Disagreements
   -- raises  : Uninitialized_Contingency_Table_Error
-  function Number_Of_Disagreements(Ct: in Contingency_Table) return Natural;
+  function Number_Of_Disagreements(Ct: in Contingency_Table) return Longint;
 
   -- Purpose : Get the Rand Index of a Contingency Table
   -- Note    : Unassigned Elements are considered as belonging to single element Lists
@@ -271,7 +272,7 @@ private
   --
   -- M       : The number of Elements
   -- return  : M over 2
-  function Combi2(M: in Natural) return Natural;
+  function Combi2(M: in Natural) return Longint;
   pragma Inline(Combi2);
 
   -- Purpose : Find the Index of a List in a PLists
