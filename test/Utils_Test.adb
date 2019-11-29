@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2018 by
+-- Radalib, Copyright (c) 2019 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/05/2005
--- @revision 28/12/2017
+-- @revision 29/11/2019
 -- @brief Test of Utils package
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -156,6 +156,17 @@ begin
   for P in 0..4 loop
     Put_Line(I2S(P) & ": " & ("(.)" ** P) & ('.' ** P));
   end loop;
+  New_Line;
+
+  Put_Line("Durations");
+  Put_Line(To_String(Duration'(13700.5), Aft => 0));
+  Put_Line(To_String(Duration'(400.01), Aft => 2));
+  Put_Line(To_String(Duration'(30.09)));
+  Put_Line(To_String(Duration'(0.01)));
+  Put_Line(To_String(Duration'(-0.01)));
+  Put_Line(To_String(Duration'(-30.09)));
+  Put_Line(To_String(Duration'(-400.01), Aft => 2));
+  Put_Line(To_String(Duration'(-13700.5), Aft => 0));
   New_Line;
 
   Put("-123      :  ");

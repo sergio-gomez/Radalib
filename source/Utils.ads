@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2018 by
+-- Radalib, Copyright (c) 2019 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 11/05/2005
--- @revision 13/10/2016
+-- @revision 29/11/2019
 -- @brief Several Utils
 
 with Ada.Text_IO; use Ada.Text_IO;

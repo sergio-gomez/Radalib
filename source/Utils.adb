@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2018 by
+-- Radalib, Copyright (c) 2019 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 11/05/2005
--- @revision 13/10/2016
+-- @revision 29/11/2019
 -- @brief Several Utils
 
 with Ada.Strings; use Ada.Strings;
@@ -743,20 +743,27 @@ package body Utils is
   ---------------
 
   function To_String(D: in Duration; Aft: in Field := Default_Float_Aft) return String is
+    Da: Duration;
     Hh, Mm, Ss: Natural;
     Sf: Float;
+    Sign: Integer;
   begin
-    Ss := Natural(Float'Floor(Float(D)));
+    Da := abs D;
+    Sign := +1;
+    if D < 0.0 then
+      Sign := -1;
+    end if;
+    Ss := Natural(Float'Floor(Float(Da)));
     Mm := Ss / 60;
-    Sf := Float(Ss mod 60) + Float(D - Duration(Ss));
+    Sf := Float(Ss mod 60) + Float(Da - Duration(Ss));
     Hh := Mm / 60;
     Mm := Mm mod 60;
     if Hh > 0 then
-      return I2S(Hh) & "h " & I2S(Mm) & "m " & F2S(Sf, Aft => Aft, Exp => 0) & "s";
+      return I2S(Sign * Hh) & "h " & I2S(Mm) & "m " & F2S(Sf, Aft => Aft, Exp => 0) & "s";
     elsif Mm > 0 then
-      return I2S(Mm) & "m " & F2S(Sf, Aft => Aft, Exp => 0) & "s";
+      return I2S(Sign * Mm) & "m " & F2S(Sf, Aft => Aft, Exp => 0) & "s";
     else
-      return F2S(Sf, Aft => Aft, Exp => 0) & "s";
+      return F2S(Sign * Sf, Aft => Aft, Exp => 0) & "s";
     end if;
   end To_String;
 

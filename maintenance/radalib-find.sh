@@ -4,5 +4,5 @@ cd ..
 
 for i in */*.ad?; do
   echo $i
-  grep -i "Minheap" $i
+  grep -i "2018" $i
 done

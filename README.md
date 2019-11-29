@@ -40,11 +40,11 @@ The selected language was Ada, for several reasons: performance (it is a compile
 - `radalib/maintenance`
     Scripts to simplify the upgrade and installation of **Radalib** in the different platforms.
 
-The size of **Radalib** at version `radalib-20180127-230551` is:
+The size of **Radalib** at version `radalib-20191129-195313` is:
 
 - Code:     253 Ada files
 - Files:    672 files
-- Source: 64086 lines of Ada code
+- Source: 64441 lines of Ada code
 
 
 ## Compilation
@@ -208,7 +208,7 @@ The tools in **Radalib** are:
 
 ## License
 
-**Radalib**, Copyright (c) 2018 by *Sergio Gomez* (sergio.gomez@urv.cat), *Alberto Fernandez* (alberto.fernandez@urv.cat)
+**Radalib**, Copyright (c) 2019 by *Sergio Gomez* (sergio.gomez@urv.cat), *Alberto Fernandez* (alberto.fernandez@urv.cat)
 
 This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License version 2.1 as published by the Free Software Foundation.
 

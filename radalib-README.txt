@@ -1,7 +1,7 @@
 ===================================================================
-== Radalib 20180427-195726                                       ==
+== Radalib 20191129-195313                                       ==
 ==                                                               ==
-== Copyright (c) 2018 by                                         ==
+== Copyright (c) 2019 by                                         ==
 ==   Sergio Gomez             (sergio.gomez@urv.cat)             ==
 ==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==
 ==                                                               ==
@@ -68,34 +68,34 @@ Radalib is distributed in a single compressed file containing the following
 folders or directories:
 
    radalib
-   radalib\source
-   radalib\test
-   radalib\tools
-   radalib\compiled
-   radalib\maintenance
+   radalib/source
+   radalib/test
+   radalib/tools
+   radalib/compiled
+   radalib/maintenance
 
 Their contents are:
 
 - radalib
     Root of Radalib, containing README.txt, LICENSE.txt, version and howto files.
 
-- radalib\source
+- radalib/source
     All the packages which form the library, and scripts for their compilation.
 
-- radalib\test
+- radalib/test
     Test programs for most of the packages in the source folder, each one with a
     script for its compilation and execution, and some test data files.
 
-- radalib\tools
+- radalib/tools
     Programs which take advantage of the source packages, mainly for the analysis
     of complex networks. There are also scripts for their compilation and execution,
     and test data files.
 
-- radalib\compiled
+- radalib/compiled
     Object files obtained from the compilation of the source packages. By default,
     they are for Windows; they need to be rebuilt when working in other platforms.
 
-- radalib\maintenance
+- radalib/maintenance
     Scripts to simplify the upgrade and installation of Radalib in the different
     platforms.
 
