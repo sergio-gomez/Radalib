@@ -5,6 +5,7 @@ rm -f *.exe *.ali *.o b~*.ad?
 
 # Communities_Detection
 rm -f test-circle8-lol.txt* test-zachary_unwh-lol.txt* test-dolphins-lol.txt*
+rm -f test-bipartite-lol.txt* test-bipartite_sgn-lol.txt*
 
 # Communities_Network
 rm -f test-zachary-lol1.net test-zachary-lol2.net

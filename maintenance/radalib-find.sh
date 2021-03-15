@@ -4,5 +4,5 @@ cd ..
 
 for i in */*.ad?; do
   echo $i
-  grep -i "2018" $i
+  grep -i "Bipartite" $i
 done

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,13 +16,14 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/12/2017
--- @revision 15/03/2018
+-- @revision 10/09/2020
 -- @brief Louvain Algorithm implementation
 
 with Ada.Unchecked_Deallocation;
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
 with Graphs_Double; use Graphs_Double;
+with Graphs_Double_Operations; use Graphs_Double_Operations;
 with Graphs_Double_Modularities_D; use Graphs_Double_Modularities_D;
 with Utils; use Utils;
 

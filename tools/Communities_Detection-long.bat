@@ -20,30 +20,30 @@ del test-circle8-lol.txt*
 echo ------------------
 echo --- Heuristics ---
 echo ------------------
-Communities_Detection.exe  s  WN  r     1  test-zachary_unwh.net  test-zachary_unwh-lol.txt
+Communities_Detection.exe  s  WN  r         1  test-zachary_unwh.net  test-zachary_unwh-lol.txt
 del test-zachary_unwh-lol.txt*
-Communities_Detection.exe  s  WN  b     1  test-zachary_unwh.net  test-zachary_unwh-lol.txt
+Communities_Detection.exe  s  WN  b         1  test-zachary_unwh.net  test-zachary_unwh-lol.txt
 del test-zachary_unwh-lol.txt*
-Communities_Detection.exe  s  WN  t     3  test-zachary_unwh.net  test-zachary_unwh-lol.txt
+Communities_Detection.exe  s  WN  t         3  test-zachary_unwh.net  test-zachary_unwh-lol.txt
 del test-zachary_unwh-lol.txt*
-Communities_Detection.exe  s  WN  te    3  test-zachary_unwh.net  test-zachary_unwh-lol.txt
+Communities_Detection.exe  s  WN  te        3  test-zachary_unwh.net  test-zachary_unwh-lol.txt
 del test-zachary_unwh-lol.txt*
-Communities_Detection.exe  s  WN  sl    3  test-zachary_unwh.net  test-zachary_unwh-lol.txt
+Communities_Detection.exe  s  WN  sl        3  test-zachary_unwh.net  test-zachary_unwh-lol.txt
 del test-zachary_unwh-lol.txt*
-Communities_Detection.exe  s  WN  sbfb  3  test-zachary_unwh.net  test-zachary_unwh-lol.txt
+Communities_Detection.exe  s  WN  sbfb      3  test-zachary_unwh.net  test-zachary_unwh-lol.txt
 del test-zachary_unwh-lol.txt*
-Communities_Detection.exe  s  WN  ebfb  3  test-zachary_unwh.net  test-zachary_unwh-lol.txt
+Communities_Detection.exe  s  WN  ebfb      3  test-zachary_unwh.net  test-zachary_unwh-lol.txt
 del test-zachary_unwh-lol.txt*
-Communities_Detection.exe  s  WN  e     3  test-zachary_unwh.net  test-zachary_unwh-lol.txt
-Communities_Detection.exe  s  WN  r     1  test-zachary_unwh.net  test-zachary_unwh-lol.txt
-Communities_Detection.exe  s  WN  f     1  test-zachary_unwh.net  test-zachary_unwh-lol.txt
-Communities_Detection.exe  s  WN  r     1  test-zachary_unwh.net  test-zachary_unwh-lol.txt
+Communities_Detection.exe  s  WN  e         3  test-zachary_unwh.net  test-zachary_unwh-lol.txt
+Communities_Detection.exe  s  WN  r         1  test-zachary_unwh.net  test-zachary_unwh-lol.txt
+Communities_Detection.exe  s  WN  f         1  test-zachary_unwh.net  test-zachary_unwh-lol.txt
+Communities_Detection.exe  s  WN  r         1  test-zachary_unwh.net  test-zachary_unwh-lol.txt
 del test-zachary_unwh-lol.txt*
-Communities_Detection.exe  p  WN  erfr  3 test-zachary_unwh.net  test-zachary_unwh-lol.txt
+Communities_Detection.exe  p  WN  erfr      3  test-zachary_unwh.net  test-zachary_unwh-lol.txt
 del test-zachary_unwh-lol.txt*
 Communities_Detection.exe  p  WN  trfrerfr  5  test-zachary_unwh.net  test-zachary_unwh-lol.txt
 del test-zachary_unwh-lol.txt*
-Communities_Detection.exe  p  WN  lrfr  10  test-dolphins.net  test-dolphins-lol.txt
+Communities_Detection.exe  p  WN  lrfr     10  test-dolphins.net  test-dolphins-lol.txt
 del test-dolphins-lol.txt*
 
 echo --------------------------------------
@@ -95,6 +95,16 @@ Communities_Detection.exe  s  WS  rlfr  5   0.0  0.8  test-zachary_unwh.net  tes
 del test-zachary_unwh-lol.txt*
 Communities_Detection.exe  s  WS  erlt  5  -1.0  0.8  test-zachary_unwh.net  test-zachary_unwh-lol.txt
 del test-zachary_unwh-lol.txt*
+
+echo -------------------
+echo --- Bipartite ---
+echo -------------------
+Communities_Detection.exe  s  WBPM  erfr-ll-trfr  5  test-bipartite.net  test-bipartite-lol.txt
+del test-bipartite-lol.txt*
+Communities_Detection.exe  s  WBPS  erfr-ll-trfr  5  test-bipartite.net  test-bipartite-lol.txt
+del test-bipartite-lol.txt*
+Communities_Detection.exe  s  WBPS  erfr-ll-trfr  5  test-bipartite_sgn.net  test-bipartite_sgn-lol.txt
+del test-bipartite_sgn-lol.txt*
 echo -----------
 del Communities_Detection.exe
 pause

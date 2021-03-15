@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 29/09/2009
--- @revision 26/10/2014
+-- @revision 08/09/2020
 -- @brief Test of Graphs Operations package
 
 with Ada.Text_Io; use Ada.Text_Io;
@@ -24,6 +24,7 @@ with Ada.Integer_Text_Io; use Ada.Integer_Text_Io;
 with Ada.Numerics.Discrete_Random;
 with Graphs_Integer; use Graphs_Integer;
 with Graphs_Integer_Operations; use Graphs_Integer_Operations;
+with Graphs_Integer_Operations_Arrays; use Graphs_Integer_Operations_Arrays;
 with Utils; use Utils;
 
 procedure Graphs_Operations_Test is
@@ -33,7 +34,12 @@ procedure Graphs_Operations_Test is
 
   procedure Put(Gr: in Graph) is
     E: Edge;
+    Nc1, Nc2: Positive;
   begin
+    if Is_Bipartite(Gr) then
+      Get_Bipartite_Sizes(Gr, Nc1, Nc2);
+      Put_Line("  bipartite: (" & I2S(Nc1) & ", " & I2S(Nc2) & ")");
+    end if;
     for I in 1..Number_Of_Vertices(Gr) loop
       for J in 1..Number_Of_Vertices(Gr) loop
         E := Get_Edge_Or_No_Edge(Get_Vertex(Gr, I), Get_Vertex(Gr, J));
@@ -81,7 +87,8 @@ begin
     Put_Line("==================");
 
     Put_Line("A graph");
-    Initialize(Gr, 2, Directed);
+    N := 2;
+    Initialize(Gr, N, Directed);
     Add_Edge(Get_Vertex(Gr, 1), Get_Vertex(Gr, 2), -1);
     Add_Edge(Get_Vertex(Gr, 2), Get_Vertex(Gr, 1), 2);
     Put(Gr);
@@ -97,7 +104,8 @@ begin
     Free(Gr);
 
     Put_Line("Two small graphs");
-    Initialize(Gr1, 3, Directed);
+    N := 3;
+    Initialize(Gr1, N, Directed);
     Add_Edge(Get_Vertex(Gr1, 1), Get_Vertex(Gr1, 1), 1);
     Add_Edge(Get_Vertex(Gr1, 1), Get_Vertex(Gr1, 2), 2);
     Add_Edge(Get_Vertex(Gr1, 1), Get_Vertex(Gr1, 3), 3);
@@ -108,7 +116,7 @@ begin
     Add_Edge(Get_Vertex(Gr1, 3), Get_Vertex(Gr1, 2), 0);
     Add_Edge(Get_Vertex(Gr1, 3), Get_Vertex(Gr1, 3), 2);
     Put(Gr1);
-    Initialize(Gr2, 3, Directed);
+    Initialize(Gr2, N, Directed);
     Add_Edge(Get_Vertex(Gr2, 1), Get_Vertex(Gr2, 1), 1);
     Add_Edge(Get_Vertex(Gr2, 1), Get_Vertex(Gr2, 2), -1);
     Add_Edge(Get_Vertex(Gr2, 1), Get_Vertex(Gr2, 3), 1);
@@ -119,6 +127,15 @@ begin
     Add_Edge(Get_Vertex(Gr2, 3), Get_Vertex(Gr2, 2), 1);
     Add_Edge(Get_Vertex(Gr2, 3), Get_Vertex(Gr2, 3), 3);
     Put(Gr2);
+
+    Put_Line("Transpose graphs");
+    Gr := Transpose(Gr1);
+    Put(Gr);
+    Free(Gr);
+
+    Gr := Transpose(Gr2);
+    Put(Gr);
+    Free(Gr);
 
     Put_Line("Sum of graphs");
     Gr := Gr1 + Gr2;
@@ -180,6 +197,15 @@ begin
     end loop;
     Put(Gr2);
 
+    Put_Line("Transpose graphs");
+    Gr := Transpose(Gr1);
+    Put(Gr);
+    Free(Gr);
+
+    Gr := Transpose(Gr2);
+    Put(Gr);
+    Free(Gr);
+
     Put_Line("Sum of graphs");
     Gr := Gr1 + Gr2;
     Put(Gr);
@@ -205,6 +231,32 @@ begin
 
     Free(Gr1);
     Free(Gr2);
+
+    Put_Line("A small bipartite graph");
+    N := 6;
+    Initialize(Gr, N, Directed);
+    Set_Bipartiteness(Gr, 3);
+    Add_Edge(Get_Vertex(Gr, 1), Get_Vertex(Gr, 4), 1);
+    Add_Edge(Get_Vertex(Gr, 1), Get_Vertex(Gr, 5), 1);
+    Add_Edge(Get_Vertex(Gr, 1), Get_Vertex(Gr, 6), 1);
+    Add_Edge(Get_Vertex(Gr, 2), Get_Vertex(Gr, 4), 1);
+    Add_Edge(Get_Vertex(Gr, 2), Get_Vertex(Gr, 5), 1);
+    Add_Edge(Get_Vertex(Gr, 3), Get_Vertex(Gr, 4), 1);
+    Put(Gr);
+
+    Put_Line("W * W");
+    Gr2 := Gr ** 2;
+    Put(Gr2);
+    Free(Gr2);
+
+    Put_Line("W * W^T");
+    Gr1 := Transpose(Gr);
+    Gr2 := Gr * Gr1;
+    Put(Gr2);
+    Free(Gr1);
+    Free(Gr2);
+
+    Free(Gr);
 
   end loop;
 

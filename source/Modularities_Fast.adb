@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -17,7 +17,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 20/11/2007
--- @revision 16/01/2018
+-- @revision 31/08/2020
 -- @brief Newman's Fast Algorithm implementation
 
 with Ada.Containers.Ordered_Sets;
@@ -31,7 +31,7 @@ package body Modularities_Fast is
   -- Create_Adjacent_Lists_Graph --
   ---------------------------------
 
-  procedure Create_Adjacent_Lists_Graph(Gr: in Graph; Lol: in List_Of_Lists; Mi: in Modularity_Info;
+  procedure Create_Adjacent_Lists_Graph(Gr_Neigh: in Graph; Lol: in List_Of_Lists; Mi: in Modularity_Info;
     Mt: in Modularity_Type; Gr_Adj: out Graph; Lists_Map: out PLists_Vector)
   is
     package List_Id_Sets is new Ada.Containers.Ordered_Sets(Integer);
@@ -50,8 +50,8 @@ package body Modularities_Fast is
   begin
     pragma Warnings(Off, L);
     pragma Warnings(Off, El);
-    Directed := Is_Directed(Gr);
-    N := Number_Of_Vertices(Gr);
+    Directed := Is_Directed(Gr_Neigh);
+    N := Number_Of_Vertices(Gr_Neigh);
     N_Adj:= Number_Of_Lists(Lol);
     Initialize(Gr_Adj, N_Adj, Directed => False);
 
@@ -87,7 +87,7 @@ package body Modularities_Fast is
       Reset(L);
       while Has_Next_Element(L) and Natural(Length(S)) < N_Adj - I_Adj loop
         I := Index_Of(Next_Element(L));
-        Vi := Get_Vertex(Gr, I);
+        Vi := Get_Vertex(Gr_Neigh, I);
         El := Edges_From(Vi);
         Save(El);
         Reset(El);
@@ -362,16 +362,18 @@ package body Modularities_Fast is
   is
     Mi: Modularity_Info;
     Q_Total: Modularity_Rec;
+    Gr_Neigh: Graph;
     Gr_Adj: Graph;
     Lists_Map: PLists_Vector;
     Steps: Positive;
     Finished: Boolean;
   begin
     Initialize(Mi, Gr, Mt, R, Pc);
+    Gr_Neigh := Neighbors_Graph(Mi);
     Lol_Best := Clone(Lol_Ini);
     Update_Modularity(Mi, Lol_Best, Mt);
     Q_Total := Total_Modularity(Mi);
-    Create_Adjacent_Lists_Graph(Gr, Lol_Best, Mi, Mt, Gr_Adj, Lists_Map);
+    Create_Adjacent_Lists_Graph(Gr_Neigh, Lol_Best, Mi, Mt, Gr_Adj, Lists_Map);
     Steps := Get_Steps(Number_Of_Vertices(Gr), Number_Of_Vertices(Gr_Adj));
     Finished := False;
     while not Finished loop

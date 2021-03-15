@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 15/03/2006
--- @revision 23/09/2015
+-- @revision 23/08/2020
 -- @brief Input and output in Pajek format
 
 with Utils; use Utils;
@@ -129,5 +129,26 @@ package Pajek_IO is
   -- Fn      : The File Name
   -- Lol     : The Partition List of Lists
   procedure Put_Partition(Fn: in String; Lol: in List_Of_Lists);
+
+private
+
+  -- Purpose : Get basic information of a Graph in Pajek format from file
+  --
+  -- Ft      : The File
+  -- N       : The Number of Vertices
+  -- N_Class1: The number of Vertices of the first Class
+  -- Directed: True if Graph is Directed
+  -- Listed  : True if Pajek file list Edges or Arcs in List format
+  -- raises  : Unrecognized_Pajek_Format
+  procedure Get_Graph_Info(Ft: in out File_Type; N: out Positive; N_Class1: out Positive; Directed: out Boolean; Listed: out Boolean);
+
+  -- Purpose : Get Name and Tag of a Vertex from Pajek file
+  --
+  -- Ft      : The File
+  -- P       : The Vertex index
+  -- Name    : The Name
+  -- Tag     : The Tag
+  -- raises  : Unrecognized_Pajek_Format
+  procedure Get_Vertex_Info(Ft: in File_Type; P: in Positive; Name, Tag: out Ustring);
 
 end Pajek_IO;

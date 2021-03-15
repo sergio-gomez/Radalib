@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -12,12 +12,12 @@
 -- library (see LICENSE.txt); if not, see http://www.gnu.org/licenses/
 
 
--- @filename Graph_Modularity_Test.adb
+-- @filename Graphs_Modularities_Test.adb
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 01/02/2007
--- @revision 14/01/2018
--- @brief Test of Graph Modularity
+-- @revision 25/09/2020
+-- @brief Test of Graphs Modularities
 
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Command_Line; use Ada.Command_Line;
@@ -32,7 +32,7 @@ with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
 with Finite_Disjoint_Lists.IO; use Finite_Disjoint_Lists.IO;
 with Pajek_IO; use Pajek_IO;
 
-procedure Graph_Modularity_Test is
+procedure Graphs_Modularities_Test is
 
   procedure Graph_Info(Gr: in Graph; Mt: in Modularity_Type) is
     Vf, Vt, V: Vertex;
@@ -90,7 +90,7 @@ procedure Graph_Modularity_Test is
       New_Line;
     end loop;
     if Mt = Weighted_Link_Rank then
-      Eigenvec := Left_Leading_Eigenvector(Mi);
+      Eigenvec := Link_Rank_Eigenvector(Mi);
       if Eigenvec /= null then
         Put_Line("---");
         Put("Left leading eigenvector:"); New_Line;
@@ -214,4 +214,4 @@ begin
 
   Free(Lol);
   Free(Gr);
-end Graph_Modularity_Test;
+end Graphs_Modularities_Test;

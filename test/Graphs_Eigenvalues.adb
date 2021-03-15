@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -12,11 +12,11 @@
 -- library (see LICENSE.txt); if not, see http://www.gnu.org/licenses/
 
 
--- @filename Graph_Eigenvalues.adb
+-- @filename Graphs_Eigenvalues.adb
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 27/07/2009
--- @revision 22/09/2015
+-- @revision 25/09/2020
 -- @brief Eigenvalues of the weights matrix of a Graph
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -29,7 +29,7 @@ with Graphs_Float; use Graphs_Float;
 with Pajek_IO; use Pajek_IO;
 with Utils; use Utils;
 
-procedure Graph_Eigenvalues is
+procedure Graphs_Eigenvalues is
 
   Fn_Net: UString;
   Fn_Eig: UString;
@@ -93,4 +93,4 @@ begin
   Free(Eig);
   Free(Wh);
   Free(Gr);
-end Graph_Eigenvalues;
+end Graphs_Eigenvalues;

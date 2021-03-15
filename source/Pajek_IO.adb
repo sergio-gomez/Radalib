@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 15/03/2006
--- @revision 23/09/2015
+-- @revision 23/08/2020
 -- @brief Input and output in Pajek format
 
 with Ada.Strings; use Ada.Strings;
@@ -66,9 +66,11 @@ package body Pajek_IO is
   -- Get_Graph_Info --
   --------------------
 
-  procedure Get_Graph_Info(Ft: in out File_Type; N: out Positive; Directed: out Boolean; Listed: out Boolean) is
+  procedure Get_Graph_Info(Ft: in out File_Type; N: out Positive; N_Class1: out Positive; Directed: out Boolean; Listed: out Boolean) is
     W: Word_Access;
     X: Integer;
+    C: Character;
+    Eol: Boolean;
   begin
     Comments_Skip(Ft);
     Get_Word(Ft, W);
@@ -77,16 +79,26 @@ package body Pajek_IO is
     end if;
     Free_Word(W);
     Get_Integer(Ft, N);
+    Line_Spaces_Skip(Ft);
+    if not End_Of_Line(Ft) then
+      Get_Integer(Ft, N_Class1);
+    else
+      N_Class1 := N;
+    end if;
     Skip_Line(Ft);
 
-    for I in 1..N loop
-      Comments_Skip(Ft);
-      Get_Integer(Ft, X);
-      Skip_Line(Ft);
-      if I /= X then
-        raise Unrecognized_Pajek_Format with "Node with index " & I2S(I) & " not found in '*Vertices' section";
-      end if;
-    end loop;
+    Comments_Skip(Ft);
+    Look_Ahead(Ft, C, Eol);
+    if C /= '*' then
+      for I in 1..N loop
+        Comments_Skip(Ft);
+        Get_Integer(Ft, X);
+        Skip_Line(Ft);
+        if I /= X then
+          raise Unrecognized_Pajek_Format with "Node with index " & I2S(I) & " not found in '*Vertices' section";
+        end if;
+      end loop;
+    end if;
 
     Comments_Skip(Ft);
     Get_Word(Ft, W);
@@ -115,40 +127,49 @@ package body Pajek_IO is
   -- Get_Vertex_Info --
   ---------------------
 
-  procedure Get_Vertex_Info(Ft: in File_Type; Name, Tag: out Ustring) is
+  procedure Get_Vertex_Info(Ft: in File_Type; P: in Positive; Name, Tag: out Ustring) is
     X: Integer;
     C: Character;
     Eol: Boolean;
   begin
     Comments_Skip(Ft);
-    Get_Integer(Ft, X);
-    Line_Spaces_Skip(Ft);
     Look_Ahead(Ft, C, Eol);
-    if Eol then
-      Name := Null_Ustring;
-    elsif C = '"' then
-      Get(Ft, C);
-      Name := Null_Ustring;
-      loop
-        Look_Ahead(Ft, C, Eol);
-        exit when Eol or else C = '"';
-        Get(Ft, C);
-        Name := Name & C;
-      end loop;
-      if not Eol then
-        Get(Ft, C);
-      end if;
+    if C = '*' then
+      Name := S2U(I2S(P));
+      Tag := Null_Ustring;
     else
-      Get_Word(Ft, Name);
+      Get_Integer(Ft, X);
+      if P /= X then
+        raise Unrecognized_Pajek_Format with "Index " & I2S(X) & " found for Vertex " & I2S(P);
+      end if;
+      Line_Spaces_Skip(Ft);
+      Look_Ahead(Ft, C, Eol);
+      if Eol then
+        Name := S2U(I2S(P));
+      elsif C = '"' then
+        Get(Ft, C);
+        Name := Null_Ustring;
+        loop
+          Look_Ahead(Ft, C, Eol);
+          exit when Eol or else C = '"';
+          Get(Ft, C);
+          Name := Name & C;
+        end loop;
+        if not Eol then
+          Get(Ft, C);
+        end if;
+      else
+        Get_Word(Ft, Name);
+      end if;
+      Line_Spaces_Skip(Ft);
+      Tag := Null_Ustring;
+      while not End_Of_Line(Ft) loop
+        Get(Ft, C);
+        Tag := Tag & C;
+      end loop;
+      Tag := Trim(Tag, Both);
+      Skip_Line(Ft);
     end if;
-    Line_Spaces_Skip(Ft);
-    Tag := Null_Ustring;
-    while not End_Of_Line(Ft) loop
-      Get(Ft, C);
-      Tag := Tag & C;
-    end loop;
-    Tag := Trim(Tag, Both);
-    Skip_Line(Ft);
   end Get_Vertex_Info;
 
   ---------------------
@@ -189,19 +210,20 @@ package body Pajek_IO is
 
   procedure Get_Graph(Fn: in String; Gr: out Graphs_Simple.Graph) is
     Ft: File_Type;
-    N: Integer;
+    N, N_Class1: Integer;
     Directed, Listed: Boolean;
     Name, Tag: Ustring;
     From, To: Integer;
   begin
     Open(Ft, In_File, Fn);
-    Get_Graph_Info(Ft, N, Directed, Listed);
+    Get_Graph_Info(Ft, N, N_Class1, Directed, Listed);
     Initialize(Gr, N, Directed);
+    Set_Bipartiteness(Gr, N_Class1);
 
     Comments_Skip(Ft);
     Skip_Line(Ft);
     for I in 1..N loop
-      Get_Vertex_Info(Ft, Name, Tag);
+      Get_Vertex_Info(Ft, I, Name, Tag);
       Set_Name(Get_Vertex(Gr, I), To_String(Name));
       Set_Tag(Get_Vertex(Gr, I), To_String(Tag));
     end loop;
@@ -243,19 +265,20 @@ package body Pajek_IO is
 
   procedure Get_Graph(Fn: in String; Gr: out Graphs_String.Graph) is
     Ft: File_Type;
-    N: Integer;
+    N, N_Class1: Integer;
     Directed, Listed: Boolean;
     Name, Tag, Value: Ustring;
     From, To: Integer;
   begin
     Open(Ft, In_File, Fn);
-    Get_Graph_Info(Ft, N, Directed, Listed);
+    Get_Graph_Info(Ft, N, N_Class1, Directed, Listed);
     Initialize(Gr, N, Directed);
+    Set_Bipartiteness(Gr, N_Class1);
 
     Comments_Skip(Ft);
     Skip_Line(Ft);
     for I in 1..N loop
-      Get_Vertex_Info(Ft, Name, Tag);
+      Get_Vertex_Info(Ft, I, Name, Tag);
       Set_Name(Get_Vertex(Gr, I), To_String(Name));
       Set_Tag(Get_Vertex(Gr, I), To_String(Tag));
     end loop;
@@ -304,19 +327,20 @@ package body Pajek_IO is
 
   procedure Get_Graph(Fn: in String; Gr: out Graphs_Integer.Graph) is
     Ft: File_Type;
-    N: Integer;
+    N, N_Class1: Integer;
     Directed, Listed: Boolean;
     Name, Tag: Ustring;
     From, To, Value: integer;
   begin
     Open(Ft, In_File, Fn);
-    Get_Graph_Info(Ft, N, Directed, Listed);
+    Get_Graph_Info(Ft, N, N_Class1, Directed, Listed);
     Initialize(Gr, N, Directed);
+    Set_Bipartiteness(Gr, N_Class1);
 
     Comments_Skip(Ft);
     Skip_Line(Ft);
     for I in 1..N loop
-      Get_Vertex_Info(Ft, Name, Tag);
+      Get_Vertex_Info(Ft, I, Name, Tag);
       Set_Name(Get_Vertex(Gr, I), To_String(Name));
       Set_Tag(Get_Vertex(Gr, I), To_String(Tag));
     end loop;
@@ -365,20 +389,21 @@ package body Pajek_IO is
 
   procedure Get_Graph(Fn: in String; Gr: out Graphs_Float.Graph) is
     Ft: File_Type;
-    N: Integer;
+    N, N_Class1: Integer;
     Directed, Listed: Boolean;
     Name, Tag: Ustring;
     From, To: Integer;
     Value: Float;
   begin
     Open(Ft, In_File, Fn);
-    Get_Graph_Info(Ft, N, Directed, Listed);
+    Get_Graph_Info(Ft, N, N_Class1, Directed, Listed);
     Initialize(Gr, N, Directed);
+    Set_Bipartiteness(Gr, N_Class1);
 
     Comments_Skip(Ft);
     Skip_Line(Ft);
     for I in 1..N loop
-      Get_Vertex_Info(Ft, Name, Tag);
+      Get_Vertex_Info(Ft, I, Name, Tag);
       Set_Name(Get_Vertex(Gr, I), To_String(Name));
       Set_Tag(Get_Vertex(Gr, I), To_String(Tag));
     end loop;
@@ -427,20 +452,21 @@ package body Pajek_IO is
 
   procedure Get_Graph(Fn: in String; Gr: out Graphs_Double.Graph) is
     Ft: File_Type;
-    N: Integer;
+    N, N_Class1: Integer;
     Directed, Listed: Boolean;
     Name, Tag: Ustring;
     From, To: Integer;
     Value: Double;
   begin
     Open(Ft, In_File, Fn);
-    Get_Graph_Info(Ft, N, Directed, Listed);
+    Get_Graph_Info(Ft, N, N_Class1, Directed, Listed);
     Initialize(Gr, N, Directed);
+    Set_Bipartiteness(Gr, N_Class1);
 
     Comments_Skip(Ft);
     Skip_Line(Ft);
     for I in 1..N loop
-      Get_Vertex_Info(Ft, Name, Tag);
+      Get_Vertex_Info(Ft, I, Name, Tag);
       Set_Name(Get_Vertex(Gr, I), To_String(Name));
       Set_Tag(Get_Vertex(Gr, I), To_String(Tag));
     end loop;

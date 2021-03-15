@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -24,5 +24,4 @@ with Graphs.Operations;
 with Utils; use Utils;
 
 package Graphs_Integer_Operations is
-  new Graphs_Integer.Operations(Zero_Value => 0, Edge_Values => Integers, PEdge_Values => PIntegers,
-                                Edge_Valuess => Integerss, PEdge_Valuess => PIntegerss);
+  new Graphs_Integer.Operations(Zero_Value => 0);

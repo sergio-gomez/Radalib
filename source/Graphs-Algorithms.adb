@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 13/08/2005
--- @revision 21/01/2018
+-- @revision 10/09/2020
 -- @brief Implementation of Graphs algorithms
 
 with Utils; use Utils;
@@ -479,6 +479,44 @@ package body Graphs.Algorithms is
     end loop;
   end Isolate_List;
 
+  ----------------
+  -- Clear_List --
+  ----------------
+
+  procedure Clear_List(Gr: in Graph; L: in List) is
+    Lol: List_Of_Lists;
+    El: Edges_List;
+    E: Edge;
+    V: Vertex;
+    Belongs_Vf, Belongs_Vt: Boolean;
+  begin
+    if Gr = null then
+      raise Uninitialized_Graph_Error;
+    end if;
+    Lol := List_Of_Lists_Of(L);
+    if Number_Of_Vertices(Gr) /= Number_Of_Elements(Lol) then
+      raise Incompatible_List_Error;
+    end if;
+
+    for I in 1..Number_Of_Vertices(Gr) loop
+      V := Get_Vertex(Gr, I);
+      Belongs_Vf := Belongs_To(Get_Element(Lol, I), L);
+      El := Edges_From(V);
+      Save(El);
+      Reset(El);
+      while Has_Next(El) loop
+        E := Get(El);
+        Belongs_Vt := Belongs_To(Get_Element(Lol, Index_Of(To(E))), L);
+        if Belongs_Vf and Belongs_Vt then
+          Remove(El);
+        else
+          Next(El);
+        end if;
+      end loop;
+      Restore(El);
+    end loop;
+  end Clear_List;
+
   ---------------------
   -- Create_Subgraph --
   ---------------------
@@ -597,8 +635,9 @@ package body Graphs.Algorithms is
     procedure Free is new Free_1D_Array(Edge_Value, Edge_Values, PEdge_Values);
 
     Directed: Boolean;
-    N, N_Ren: Natural;
+    N, N_Ren, Nc1_Ren: Natural;
     L: List;
+    Finished: Boolean;
     El: Edges_List;
     E: Edge;
     Vi, Vj, Vi_Ren, Vj_Ren: Vertex;
@@ -620,6 +659,29 @@ package body Graphs.Algorithms is
     N := Number_Of_Vertices(Gr);
     N_Ren:= Number_Of_Lists(Ren);
     Initialize(Gr_Ren, N_Ren, Directed);
+    if Gr.Bipartite then
+      Sort_By_First_Element(Ren);
+      Nc1_Ren := 0;
+      Finished := False;
+      Save(Ren);
+      Reset(Ren);
+      while Has_Next_List(Ren) and not Finished loop
+        L := Next_List(Ren);
+        Save(L);
+        Reset(L);
+        if Has_Next_Element(L) then
+          I := Index_Of(Get_Element(L));
+          if I <= Gr.Num_Class1 then
+            Nc1_Ren := Nc1_Ren + 1;
+          else
+            Finished := True;
+          end if;
+        end if;
+        Restore(L);
+      end loop;
+      Restore(Ren);
+      Set_Bipartiteness(Gr_Ren, Nc1_Ren);
+    end if;
 
     Vertex_To_List_Index := Alloc(1, N);
     I_Ren := 1;
@@ -847,5 +909,35 @@ package body Graphs.Algorithms is
     Free(Lol);
     Free(H);
   end Spanning_Tree;
+
+  -------------------------
+  -- Force_Bipartiteness --
+  -------------------------
+
+  procedure Force_Bipartiteness(Gr: in Graph) is
+    Lol: List_Of_Lists;
+    L: List;
+    E: Element;
+  begin
+    if Gr = null then
+      raise Uninitialized_Graph_Error;
+    end if;
+
+    if Gr.Bipartite then
+      Initialize(Lol, Gr.Size, Together_Initialization);
+      L := New_List(Lol);
+      for I in 1..Gr.Num_Class1 loop
+        E := Get_Element(Lol, I);
+        Move(E, L);
+      end loop;
+      Save(Lol);
+      Reset(Lol);
+      while Has_Next_List(Lol) loop
+        L := Next_List(Lol);
+        Clear_List(Gr, L);
+      end loop;
+      Restore(Lol);
+    end if;
+  end Force_Bipartiteness;
 
 end Graphs.Algorithms;

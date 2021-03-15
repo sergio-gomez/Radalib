@@ -1,14 +1,14 @@
 # Interesting network
 
 *Vertices 8
- 1 "Name1"0.1 0.6 0.5
- 2 "Name 2" 0.1 0.4 0.5
+ 1 Name1 0.1 0.6 0.5
+ 2 Name2 0.1 0.4 0.5
  3 Name3 0.2 0.5 0.5
- 4 "Name4 0.4 0.5 0.5"
- 5 "  Name  5  " 0.6 0.5 0.5
- 6 "6 0.8 0.5 0.5"
- 7 7 0.9 0.4 0.5
- 8
+ 4 Name4 0.4 0.5 0.5
+ 5 Name5 0.6 0.5 0.5
+ 6 Name6 0.8 0.5 0.5
+ 7 Name7 0.9 0.4 0.5
+ 8 Name8 0.9 0.5 0.4
 
 *Edges
  1 2 #no weight 0.9
@@ -25,7 +25,7 @@
  6 8 0.9
  7 8 0.9
 
-# uncomment to have incompatible values 0.7 and 0.8 and for the undirected edge (2,3)
+# uncomment to have incompatible values 0.7 and 0.8 for the undirected edge (2,3)
 #3 2 0.8
 
 

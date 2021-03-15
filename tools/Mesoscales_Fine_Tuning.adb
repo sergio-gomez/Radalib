@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 03/10/2006
--- @revision 27/01/2018
+-- @revision 14/09/2020
 -- @brief Fine Tuning of Mesoscales obtained with variable self-loops
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -40,7 +40,7 @@ procedure Mesoscales_Fine_Tuning is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2019 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2021 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
@@ -96,7 +96,7 @@ begin
     Put_Line("                                    *-lols.txt: the partitions found for the mesoscale in Lol format");
     Put_Line("                                    *-lols-extra.txt : optional file with extra partitions");
     New_Line;
-    Put_Line("   weighted_modularity_types :  WN | WS | WUN | WLA | WULA | WLUN | WNN | WLR");
+    Put_Line("   weighted_modularity_types :  WN | WS | WUN | WLA | WULA | WLUN | WNN | WLR | WBPM | WBPS");
     Put_Line("                                  also lowercase symbols");
     Put_Line("                                  also case-insensitive full names (Weighted_Newman, ...)");
     Put_Line("                                  WN   = Weighted_Newman");
@@ -107,6 +107,8 @@ begin
     Put_Line("                                  WLUN = Weighted_Links_Unweighted_Nullcase");
     Put_Line("                                  WNN  = Weighted_No_Nullcase");
     Put_Line("                                  WLR  = Weighted_Link_Rank");
+    Put_Line("                                  WBPM = Weighted_Bipartite_Path_Motif");
+    Put_Line("                                  WBPS = Weighted_Bipartite_Path_Signed");
     return;
   end if;
 

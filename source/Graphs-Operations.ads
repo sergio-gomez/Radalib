@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,29 +16,28 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/08/2009
--- @revision 29/12/2014
+-- @revision 08/09/2020
 -- @brief Implementation of Graphs operations
 
 generic
   Zero_Value: Edge_Value;
-  type Edge_Values is array(Integer range <>) of Edge_Value;
-  type PEdge_Values is access Edge_Values;
-  type Edge_Valuess is array(Integer range <>, Integer range <>) of Edge_Value;
-  type PEdge_Valuess is access Edge_Valuess;
   with function "+"(Left, Right: in Edge_Value) return Edge_Value is <>;
   with function "*"(Left, Right: in Edge_Value) return Edge_Value is <>;
-  with function Alloc(First: in Integer; Last: in Integer) return PEdge_Values is <>;
-  with function Alloc(First1, Last1, First2, Last2: in Integer) return PEdge_Valuess is <>;
 package Graphs.Operations is
 
-    Incompatible_Dimensions_Error: exception;
-    Uninitialized_Vector_Error: exception;
+  -- Purpose : Transpose a Graph
+  -- Note    : A new Graph is returned even if its undirected
+  --
+  -- Gr      : The Graph
+  -- return  : The Transposed Graph
+  -- raises  : Uninitialized_Graph_Error
+  function Transpose(Gr: in Graph) return Graph;
 
   -- Purpose : Sum of two Graphs
   -- Note    : Vertices Names and Tags are inherited from the Left Graph
   --
-  -- Left    : The Left Graph
-  -- Right   : The Right Graph
+  -- Gr_Left : The Left Graph
+  -- Gr_Right: The Right Graph
   -- return  : The output Graph
   -- raises  : Uninitialized_Graph_Error
   -- raises  : Incompatible_Graphs_Error
@@ -47,8 +46,8 @@ package Graphs.Operations is
   -- Purpose : Multiplication of two Graphs
   -- Note    : Vertices Names and Tags are inherited from the Left Graph
   --
-  -- Left    : The Left Graph
-  -- Right   : The Right Graph
+  -- Gr_Left : The Left Graph
+  -- Gr_Right: The Right Graph
   -- return  : The output Graph
   -- raises  : Uninitialized_Graph_Error
   -- raises  : Incompatible_Graphs_Error
@@ -61,40 +60,5 @@ package Graphs.Operations is
   -- return  : The Power Graph
   -- raises  : Uninitialized_Graph_Error
   function "**"(Gr: in Graph; Power: in Natural) return Graph;
-
-  -- Purpose : Multiplication of a Graph and a Vector
-  --
-  -- Gr      : The Graph
-  -- V       : The Vector
-  -- return  : The output Vector
-  -- raises  : Uninitialized_Graph_Error
-  -- raises  : Incompatible_Dimensions_Error
-  function "*"(Gr: in Graph; V: in Edge_Values) return Edge_Values;
-
-  -- Purpose : Multiplication of a Graph and a Vector
-  --
-  -- Gr      : The Graph
-  -- V       : The Vector
-  -- return  : The output Vector
-  -- raises  : Uninitialized_Graph_Error
-  -- raises  : Uninitialized_Vector_Error
-  -- raises  : Incompatible_Dimensions_Error
-  function "*"(Gr: in Graph; V: in PEdge_Values) return PEdge_Values;
-
-  -- Purpose : Convert a Graph to Array
-  -- Note    : Missing edges are converted to Zero
-  --
-  -- Gr      : The Graph
-  -- return  : The Array
-  -- raises  : Uninitialized_Graph_Error
-  function To_Array(Gr: in Graph) return Edge_Valuess;
-
-  -- Purpose : Convert a Graph to Array
-  -- Note    : Missing edges are converted to Zero
-  --
-  -- Gr      : The Graph
-  -- return  : The Array
-  -- raises  : Uninitialized_Graph_Error
-  function To_Array(Gr: in Graph) return PEdge_Valuess;
 
 end Graphs.Operations;

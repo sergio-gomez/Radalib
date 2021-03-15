@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 20/11/2004
--- @revision 14/01/2018
+-- @revision 10/09/2020
 -- @brief Test of Graphs Algorithms package
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -336,13 +336,78 @@ begin
       Put_Line("------");
     end loop;
 
-
-
     Free(Lol);
     Free(Lol_Ren);
     Free(Ren);
     Free(Gr);
 
   end loop;
+
+
+  Put_Line("Bipartite graph");
+  Initialize(Gr, 8, Directed => False);
+  Set_Bipartiteness(Gr, 4);
+  Add_Edge(Get_Vertex(Gr, 1), Get_Vertex(Gr, 5));
+  Add_Edge(Get_Vertex(Gr, 1), Get_Vertex(Gr, 6));
+  Add_Edge(Get_Vertex(Gr, 1), Get_Vertex(Gr, 7));
+  Add_Edge(Get_Vertex(Gr, 2), Get_Vertex(Gr, 5));
+  Add_Edge(Get_Vertex(Gr, 2), Get_Vertex(Gr, 6));
+  Add_Edge(Get_Vertex(Gr, 3), Get_Vertex(Gr, 5));
+  Add_Edge(Get_Vertex(Gr, 4), Get_Vertex(Gr, 7));
+  Add_Edge(Get_Vertex(Gr, 4), Get_Vertex(Gr, 8));
+  Put(Gr);
+
+  Put_Line("Add edges to break bipartiteness");
+  Add_Edge(Get_Vertex(Gr, 1), Get_Vertex(Gr, 1));
+  Add_Edge(Get_Vertex(Gr, 1), Get_Vertex(Gr, 3));
+  Put(Gr);
+
+  Put_Line("Convert to bipartite graph");
+  Force_Bipartiteness(Gr);
+  Put(Gr);
+
+  Put_Line("Renormalizing lol");
+  Initialize(Ren, 8);
+  L := New_List(Ren);
+  Move(Get_Element(Ren, 3), L);
+  Move(Get_Element(Ren, 1), L);
+  Move(Get_Element(Ren, 2), L);
+  L := New_List(Ren);
+  Move(Get_Element(Ren, 7), L);
+  Move(Get_Element(Ren, 8), L);
+  L := New_List(Ren);
+  Move(Get_Element(Ren, 6), L);
+  L := New_List(Ren);
+  Move(Get_Element(Ren, 5), L);
+  L := New_List(Ren);
+  Move(Get_Element(Ren, 4), L);
+
+  Put(Ren);
+  Put_Line("------");
+
+  Put_Line("Renormalized graph");
+  Renormalize_Graph(Gr, Ren, Gr_Ren);
+  Put(Gr_Ren);
+
+  Put_Line("Lol of renormalized graph");
+  Initialize(Lol_Ren, 5);
+  L := New_List(Lol_Ren);
+  Move(Get_Element(Lol_Ren, 1), L);
+  Move(Get_Element(Lol_Ren, 2), L);
+  L := New_List(Lol_Ren);
+  Move(Get_Element(Lol_Ren, 3), L);
+  Move(Get_Element(Lol_Ren, 4), L);
+  L := New_List(Lol_Ren);
+  Move(Get_Element(Lol_Ren, 5), L);
+  Put(Lol_Ren);
+  Put_Line("------");
+
+  Put_Line("Unrenormalized lol");
+  Unrenormalize_List_Of_Lists(Lol_Ren, Ren, Lol);
+  Put(Lol);
+  Put_Line("------");
+
+
+
 
 end Graphs_Algorithms_Test;

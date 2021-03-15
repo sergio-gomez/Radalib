@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 18/11/2004
--- @revision 14/01/2018
+-- @revision 25/09/2020
 -- @brief Treatment of Graphs
 
 with Ada.Strings.Unbounded;
@@ -45,6 +45,9 @@ package Graphs is
   -- Represents a set of Edges to or from a given Vertex
   type Edges_List is private;
 
+  -- Represents the Class of a Vertex in a Bipartite Graph
+  type Bipartite_Class is (Class_1, Class_2);
+
   -- Sentinel Edge to represent a non-existent Edge
   No_Edge: constant Edge;
 
@@ -52,6 +55,7 @@ package Graphs is
   Index_Error: exception;
   Incompatible_Graphs_Error: exception;
   Incompatible_Values_Error: exception;
+  Incompatible_Class_Size_Error: exception;
   No_Edge_Error: exception;
   No_More_Edges_Error: exception;
   Non_Unique_Names_Error: exception;
@@ -136,6 +140,47 @@ package Graphs is
   -- Gr      : The Graph
   -- raises  : Uninitialized_Graph_Error
   procedure To_Unweighted(Gr: in Graph);
+
+  -- Purpose : To know if a Graph is Bipartite
+  --
+  -- Gr      : The Graph
+  -- return  : True if Bipartite
+  -- raises  : Uninitialized_Graph_Error
+  function Is_Bipartite(Gr: in Graph) return Boolean;
+
+  -- Purpose : Set the Bipartiteness of a Graph
+  -- Note    : If Num_Class1 equals number of Vertices, the Graph is non-Bipartite
+  -- Note    : Otherwise, the first Num_Class1 Vertices form the first Class, the rest the second Class
+  --
+  -- Gr      : The Graph
+  -- Num_Class1: The number of Vertices of the first Class
+  -- raises  : Uninitialized_Graph_Error
+  -- raises  : Incompatible_Class_Size_Error
+  procedure Set_Bipartiteness(Gr: in Graph; Num_Class1: in Positive);
+
+  -- Purpose : Get the Bipartiteness of a Graph
+  -- Note    : It is equal to the number of Vertices of the first Class
+  --
+  -- Gr      : The Graph
+  -- return  : The number of Vertices of the first Class
+  -- raises  : Uninitialized_Graph_Error
+  function Get_Bipartiteness(Gr: in Graph) return Positive;
+
+  -- Purpose : Get the sizes of the classes of a Bipartite Graph
+  -- Note    : Num_Class2 is zero if not a Bipartite Graph
+  --
+  -- Gr      : The Graph
+  -- Num_Class1: The number of Vertices of the first Class
+  -- Num_Class2: The number of Vertices of the second Class
+  -- raises  : Uninitialized_Graph_Error
+  procedure Get_Bipartite_Sizes(Gr: in Graph; Num_Class1: out Positive; Num_Class2: out Natural);
+
+  -- Purpose : Get the Class of a Vertex in a Bipartite Graph
+  -- Note    : Equal to Class_1 if not a Bipartite Graph
+  --
+  -- V       : The Vertex
+  -- return  : The Bipartite Class of the Vertex
+  function Get_Bipartite_Class(V: in Vertex) return Bipartite_Class;
 
   -- Purpose : Obtain a Vertex from an index
   --
@@ -522,6 +567,8 @@ private
     Vertices: Vertex_Recs(1..Size);
     Directed: Boolean;
     Names_Map: Unbounded_Strings_Maps.Map;
+    Bipartite: Boolean;
+    Num_Class1: Positive;
   end record;
 
   type Graph is access Graph_Rec;

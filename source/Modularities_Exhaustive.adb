@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -17,7 +17,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/02/2007
--- @revision 26/10/2014
+-- @revision 31/08/2020
 -- @brief Exhaustive search Modularity Optimization
 
 with Finite_Disjoint_Lists.Algorithms; use Finite_Disjoint_Lists.Algorithms;

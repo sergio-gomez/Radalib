@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -17,7 +17,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 20/11/2007
--- @revision 26/03/2018
+-- @revision 31/08/2020
 -- @brief Extremal Modularity Optimization implementation (after J. Duch and A. Arenas)
 
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
@@ -177,12 +177,14 @@ package body Modularities_Extremal is
   is
     use Linked_Lists_Of_Lists;
 
+    Gr_Neigh: Graph;
     Ls: Linked_List;
     Lc, L_Copy: List;
     Q_Aux: Double;
   begin
     Save_Modularity(Mi, L);
-    Update_List_Connected_Components(Gr, L, Ls);
+    Gr_Neigh := Neighbors_Graph(Mi);
+    Update_List_Connected_Components(Gr_Neigh, L, Ls);
 
     if Size(Ls) = 1 then
       L_Copy := New_List(Lol);

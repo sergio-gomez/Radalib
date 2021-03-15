@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -17,12 +17,13 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/02/2007
--- @revision 14/01/2018
+-- @revision 31/08/2020
 -- @brief Main access to Modularity Optimization Algorithms
 
 with Utils; use Utils;
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
 with Graphs_Double; use Graphs_Double;
+with Graphs_Double_Operations; use Graphs_Double_Operations;
 with Graphs_Double_Modularities_D; use Graphs_Double_Modularities_D;
 
 

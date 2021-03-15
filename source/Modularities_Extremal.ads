@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -17,7 +17,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 20/11/2007
--- @revision 26/03/2018
+-- @revision 31/08/2020
 -- @brief Extremal Modularity Optimization implementation (after J. Duch and A. Arenas)
 
 with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
@@ -25,6 +25,7 @@ with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
 with Utils; use Utils;
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
 with Graphs_Double; use Graphs_Double;
+with Graphs_Double_Operations; use Graphs_Double_Operations;
 with Graphs_Double_Modularities_D; use Graphs_Double_Modularities_D;
 with Queues;
 

@@ -5,9 +5,20 @@ gnatmake -O2 Graphs_Modularities_Join_Test.adb
 del /q *.ali
 del /q *.o
 echo ---------------------------------------------------------------------
-Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt            WN   4
-Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  2.0       WLA  4
-Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  2.0  0.5  UUN  4
+Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt            WN    4
+Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  3.0       WLA   4
+Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  2.0  0.5  UN    4
+Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  2.0  0.5  UUN   4
+Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  2.0  0.5  WN    4
+Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  2.0  0.5  WS    4
+Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  2.0  0.5  WUN   4
+Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  2.0  0.5  WLA   4
+Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  2.0  0.5  WULA  4
+Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  2.0  0.5  WLUN  4
+Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  2.0  0.5  WNN   4
+Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  2.0  0.5  WLR   4
+Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  2.0  0.5  WBPM  4
+Graphs_Modularities_Join_Test.exe  test-zachary_wh.net  test-zachary-lol2.txt  2.0  0.5  WBPS  4
 echo -----------
 del Graphs_Modularities_Join_Test.exe
 pause

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 10/10/2004
--- @revision 28/12/2017
+-- @revision 10/09/2020
 -- @brief Test of Finite_Disjoint_Lists package
 
 with Ada.Text_Io; use Ada.Text_Io;
@@ -39,6 +39,7 @@ procedure Finite_Disjoint_Lists_Test is
 
   procedure Put_Title(S: in String) is
   begin
+    New_Line;
     Put_Line("----------- " & S & " -----------");
   end Put_Title;
 
@@ -72,7 +73,7 @@ begin
 
   Put_Title("Sort by Size");
   Sort_By_Size(Lol);
-  Put("La(2)  after Sort By Size: "); Put(La(2));
+  Put("La(2) after Sort By Size: "); Put(La(2));
   Save(Lol);
   Reset(Lol);
   K := 1;
@@ -119,10 +120,6 @@ begin
   end if;
   Put(Lol);
 
-  Put_Title("Sort Elements");
-  Sort_Lists(Lol);
-  Put(Lol);
-
   Put_Title("Clear List of Lists");
   Clear(Lol);
   Put(Lol);
@@ -131,7 +128,7 @@ begin
   for N in 1..Num loop
     La(N) := New_List(Lol);
   end loop;
-  for I in 1..Total loop
+  for I in reverse 1..Total loop
     for J in reverse 1..Num loop
       if I mod J = 0 then
         E := Get_Element(Lol, I);
@@ -140,6 +137,26 @@ begin
       end if;
     end loop;
   end loop;
+  Put(Lol);
+
+  Put_Title("Sort Lists by Size");
+  Sort_By_Size(Lol);
+  Put(Lol);
+
+  Put_Title("Sort Lists by First Element");
+  Sort_By_First_Element(Lol);
+  Put(Lol);
+
+  Put_Title("Sort Elements");
+  Sort_Lists(Lol);
+  Put(Lol);
+
+  Put_Title("Sort Lists by First Element");
+  Sort_By_First_Element(Lol);
+  Put(Lol);
+
+  Put_Title("Sort Lists by Size");
+  Sort_By_Size(Lol);
   Put(Lol);
 
   Put_Title("Save and Restore of Lists");

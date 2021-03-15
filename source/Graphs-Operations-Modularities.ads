@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -12,11 +12,11 @@
 -- library (see LICENSE.txt); if not, see http://www.gnu.org/licenses/
 
 
--- @filename Graphs-Modularities.ads
+-- @filename Graphs-Operations-Modularities.ads
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 5/03/2006
--- @revision 15/01/2018
+-- @revision 26/09/2020
 -- @brief Calculation of Modularities of Graphs
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
@@ -29,13 +29,14 @@ generic
   type PNums is access Nums;
   type Numss is array(Integer range <>, Integer range <>) of Num;
   type PNumss is access Numss;
+  Num_Epsilon: Num := 1.0e-6;
   with function To_Num(Value: in Edge_Value) return Num is <>;
   with function To_Value(Value: in Num) return Edge_Value is <>;
   with function Alloc(First: in Integer; Last: in Integer) return PNums is <>;
   with procedure Free(P: in out PNums) is <>;
   with function Alloc(First1, Last1, First2, Last2: in Integer) return PNumss is <>;
   with procedure Free(P: in out PNumss) is <>;
-package Graphs.Modularities is
+package Graphs.Operations.Modularities is
 
   package Graphs_Num_Properties is new Graphs.Properties(Num => Num, Nums => Nums, PNums => PNums,
                                                          Numss => Numss, PNumss => PNumss);
@@ -52,7 +53,9 @@ package Graphs.Modularities is
     Weighted_Uniform_Local_Average,
     Weighted_Links_Unweighted_Nullcase,
     Weighted_No_Nullcase,
-    Weighted_Link_Rank
+    Weighted_Link_Rank,
+    Weighted_Bipartite_Path_Motif,
+    Weighted_Bipartite_Path_Signed
   );
 
   subtype Unweighted_Modularity_Type is Modularity_Type range Modularity_Type'First..Unweighted_Uniform_Nullcase;
@@ -71,6 +74,8 @@ package Graphs.Modularities is
   type Modularity_Info is private;
 
   No_Resistance: constant Num;
+  Default_Penalty_Coefficient: constant Num := 1.0;
+  Default_Teleportation: constant Num := 0.15;
 
   Unknown_Modularity_Error: exception;
   Uninitialized_Modularity_Info_Error: exception;
@@ -91,6 +96,8 @@ package Graphs.Modularities is
   -- Note    :    WLUN | Weighted_Links_Unweighted_Nullcase
   -- Note    :    WNN  | Weighted_No_Nullcase
   -- Note    :    WLR  | Weighted_Link_Rank
+  -- Note    :    WBPM | Weighted_Bipartite_Path_Motif
+  -- Note    :    WBPS | Weighted_Bipartite_Path_Signed
   --
   -- Mt_Name : The Modularity Type Name
   -- return  : The Modularity Type
@@ -109,6 +116,8 @@ package Graphs.Modularities is
   -- Note    :    WLUN | Weighted_Links_Unweighted_Nullcase
   -- Note    :    WNN  | Weighted_No_Nullcase
   -- Note    :    WLR  | Weighted_Link_Rank
+  -- Note    :    WBPM | Weighted_Bipartite_Path_Motif
+  -- Note    :    WBPS | Weighted_Bipartite_Path_Signed
   --
   -- Mt      : The Modularity Type
   -- return  : The Modularity Type Name
@@ -147,7 +156,7 @@ package Graphs.Modularities is
   -- Mi      : The Modularity Info
   -- Pc      : The Penalty Coefficient
   -- raises  : Uninitialized_Modularity_Info_Error
-  procedure Set_Penalty_Coefficient(Mi: in Modularity_Info; Pc: in Num := 1.0);
+  procedure Set_Penalty_Coefficient(Mi: in Modularity_Info; Pc: in Num := Default_Penalty_Coefficient);
 
   -- Purpose : Obtain the Penalty Coefficient
   --
@@ -155,6 +164,20 @@ package Graphs.Modularities is
   -- return  : The Penalty Coefficient
   -- raises  : Uninitialized_Modularity_Info_Error
   function Get_Penalty_Coefficient(Mi: in Modularity_Info) return Num;
+
+  -- Purpose : Set the Teleportation
+  --
+  -- Mi      : The Modularity Info
+  -- Tp      : The Teleportation
+  -- raises  : Uninitialized_Modularity_Info_Error
+  procedure Set_Teleportation(Mi: in Modularity_Info; Tp: in Num := Default_Teleportation);
+
+  -- Purpose : Obtain the Teleportation
+  --
+  -- Mi      : The Modularity Info
+  -- return  : The Teleportation
+  -- raises  : Uninitialized_Modularity_Info_Error
+  function Get_Teleportation(Mi: in Modularity_Info) return Num;
 
   -- Purpose : Update Modularity Info
   -- Note    : Only needed if Graph has changed
@@ -186,6 +209,14 @@ package Graphs.Modularities is
   -- return  : The Graph
   -- raises  : Uninitialized_Modularity_Info_Error
   function Graph_Of(Mi: in Modularity_Info) return Graph;
+
+  -- Purpose : Get the Neighbors Graph corresponding to the Modularity Info
+  -- Note    : This is the Graph needed to select nodes during modularity optimization
+  --
+  -- Mi      : The Modularity Info
+  -- return  : The Neighbors Graph
+  -- raises  : Uninitialized_Modularity_Info_Error
+  function Neighbors_Graph(Mi: in Modularity_Info) return Graph;
 
   -- Purpose : Create a copy of a Modularity Info
   --
@@ -277,13 +308,13 @@ package Graphs.Modularities is
   -- raises  : Uninitialized_Modularity_Info_Error
   function Total_Self_Loops_Strength(Mi: in Modularity_Info) return Num;
 
-  -- Purpose : Obtain the Left Leading Eigenvector
+  -- Purpose : Obtain the Link Rank Eigenvector
   -- Note    : Returns null if not Weighted_Link_Rank initialization
   --
   -- Mi      : The Modularity Info
-  -- return  : The Left Leading Eigenvector
+  -- return  : The Link Rank Eigenvector
   -- raises  : Uninitialized_Modularity_Info_Error
-  function Left_Leading_Eigenvector(Mi: in Modularity_Info) return PNums;
+  function Link_Rank_Eigenvector(Mi: in Modularity_Info) return PNums;
 
   -- Purpose : Save the Modularity contribution of all Nodes
   -- Note    : Previously saved values are overwritten
@@ -511,6 +542,12 @@ private
     Kr, W, W_Pos, W_Neg: Num := 0.0;
     Has_Self_Loop: Boolean := False;
     Self_Loop: Num := 0.0;
+    Self_Loop_Path: Num := 0.0;
+    Path_Null_Factor: Num := 1.0;
+    Path_Null_Factor_PP: Num := 1.0;
+    Path_Null_Factor_NN: Num := 1.0;
+    Path_Null_Factor_PN: Num := 1.0;
+    Path_Null_Factor_NP: Num := 1.0;
   end record;
 
   type Vertex_Info_Recs is array(Positive range <>) of Vertex_Info_Rec;
@@ -521,21 +558,28 @@ private
 
   type Modularity_Info_Rec is record
     Gr: Graph;
+    Gr_Path: Graph;
+    Gr_Neigh: Graph;
     Size: Natural := 0;
     Directed: Boolean := True;
     Signed: Boolean := True;
     From: PVertex_Info_Recs;
     To: PVertex_Info_Recs;
-    Lower_Q: Pmodularity_Recs;
-    Lower_Q_Saved: Pmodularity_Recs;
+    Q_Node: Pmodularity_Recs;
+    Q_Node_Saved: Pmodularity_Recs;
     Two_M: Natural := 0;
     Two_Mr, Two_W, Two_W_Pos, Two_W_Neg: Num := 0.0;
+    Two_W_Path: Num := 0.0;
+    Two_W_Path_Pos, Two_W_Path_Neg: Num := 0.0;
+    Two_W_Path_Null: Num := 0.0;
+    Two_W_Path_Null_Pos, Two_W_Path_Null_Neg: Num := 0.0;
     Two_La: Num := 0.0;
     Two_Ula: Num := 0.0;
     Self_Loops: Num := 0.0;
     Self_Loops_N: Natural := 0;
     Gr_Trans: Graphs_Double.Graph;
-    Eigenvec: PNums;
+    Link_Rank_Eigenvec: PNums;
+    Teleportation: Num := 0.15;
     Resistance: Num := No_Resistance;
     Penalty_Coefficient: Num := 1.0;
   end record;
@@ -556,6 +600,8 @@ private
   procedure Update_Weighted_Links_Unweighted_Nullcase(Mi: in Modularity_Info; L: in List);
   procedure Update_Weighted_No_Nullcase(Mi: in Modularity_Info; L: in List);
   procedure Update_Weighted_Link_Rank(Mi: in Modularity_Info; L: in List);
+  procedure Update_Weighted_Bipartite_Path_Motif(Mi: in Modularity_Info; L: in List);
+  procedure Update_Weighted_Bipartite_Path_Signed(Mi: in Modularity_Info; L: in List);
 
   -- Purpose : Update the Modularity Contribution of a Module when an Element is Inserted
   -- Note    : The insertion is not performed, it must be done after this call
@@ -573,6 +619,8 @@ private
   procedure Update_Inserted_Element_Weighted_Links_Unweighted_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List);
   procedure Update_Inserted_Element_Weighted_No_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List);
   procedure Update_Inserted_Element_Weighted_Link_Rank(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Inserted_Element_Weighted_Bipartite_Path_Motif(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Inserted_Element_Weighted_Bipartite_Path_Signed(Mi: in Modularity_Info; E: in Element; L: in List);
 
   -- Purpose : Update the Modularity Contribution of a Module when an Element is Removed
   -- Note    : The removal is not performed, it must be done before this call
@@ -590,16 +638,20 @@ private
   procedure Update_Removed_Element_Weighted_Links_Unweighted_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List);
   procedure Update_Removed_Element_Weighted_No_Nullcase(Mi: in Modularity_Info; E: in Element; L: in List);
   procedure Update_Removed_Element_Weighted_Link_Rank(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Removed_Element_Weighted_Bipartite_Path_Motif(Mi: in Modularity_Info; E: in Element; L: in List);
+  procedure Update_Removed_Element_Weighted_Bipartite_Path_Signed(Mi: in Modularity_Info; E: in Element; L: in List);
 
   -- Purpose : Calculation of Random Walk Transitions Graph
   --
   -- Mi      : The Modularity Info
+  -- raises  : Uninitialized_Modularity_Info_Error
   procedure Transitions_Graph(Mi: in Modularity_Info);
 
   -- Gr      : The Graph
   -- V       : The Vector
   -- return  : The Left Leading Eigenvector
+  -- raises  : Uninitialized_Modularity_Info_Error
   -- raises  : Uninitialized_Graph_Error
-  procedure Left_Leading_Eigenvector(Gr: in Graphs_Double.Graph; Eigv: out PNums);
+  procedure Link_Rank_Left_Leading_Eigenvector(Mi: in Modularity_Info);
 
-end Graphs.Modularities;
+end Graphs.Operations.Modularities;

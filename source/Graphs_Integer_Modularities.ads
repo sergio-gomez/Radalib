@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,13 +16,13 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 20/03/2006
--- @revision 01/06/2009
--- @brief Instantiation of Graphs.Modularities to Integer Edge Values and Float precision
+-- @revision 09/09/2020
+-- @brief Instantiation of Graphs.Operations.Modularities to Integer Edge Values and Float precision
 
-with Graphs_Integer;
-with Graphs.Modularities;
+with Graphs_Integer_Operations;
+with Graphs.Operations.Modularities;
 with Utils; use Utils;
 
 package Graphs_Integer_Modularities is
-  new Graphs_Integer.Modularities(Num => Float, Nums => Floats, PNums => PFloats,
-                                  Numss => Floatss, PNumss => PFloatss);
+  new Graphs_Integer_Operations.Modularities(Num => Float, Nums => Floats, PNums => PFloats,
+                                             Numss => Floatss, PNumss => PFloatss, Num_Epsilon => 1.0E-6);

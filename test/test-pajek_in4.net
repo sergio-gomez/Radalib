@@ -1,0 +1,19 @@
+*Vertices 8 5
+1 P1 Class_1
+2 P2 Class_1
+3 P3 Class_1
+4 P4 Class_1
+5 P5 Class_1
+6 E1 Class_2
+7 E2 Class_2
+8 E3 Class_2
+*Edges
+1 6
+1 7
+1 8
+2 6
+2 7
+3 7
+3 8
+4 6
+5 8

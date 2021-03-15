@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 29/08/2009
--- @revision 29/08/2009
+-- @revision 25/08/2020
 -- @brief Instantiation of Graphs.Operations to String Edge Values
 
 with Graphs_String;
@@ -24,5 +24,4 @@ with Graphs.Operations;
 with Utils; use Utils;
 
 package Graphs_String_Operations is
-  new Graphs_String.Operations(Zero_Value => S2U("0"), Edge_Values => Ustrings, PEdge_Values => PUstrings,
-                               Edge_Valuess => Ustringss, PEdge_Valuess => PUstringss);
+  new Graphs_String.Operations(Zero_Value => S2U("0"));

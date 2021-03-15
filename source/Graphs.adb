@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 18/11/2004
--- @revision 14/01/2018
+-- @revision 25/09/2020
 -- @brief Treatment of Graphs
 
 with Ada.Containers; use Ada.Containers;
@@ -52,6 +52,8 @@ package body Graphs is
         Gr.Vertices(I).To := Gr.Vertices(I).From;
       end loop;
     end if;
+    Gr.Bipartite := False;
+    Gr.Num_Class1 := Num_Vertices;
   end Initialize;
 
   --------------------
@@ -329,6 +331,76 @@ package body Graphs is
       end loop;
     end if;
   end To_Unweighted;
+
+  ------------------
+  -- Is_Bipartite --
+  ------------------
+
+  function Is_Bipartite(Gr: in Graph) return Boolean is
+  begin
+    if Gr = null then
+      raise Uninitialized_Graph_Error;
+    end if;
+
+    return Gr.Bipartite;
+  end Is_Bipartite;
+
+  -----------------------
+  -- Set_Bipartiteness --
+  -----------------------
+
+  procedure Set_Bipartiteness(Gr: in Graph; Num_Class1: in Positive) is
+  begin
+    if Gr = null then
+      raise Uninitialized_Graph_Error;
+    end if;
+    if Num_Class1 > Gr.Size then
+      raise Incompatible_Class_Size_Error;
+    end if;
+
+    Gr.Num_Class1 := Num_Class1;
+    Gr.Bipartite := Num_Class1 < Gr.Size;
+  end Set_Bipartiteness;
+
+  -----------------------
+  -- Get_Bipartiteness --
+  -----------------------
+
+  function Get_Bipartiteness(Gr: in Graph) return Positive is
+  begin
+    if Gr = null then
+      raise Uninitialized_Graph_Error;
+    end if;
+
+    return Gr.Num_Class1;
+  end Get_Bipartiteness;
+
+  -------------------------
+  -- Get_Bipartite_Sizes --
+  -------------------------
+
+  procedure Get_Bipartite_Sizes(Gr: in Graph; Num_Class1: out Positive; Num_Class2: out Natural) is
+  begin
+    if Gr = null then
+      raise Uninitialized_Graph_Error;
+    end if;
+
+    Num_Class1 := Gr.Num_Class1;
+    Num_Class2 := Gr.Size - Num_Class1;
+  end Get_Bipartite_Sizes;
+
+  -------------------------
+  -- Get_Bipartite_Class --
+  -------------------------
+
+  function Get_Bipartite_Class(V: in Vertex) return Bipartite_Class is
+  begin
+    if V.Index <= V.Gr.Num_Class1 then
+      return Class_1;
+    else
+      return Class_2;
+    end if;
+  end Get_Bipartite_Class;
 
   ----------------
   -- Get_Vertex --

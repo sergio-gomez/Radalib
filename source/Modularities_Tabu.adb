@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -17,7 +17,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/02/2007
--- @revision 27/04/2018
+-- @revision 31/08/2020
 -- @brief Tabu Modularity Optimization
 
 with Finite_Disjoint_Lists.Algorithms; use Finite_Disjoint_Lists.Algorithms;
@@ -158,7 +158,7 @@ package body Modularities_Tabu is
     use Linked_Lists_Of_Lists;
 
     Q_Ini, Q_End: Double;
-    Gr: Graph;
+    Gr_Neigh: Graph;
     Lol: List_Of_Lists;
     Lk, Lr: List;
     Ls: Linked_List;
@@ -169,7 +169,7 @@ package body Modularities_Tabu is
       return;
     end if;
 
-    Gr := Graph_Of(Mi);
+    Gr_Neigh := Neighbors_Graph(Mi);
     Lol := List_of_Lists_Of(Li);
 
     if Isolate then
@@ -184,7 +184,7 @@ package body Modularities_Tabu is
 
     if (not Fast) or else Number_Of_Elements(Li) <= Fast_Min_Module_Size then
       Move(Ei, Lk);
-      Update_List_Connected_Components(Gr, Li, Ls);
+      Update_List_Connected_Components(Gr_Neigh, Li, Ls);
       Move(Ei, Li);
 
       Disconnected := (Size(Ls) > 1);
@@ -241,6 +241,7 @@ package body Modularities_Tabu is
     Tabu_Moves: in PIntegers; Best_Move: out Movement)
   is
     N: constant Positive := Number_Of_Vertices(Gr);
+    Gr_Neigh: Graph;
     Num_Nodes, I: Positive;
     Vi: Vertex;
     Ei: Element;
@@ -248,6 +249,7 @@ package body Modularities_Tabu is
     Q_Actual, Dq, Dq_Best: Double;
     Isolate, Disconnected: Boolean;
   begin
+    Gr_Neigh := Neighbors_Graph(Mi);
     Best_Move.Idx := 0;
     Q_Actual := Total_Modularity(Mi);
     Dq_Best := Double'First;
@@ -263,7 +265,7 @@ package body Modularities_Tabu is
       else
         I := Random_Uniform(Gen, 1, N);
       end if;
-      Vi := Get_Vertex(Gr, I);
+      Vi := Get_Vertex(Gr_Neigh, I);
       Ei := Get_Element(Lol, I);
       -- Select move
       Select_Move(Gen, Vi, Ei, Li, Lj, Isolate);
@@ -298,6 +300,7 @@ package body Modularities_Tabu is
 
     Fast, Subset: Boolean;
     Mi: Modularity_Info;
+    Gr_Neigh: Graph;
     Lol_Actual: List_Of_Lists;
     Q_Actual: Double;
     N, Iter, Max_Iters, Step, Num_Steps: Natural;
@@ -311,6 +314,7 @@ package body Modularities_Tabu is
     N := Number_Of_Vertices(Gr);
 
     Initialize(Mi, Gr, Mt, R, Pc);
+    Gr_Neigh := Neighbors_Graph(Mi);
 
     Tabu_Moves := Alloc(1, N);
     Tabu_Moves.all := (others => 0);
@@ -353,7 +357,7 @@ package body Modularities_Tabu is
         if Best_Move.Disconnected then
           Update_Modularity_Inserted_Element(Mi, Ei, Lk, Mt);
           Move(Ei, Lk);
-          Update_List_Connected_Components(Gr, Li, Ls);
+          Update_List_Connected_Components(Gr_Neigh, Li, Ls);
           Save(Ls);
           Reset(Ls);
           while Has_Next(Ls) loop
@@ -372,7 +376,7 @@ package body Modularities_Tabu is
         -- Save partition if improves current best
         if Q_Actual > Q_Best.Total + Improvement_Tolerance then
           Free(Lol_Best);
-          Connected_Components(Gr, Lol_Actual, Lol_Best);
+          Connected_Components(Gr_Neigh, Lol_Actual, Lol_Best);
           if Number_Of_Lists(Lol_Actual) /= Number_Of_Lists(Lol_Best) then
             Q_Best := Modularity(Mi, Lol_Best, Mt);
             Free(Lol_Actual);

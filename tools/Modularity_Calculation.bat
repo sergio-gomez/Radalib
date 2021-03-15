@@ -120,6 +120,15 @@ Modularity_Calculation.exe  test-zachary_unwh.net  test-zachary-lol1.clu  -1.0  
 Modularity_Calculation.exe  test-zachary_unwh.net  test-zachary-lol1.clu  -5.0  WLR  T
 Modularity_Calculation.exe  test-zachary_unwh.net  test-zachary-lol1.clu   0.0  1.5  WLR  T
 Modularity_Calculation.exe  test-zachary_unwh.net  test-zachary-lol1.clu   2.0  0.5  WLR  T
+echo ---
+Modularity_Calculation.exe  test-zachary_unwh.net  test-zachary-lol1.clu        WBPM  T
+Modularity_Calculation.exe  test-zachary_unwh.net  test-zachary-lol1.clu   0.0  WBPM  T
+Modularity_Calculation.exe  test-zachary_unwh.net  test-zachary-lol1.clu   1.0  WBPM  T
+Modularity_Calculation.exe  test-zachary_unwh.net  test-zachary-lol1.clu   5.0  WBPM  T
+Modularity_Calculation.exe  test-zachary_unwh.net  test-zachary-lol1.clu  -1.0  WBPM  T
+Modularity_Calculation.exe  test-zachary_unwh.net  test-zachary-lol1.clu  -5.0  WBPM  T
+Modularity_Calculation.exe  test-zachary_unwh.net  test-zachary-lol1.clu   0.0  1.5  WBPM  T
+Modularity_Calculation.exe  test-zachary_unwh.net  test-zachary-lol1.clu   2.0  0.5  WBPM  T
 
 echo -----------------------------------------------------------------
 echo --- Weighted directed signed network: test-modularity_toy.net ---
@@ -213,6 +222,15 @@ Modularity_Calculation.exe  test-modularity_toy.net  test-modularity_toy.clu  -1
 Modularity_Calculation.exe  test-modularity_toy.net  test-modularity_toy.clu  -5.0  WLR  T
 Modularity_Calculation.exe  test-modularity_toy.net  test-modularity_toy.clu   0.0  1.5  WLR  T
 Modularity_Calculation.exe  test-modularity_toy.net  test-modularity_toy.clu   2.0  0.5  WLR  T
+echo ---
+Modularity_Calculation.exe  test-modularity_toy.net  test-modularity_toy.clu        WBPM  T
+Modularity_Calculation.exe  test-modularity_toy.net  test-modularity_toy.clu   0.0  WBPM  T
+Modularity_Calculation.exe  test-modularity_toy.net  test-modularity_toy.clu   1.0  WBPM  T
+Modularity_Calculation.exe  test-modularity_toy.net  test-modularity_toy.clu   5.0  WBPM  T
+Modularity_Calculation.exe  test-modularity_toy.net  test-modularity_toy.clu  -1.0  WBPM  T
+Modularity_Calculation.exe  test-modularity_toy.net  test-modularity_toy.clu  -5.0  WBPM  T
+Modularity_Calculation.exe  test-modularity_toy.net  test-modularity_toy.clu   0.0  1.5  WBPM  T
+Modularity_Calculation.exe  test-modularity_toy.net  test-modularity_toy.clu   2.0  0.5  WBPM  T
 echo -----------
 del Modularity_Calculation.exe
 pause

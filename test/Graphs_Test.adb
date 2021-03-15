@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 20/11/2004
--- @revision 30/10/2014
+-- @revision 25/09/2020
 -- @brief Test of Graphs package
 
 with Ada.Text_Io; use Ada.Text_Io;
@@ -26,12 +26,11 @@ with Utils; use Utils;
 
 procedure Graphs_Test is
 
-  Num: constant Natural := 4;
-
   procedure Put(Gr: in Graph) is
     Vf, Vt: Vertex;
     E: Edge;
     El: Edges_List;
+    Nc1, Nc2: Positive;
   begin
     pragma Warnings(Off, El);
     for I in 1..Number_Of_Vertices(Gr) loop
@@ -95,8 +94,14 @@ procedure Graphs_Test is
     Put("Total degree        : "); Put(Total_Degree(Gr), Width => 0); New_Line;
     Put("Number of edges     : "); Put(Number_Of_Edges(Gr), Width => 0); New_Line;
     Put("Number of self-loops: "); Put(Number_Of_Self_Loops(Gr), Width => 0); New_Line;
+    if Is_Bipartite(Gr) then
+      Get_Bipartite_Sizes(Gr, Nc1, Nc2);
+      Put_Line("Bipartite sizes     : (" & I2S(Nc1) & ", " & I2S(Nc2) & ")");
+    end if;
   end Put;
 
+  Num: Positive;
+  Nc1, Nc2: Natural;
   Gr, Gr_Clone: Graph;
   El: Edges_List;
   E: Edge;
@@ -108,6 +113,7 @@ begin
   for Directed in reverse Boolean loop
     for Weighted in reverse Boolean loop
 
+      Num := 4;
       Initialize(Gr, Num, Directed);
 
       New_Line;
@@ -220,5 +226,25 @@ begin
 
     end loop;
   end loop;
+
+  New_Line;
+  Put_Line("=============================");
+  Put_Line("Bipartite graph");
+  Put_Line("=============================");
+  Num := 6;
+  Initialize(Gr, Num, Directed => False);
+  Nc1 := 3;
+  Nc2 := Num - Nc1;
+  Set_Bipartiteness(Gr, Nc1);
+  Add_Edge(Get_Vertex(Gr, 1), Get_Vertex(Gr, 4));
+  Add_Edge(Get_Vertex(Gr, 1), Get_Vertex(Gr, 5));
+  Add_Edge(Get_Vertex(Gr, 1), Get_Vertex(Gr, 6));
+  Add_Edge(Get_Vertex(Gr, 2), Get_Vertex(Gr, 4));
+  Add_Edge(Get_Vertex(Gr, 2), Get_Vertex(Gr, 5));
+  Add_Edge(Get_Vertex(Gr, 3), Get_Vertex(Gr, 4));
+  Put(Gr);
+  Put_Line("Node 3 belongs to: " & Capitalize(Bipartite_Class'Image(Get_Bipartite_Class(Get_Vertex(Gr, 3)))));
+  Put_Line("Node 4 belongs to: " & Capitalize(Bipartite_Class'Image(Get_Bipartite_Class(Get_Vertex(Gr, 4)))));
+  Put_Line("---------");
 
 end Graphs_Test;

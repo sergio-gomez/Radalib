@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 5/10/2005
--- @revision 19/12/2014
+-- @revision 10/09/2020
 -- @brief Implementation of Lists of Lists Algorithms
 
 with Utils; use Utils;
@@ -37,21 +37,30 @@ package body Finite_Disjoint_Lists.Algorithms is
     return Left < Right;
   end Lt;
 
-  -- Sort_By_Size utils
-  type Size_Rec is record
-    Size: Natural;
+  -- Sort Lists utils
+  type Sort_Rec is record
+    Value: Integer;
     Index: Natural;
   end record;
 
-  package Size_Linked_Lists is new Linked_Lists(Size_Rec);
-  use Size_Linked_Lists;
+  package Sort_Linked_Lists is new Linked_Lists(Sort_Rec);
+  use Sort_Linked_Lists;
 
-  function Gt(Left, Right: in Size_Rec) return Boolean;
+  function Lt(Left, Right: in Sort_Rec) return Boolean;
+  pragma Inline(Lt);
+
+  function Gt(Left, Right: in Sort_Rec) return Boolean;
   pragma Inline(Gt);
 
-  function Gt(Left, Right: in Size_Rec) return Boolean is
+
+  function Lt(Left, Right: in Sort_Rec) return Boolean is
   begin
-    return Left.Size > Right.Size;
+    return Left.Value < Right.Value;
+  end Lt;
+
+  function Gt(Left, Right: in Sort_Rec) return Boolean is
+  begin
+    return Left.Value > Right.Value;
   end Gt;
 
   ---------------
@@ -115,9 +124,9 @@ package body Finite_Disjoint_Lists.Algorithms is
   ------------------
 
   procedure Sort_By_Size(Lol: in List_Of_Lists) is
-    Ll: Size_Linked_Lists.Linked_List;
+    Ll: Sort_Linked_Lists.Linked_List;
     L: List;
-    Sr: Size_Rec;
+    Sr: Sort_Rec;
     I, Iprev: Natural;
   begin
     if Lol = null then
@@ -131,7 +140,7 @@ package body Finite_Disjoint_Lists.Algorithms is
       Reset(Lol);
       while Has_Next_List(Lol) loop
         L := Next_List(Lol);
-        Sr := (Lol.Lists(L.Index).Control.Num, L.Index);
+        Sr := (Number_Of_Elements(L), L.Index);
         Add_Last(Sr, Ll);
       end loop;
       Restore(Lol);
@@ -158,6 +167,60 @@ package body Finite_Disjoint_Lists.Algorithms is
       Free(Ll);
     end if;
   end Sort_By_Size;
+
+  ---------------------------
+  -- Sort_By_First_Element --
+  ---------------------------
+
+  procedure Sort_By_First_Element(Lol: in List_Of_Lists) is
+    Ll: Sort_Linked_Lists.Linked_List;
+    L: List;
+    Sr: Sort_Rec;
+    I, Iprev: Natural;
+  begin
+    if Lol = null then
+      raise Uninitialized_List_Of_Lists_Error;
+    end if;
+
+    if Lol.Used.Num >= 2 then
+      Initialize(Ll);
+
+      Save(Lol);
+      Reset(Lol);
+      while Has_Next_List(Lol) loop
+        L := Next_List(Lol);
+        if Number_Of_Elements(L) = 0 then
+          I := Natural'Last;
+        else
+          I := Index_Of(Get_Element(L));
+        end if;
+        Sr := (I, L.Index);
+        Add_Last(Sr, Ll);
+      end loop;
+      Restore(Lol);
+      Sort(Ll, Lt'Access);
+
+      Iprev := Void;
+      Reset(Ll);
+      while Has_Next(Ll) loop
+        Sr := Next(Ll);
+        I := Sr.Index;
+        Lol.Lists(I).Prev := Iprev;
+        if Iprev = Void then
+          Lol.Used.First := I;
+        else
+          Lol.Lists(Iprev).Next := I;
+        end if;
+        Iprev := I;
+      end loop;
+      Lol.Lists(Iprev).Next := Void;
+      Lol.Used.Last := Iprev;
+      Clear(Lol.Used.Saved);
+      Reset(Lol);
+
+      Free(Ll);
+    end if;
+  end Sort_By_First_Element;
 
   ------------------------
   -- Maximal_Refinement --

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 5/10/2005
--- @revision 19/12/2014
+-- @revision 10/09/2020
 -- @brief Implementation of Lists of Lists Algorithms
 
 package Finite_Disjoint_Lists.Algorithms is
@@ -48,6 +48,13 @@ package Finite_Disjoint_Lists.Algorithms is
   -- Lol     : The List of Lists
   -- raises  : Uninitialized_List_Of_Lists_Error
   procedure Sort_By_Size(Lol: in List_Of_Lists);
+
+  -- Purpose : Sort the Lists of a List of Lists in increasing Index of the first Element of each List
+  -- Note    : Current position and Saved positions are lost
+  --
+  -- Lol     : The List of Lists
+  -- raises  : Uninitialized_List_Of_Lists_Error
+  procedure Sort_By_First_Element(Lol: in List_Of_Lists);
 
   -- Purpose : Obtain the Maximal Refinement of two List of Lists
   -- Note    : Any other possible Refinement is also a Refinement of the Maximal Refinement

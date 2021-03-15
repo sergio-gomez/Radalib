@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 13/08/2005
--- @revision 21/01/2018
+-- @revision 10/09/2020
 -- @brief Implementation of Graphs algorithms
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
@@ -114,6 +114,14 @@ package Graphs.Algorithms is
   -- raises  : Incompatible_List_Error
   procedure Isolate_List(Gr: in Graph; L: in List);
 
+  -- Purpose : Remove all internal edges of a List of Vertices from a Graph
+  --
+  -- Gr      : The Graph
+  -- L       : The List to Isolate
+  -- raises  : Uninitialized_Graph_Error
+  -- raises  : Incompatible_List_Error
+  procedure Clear_List(Gr: in Graph; L: in List);
+
   -- Purpose : Create the Subgraph formed by the Vertices in a List
   -- Note    : The order of the Vertices in the List is mantained
   --
@@ -130,6 +138,7 @@ package Graphs.Algorithms is
   -- Note    : Names of Renormalized Vertices are those of the first Element of the Lists with a '*' appended
   -- Note    : Tags of Renormalized Vertices are those of the first Element of the Lists
   -- Note    : Resistance ignored if equals Zero_Value or No_Value
+  -- Note    : For Bipartite Graphs, the Renormalizing List of Lists is Sorted by first Element
   --
   -- Gr      : The Graph
   -- Ren     : The Renormalizing List of Lists
@@ -156,5 +165,12 @@ package Graphs.Algorithms is
   -- Optim   : The Optimum Type
   -- raises  : Uninitialized_Graph_Error
   procedure Spanning_Tree(Gr: in Graph; Gr_Mst: out Graph; Optim: in Optimum_Type := Minimum);
+
+  -- Purpose : Remove Edges within the same Class of nodes in a Bipartite Graph
+  -- Note    : Graph unchanged if not Bipartite
+  --
+  -- Gr      : The Graph
+  -- raises  : Uninitialized_Graph_Error
+  procedure Force_Bipartiteness(Gr: in Graph);
 
 end Graphs.Algorithms;

@@ -5,8 +5,8 @@ gnatmake -O2 Communities_Detection.adb
 del /q *.ali
 del /q *.o
 echo -----------
-Communities_Detection.exe  v  WN el-lr-ll-srfr-trfr   5  test-zachary_unwh.net  test-zachary_unwh-lol.txt
-Communities_Detection.exe  v  WN rt-llt-ert+srt.ft!trfr     10  test-dolphins.net  test-dolphins-lol.txt
+Communities_Detection.exe  v  WN el-lr-ll-srfr-trfr       5  test-zachary_unwh.net  test-zachary_unwh-lol.txt
+Communities_Detection.exe  v  WN rt-llt-ert+srt.ft!trfr  10  test-dolphins.net      test-dolphins-lol.txt
 echo -----------
 del Communities_Detection.exe
 pause

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,13 +16,13 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 15/08/2006
--- @revision 01/06/2009
--- @brief Instantiation of Graphs.Modularities to Float Edge Values and Double precision
+-- @revision 09/09/2020
+-- @brief Instantiation of Graphs.Operations.Modularities to Float Edge Values and Double precision
 
-with Graphs_Float;
-with Graphs.Modularities;
+with Graphs_Float_Operations;
+with Graphs.Operations.Modularities;
 with Utils; use Utils;
 
 package Graphs_Float_Modularities_D is
-  new Graphs_Float.Modularities(Num => Double, Nums => Doubles, PNums => PDoubles,
-                                Numss => Doubless, PNumss => PDoubless);
+  new Graphs_Float_Operations.Modularities(Num => Double, Nums => Doubles, PNums => PDoubles,
+                                           Numss => Doubless, PNumss => PDoubless, Num_Epsilon => 1.0E-8);

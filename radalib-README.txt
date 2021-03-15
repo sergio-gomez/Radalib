@@ -1,7 +1,7 @@
 ===================================================================
-== Radalib 20191129-195313                                       ==
+== Radalib 20210315-172806                                       ==
 ==                                                               ==
-== Copyright (c) 2019 by                                         ==
+== Copyright (c) 2021 by                                         ==
 ==   Sergio Gomez             (sergio.gomez@urv.cat)             ==
 ==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==
 ==                                                               ==
@@ -68,6 +68,7 @@ Radalib is distributed in a single compressed file containing the following
 folders or directories:
 
    radalib
+   radalib/docs
    radalib/source
    radalib/test
    radalib/tools
@@ -77,7 +78,10 @@ folders or directories:
 Their contents are:
 
 - radalib
-    Root of Radalib, containing README.txt, LICENSE.txt, version and howto files.
+    Root of Radalib, containing README, LICENSE, version and howto files.
+
+- radalib/docs
+    Mathematical description of all modularity types available in Radalib.
 
 - radalib/source
     All the packages which form the library, and scripts for their compilation.
@@ -100,11 +104,11 @@ Their contents are:
     platforms.
 
 
-The size of radalib at version radalib-20180127-230551 is:
+The size of radalib at version radalib-20210315-172806 is:
 
-Code   :   253 Ada files
-Files  :   672 files
-Source : 64086 lines of Ada code
+Code   :   260 Ada files
+Files  :   717 files
+Source : 65897 lines of Ada code
 
 
 -----------
@@ -299,7 +303,7 @@ The tools in Radalib are:
 License
 -------
 
-Radalib, Copyright (c) 2018 by
+Radalib, Copyright (c) 2021 by
 Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 
 This library is free software; you can redistribute it and/or modify it under the terms

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,10 +16,35 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/08/2009
--- @revision 29/12/2014
+-- @revision 08/09/2020
 -- @brief Implementation of Graphs operations
 
 package body Graphs.Operations is
+
+  ---------------
+  -- Transpose --
+  ---------------
+
+  function Transpose(Gr: in Graph) return Graph is
+    Gr_Trans: Graph;
+    Ll: Linked_List;
+  begin
+    if Gr = null then
+      raise Uninitialized_Graph_Error;
+    end if;
+
+    Gr_Trans := Clone(Gr);
+
+    if Is_Directed(Gr_Trans) then
+      for I in 1..Gr_Trans.Size loop
+        Ll := Gr_Trans.Vertices(I).From;
+        Gr_Trans.Vertices(I).From := Gr_Trans.Vertices(I).To;
+        Gr_Trans.Vertices(I).To := Ll;
+      end loop;
+    end if;
+
+    return Gr_Trans;
+  end Transpose;
 
   ---------
   -- "+" --
@@ -131,7 +156,7 @@ package body Graphs.Operations is
   function "*"(Gr_Left, Gr_Right: in Graph) return Graph is
     Gr: Graph;
     N: Natural;
-    Directed, Is_Zero: Boolean;
+    Directed, Bipartite, Is_Zero: Boolean;
     V, Vl, Vf, Vt, Vlf, Vrt: Vertex;
     Ellf, Elrt: Edges_List;
     Elf, Ert: Edge;
@@ -144,11 +169,20 @@ package body Graphs.Operations is
 
     N := Number_Of_Vertices(Gr_Left);
     if Number_Of_Vertices(Gr_Right) /= N then
-      raise Incompatible_Graphs_Error;
+      raise Incompatible_Graphs_Error with "Incompatible sizes";
+    end if;
+
+    Bipartite := Is_Bipartite(Gr_Left) and Is_Bipartite(Gr_Right);
+    if Bipartite and then Get_Bipartiteness(Gr_Left) /= Get_Bipartiteness(Gr_Right) then
+      raise Incompatible_Graphs_Error with "Incompatible bipartiteness";
     end if;
 
     Directed := (Gr_Left /= Gr_Right) or Gr_Left.Directed or Gr_Right.Directed;
     Initialize(Gr, N, Directed);
+    if Bipartite then
+      Set_Bipartiteness(Gr, Get_Bipartiteness(Gr_Left));
+    end if;
+
     for I in 1..N loop
       V := Get_Vertex(Gr, I);
       Vl := Get_Vertex(Gr_Left, I);
@@ -259,151 +293,5 @@ package body Graphs.Operations is
 
     return Gr_Pow;
   end "**";
-
-  ---------
-  -- "*" --
-  ---------
-
-  function "*"(Gr: in Graph; V: in Edge_Values) return Edge_Values is
-    N: Natural;
-  begin
-    if Gr = null then
-      raise Uninitialized_Graph_Error;
-    end if;
-
-    N := Number_Of_Vertices(Gr);
-    if V'Length /= N then
-      raise Incompatible_Dimensions_Error;
-    end if;
-
-    declare
-      Offset: constant Integer := V'First - 1;
-      Prod: Edge_Values(V'Range);
-      J: Positive;
-      El: Edges_List;
-      E: Edge;
-    begin
-      Prod := (others => Zero_Value);
-      for I in 1..N loop
-        El := Edges_From(Get_Vertex(Gr, I));
-        Save(El);
-        Reset(El);
-        while Has_Next(El) loop
-          E := Next(El);
-          J := Index_Of(To(E));
-          Prod(I + Offset) := Prod(I + Offset) + (Value(E) * V(J + Offset));
-        end loop;
-        Restore(El);
-      end loop;
-      return Prod;
-    end;
-  end "*";
-
-  ---------
-  -- "*" --
-  ---------
-
-  function "*"(Gr: in Graph; V: in PEdge_Values) return PEdge_Values is
-    N: Natural;
-    Prod: PEdge_Values;
-    Offset: Integer;
-    J: Positive;
-    El: Edges_List;
-    E: Edge;
-  begin
-    if Gr = null then
-      raise Uninitialized_Graph_Error;
-    end if;
-    if V = null then
-      raise Uninitialized_Vector_Error;
-    end if;
-
-    N := Number_Of_Vertices(Gr);
-    if V'Length /= N then
-      raise Incompatible_Dimensions_Error;
-    end if;
-
-    Prod := Alloc(V'First, V'Last);
-    Prod.all := (others => Zero_Value);
-    Offset := V'First - 1;
-    for I in 1..N loop
-      El := Edges_From(Get_Vertex(Gr, I));
-      Save(El);
-      Reset(El);
-      while Has_Next(El) loop
-        E := Next(El);
-        J := Index_Of(To(E));
-        Prod(I + Offset) := Prod(I + Offset) + (Value(E) * V(J + Offset));
-      end loop;
-      Restore(El);
-    end loop;
-    return Prod;
-  end "*";
-
-  --------------
-  -- To_Array --
-  --------------
-
-  function To_Array(Gr: in Graph) return Edge_Valuess is
-    N: Natural;
-    J: Positive;
-    El: Edges_List;
-    E: Edge;
-  begin
-    if Gr = null then
-      raise Uninitialized_Graph_Error;
-    end if;
-
-    N := Number_Of_Vertices(Gr);
-    declare
-      A: Edge_Valuess(1..N, 1..N);
-    begin
-      A := (others => (others => Zero_Value));
-      for I in 1..N loop
-        El := Edges_From(Get_Vertex(Gr, I));
-        Save(El);
-        Reset(El);
-        while Has_Next(El) loop
-          E := Next(El);
-          J := Index_Of(To(E));
-          A(I, J) := Value(E);
-        end loop;
-        Restore(El);
-      end loop;
-      return A;
-    end;
-  end To_Array;
-
-  --------------
-  -- To_Array --
-  --------------
-
-  function To_Array(Gr: in Graph) return PEdge_Valuess is
-    P: PEdge_Valuess;
-    N: Natural;
-    J: Positive;
-    El: Edges_List;
-    E: Edge;
-  begin
-    if Gr = null then
-      raise Uninitialized_Graph_Error;
-    end if;
-
-    N := Number_Of_Vertices(Gr);
-    P := Alloc(1, N, 1, N);
-    P.all := (others => (others => Zero_Value));
-    for I in 1..N loop
-      El := Edges_From(Get_Vertex(Gr, I));
-      Save(El);
-      Reset(El);
-      while Has_Next(El) loop
-        E := Next(El);
-        J := Index_Of(To(E));
-        P(I, J) := Value(E);
-      end loop;
-      Restore(El);
-    end loop;
-    return P;
-  end To_Array;
 
 end Graphs.Operations;

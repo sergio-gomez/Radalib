@@ -10,6 +10,8 @@ for i in *.adb ; do
   echo "---"
 done
 
+rm -f *.ali *.o b~*.ad?
+
 # export LARGE_STACK="Communities_Detection.adb Mesoscales_Detection.adb Network_Properties.adb"
 export LARGE_STACK="Network_Properties.adb"
 

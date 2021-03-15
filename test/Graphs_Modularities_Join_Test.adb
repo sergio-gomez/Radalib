@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 28/12/2017
--- @revision 17/01/2018
+-- @revision 14/09/2020
 -- @brief Test of Graphs Modularities Updates
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -166,7 +166,7 @@ begin
     Put_Line("                                non-negative real number");
     Put_Line("                                default => 1.0");
     New_Line;
-    Put_Line("   modularity_type         :  UN | UUN | WN | WS | WUN | WLA | WULA | WLUN | WNN | WLR");
+    Put_Line("   modularity_type         :  UN | UUN | WN | WS | WUN | WLA | WULA | WLUN | WNN | WLR | WBPM | WBPS");
     Put_Line("                                also lowercase symbols");
     Put_Line("                                also case-insensitive full names (Unweighted_Newman, ...)");
     Put_Line("                                UN   = Unweighted_Newman");
@@ -179,6 +179,8 @@ begin
     Put_Line("                                WLUN = Weighted_Links_Unweighted_Nullcase");
     Put_Line("                                WNN  = Weighted_No_Nullcase");
     Put_Line("                                WLR  = Weighted_Link_Rank");
+    Put_Line("                                WBPM = Weighted_Bipartite_Path_Motif");
+    Put_Line("                                WBPS = Weighted_Bipartite_Path_Signed");
     New_Line;
     Put_Line("   number_of_lines_to_skip :  number of lines to skip at the beginning of the Lol files");
     Put_Line("                                ignored for partitions in Pajek format");

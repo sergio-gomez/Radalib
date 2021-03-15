@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 20/03/2006
--- @revision 18/01/2018
+-- @revision 02/09/2020
 -- @brief Test of Graphs Modularities package
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -107,7 +107,7 @@ procedure Graphs_Modularities_Test_F is
       end if;
       New_Line;
     end loop;
-    Eigenvec := Left_Leading_Eigenvector(Mi);
+    Eigenvec := Link_Rank_Eigenvector(Mi);
     if Eigenvec /= null then
       Put_Line("---");
       Put("Left leading eigenvector:"); New_Line;

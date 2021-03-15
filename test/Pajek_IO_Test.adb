@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -24,8 +24,9 @@ with Ada.Integer_Text_Io; use Ada.Integer_Text_Io;
 with Graphs_Double; use Graphs_Double;
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
 with Finite_Disjoint_Lists.Io; use Finite_Disjoint_Lists.Io;
-with Pajek_Io; use Pajek_Io;
-with Utils.Io; use Utils.Io;
+with Utils; use Utils;
+with Utils.IO; use Utils.IO;
+with Pajek_IO; use Pajek_IO;
 
 procedure Pajek_IO_Test is
 
@@ -35,6 +36,14 @@ procedure Pajek_IO_Test is
     El: Edges_List;
   begin
     pragma Warnings(Off, El);
+    for I in 1..Number_Of_Vertices(Gr) loop
+      Put(I, Width => 2); Put(":  ");
+      Put("Name = '" & Get_Name(Get_Vertex(Gr, I)) & "'  ");
+      Put("Tag = '" & Get_Tag(Get_Vertex(Gr, I)) & "'  ");
+      Put("Marked = '" & To_Lowercase(Boolean'Image(Is_Marked(Get_Vertex(Gr, I)))) & "'");
+      New_Line;
+    end loop;
+    Put_Line("---");
     for F in 1..Number_Of_Vertices(Gr) loop
       Put(F, Width => 2); Put(" -> ");
       Vf := Get_Vertex(Gr, F);
@@ -81,35 +90,32 @@ procedure Pajek_IO_Test is
     Put_Line("------");
   end Put;
 
-  Fn_In_Net1: constant String  := "test-pajek_in1.net";
-  Fn_In_Net2: constant String  := "test-pajek_in2.net";
-  Fn_In_Clu : constant String  := "test-pajek_in.clu";
-  Fn_Out_Net1: constant String := "test-pajek_out1.net";
-  Fn_Out_Net2: constant String := "test-pajek_out2.net";
+  Fn_Net_In_Prefix  : constant String := "test-pajek_in";
+  Fn_Net_Out_Prefix : constant String := "test-pajek_out";
+  Fn_Net_Sufix      : constant String := ".net";
+  Fn_In_Clu  : constant String := "test-pajek_in.clu";
   Fn_Out_Clu : constant String := "test-pajek_out.clu";
+
+  Num_Nets: constant Integer := 4;
+  Fn_Net_In : UString;
+  Fn_Net_Out: UString;
   Gr: Graph;
   Lol: List_Of_Lists;
 
 begin
-  Put_Line("=========");
-  Put_Line(Fn_In_Net1 & " -> " & Fn_Out_Net1);
-  Put_Line("---");
-  Get_Graph(Fn_In_Net1, Gr);
-  Put(Gr);
-  Put_Graph(Fn_Out_Net1, Gr, Aft => 1, Exp => 0);
-  Free(Gr);
+  for I in 1..Num_Nets loop
+    Put_Line("=========");
+    Fn_Net_In  := S2U(Fn_Net_In_Prefix  & I2S(I) & Fn_Net_Sufix);
+    Fn_Net_Out := S2U(Fn_Net_Out_Prefix & I2S(I) & Fn_Net_Sufix);
+    Put_Line(U2S(Fn_Net_In) & " -> " & U2S(Fn_Net_Out));
+    Put_Line("---");
+    Get_Graph(U2S(Fn_Net_In), Gr);
+    Put(Gr);
+    Put_Graph(U2S(Fn_Net_Out), Gr, Aft => 1, Exp => 0);
+    Free(Gr);
 
-  New_Line;
-
-  Put_Line("=========");
-  Put_Line(Fn_In_Net2 & " -> " & Fn_Out_Net2);
-  Put_Line("---");
-  Get_Graph(Fn_In_Net2, Gr);
-  Put(Gr);
-  Put_Graph(Fn_Out_Net2, Gr, Aft => 1, Exp => 0);
-  Free(Gr);
-
-  New_Line;
+    New_Line;
+  end loop;
 
   Put_Line("=========");
   Put_Line(Fn_In_Clu & " -> " & Fn_Out_Clu);

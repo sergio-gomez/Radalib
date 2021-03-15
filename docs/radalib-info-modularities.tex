@@ -1,0 +1,837 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mdwlist}
+\usepackage[colorlinks]{hyperref}
+
+\addtolength{\textwidth}{3cm}
+\addtolength{\textheight}{3cm}
+\addtolength{\topmargin}{-1.5cm}
+\addtolength{\oddsidemargin}{-1.5cm}
+\addtolength{\evensidemargin}{-1.5cm}
+
+
+\newcommand{\comment}[1]{{}}
+
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\ba}[1]{\begin{array}{#1}}
+\newcommand{\ea}{\end{array}}
+\newcommand{\bea}{\begin{eqnarray}}
+\newcommand{\eea}{\end{eqnarray}}
+\newcommand{\nn}{\nonumber \\}
+
+\newcommand{\ds}{\displaystyle}
+\newcommand{\ts}{\textstyle}
+\newcommand{\st}{\scriptstyle}
+\newcommand{\sss}{\scriptscriptstyle}
+\newcommand{\sz}{\scriptsize}
+\newcommand{\lra}{\longrightarrow}
+\newcommand{\lmt}{\longmapsto}
+\newcommand{\sign}{\mbox{sign}}
+
+\newcommand{\bm}[1]{\mbox{\boldmath $#1$}}
+\newcommand{\req}[1]{(\ref{#1})}
+\newcommand{\average}[1]{{\left\langle {#1} \right\rangle}}
+\newcommand{\comb}[2]{\pmatrix{{#1} \cr {#2}}}
+\newcommand{\pderiv}[2]{\frac{\partial {#1}}{\partial {#2}}}
+
+\newcommand{\wout}[2]{{#1}_{#2}^{\mbox{\sz out}}}
+\newcommand{\win}[2]{{#1}_{#2}^{\mbox{\sz in}}}
+\newcommand{\wpos}[2]{{#1}_{#2}^{+}}
+\newcommand{\wneg}[2]{{#1}_{#2}^{-}}
+\newcommand{\wposout}[2]{{#1}_{#2}^{+,\mbox{\sz out}}}
+\newcommand{\wposin}[2]{{#1}_{#2}^{+,\mbox{\sz in}}}
+\newcommand{\wnegout}[2]{{#1}_{#2}^{-,\mbox{\sz out}}}
+\newcommand{\wnegin}[2]{{#1}_{#2}^{-,\mbox{\sz in}}}
+\newcommand{\wpm}[2]{{#1}_{#2}^{\pm}}
+\newcommand{\wpmout}[2]{{#1}_{#2}^{\pm,\mbox{\sz out}}}
+\newcommand{\wpmin}[2]{{#1}_{#2}^{\pm,\mbox{\sz in}}}
+\newcommand{\xpp}[2]{{#1}_{#2}^{++}}
+\newcommand{\xpn}[2]{{#1}_{#2}^{+-}}
+\newcommand{\xnp}[2]{{#1}_{#2}^{-+}}
+\newcommand{\xnn}[2]{{#1}_{#2}^{--}}
+
+\newcommand{\bdesc}[2]{\begin{basedescript}{\desclabelstyle{\pushlabel}\desclabelwidth{#1}\setlength{\labelsep}{0mm}\setlength{\leftmargin}{#2}}}
+\newcommand{\edesc}{\end{basedescript}}
+
+
+
+\title{\bf \Large Definitions of modularity in {\sc Radalib} and {\sc Radatools}}
+\author{Sergio G{\'o}mez$^1$, Alberto Fern{\'a}ndez$^2$\\
+\\
+\normalsize{$^1$ Departament d'Enginyeria Inform\`{a}tica i Matem\`{a}tiques,}\\
+\normalsize{Universitat Rovira i Virgili,}\\
+\normalsize{43007 Tarragona, Spain}\\
+\\
+\normalsize{$^2$ Departament d'Enginyeria Qu\'{\i}mica,}\\
+\normalsize{Universitat Rovira i Virgili,}\\
+\normalsize{43007 Tarragona, Spain}\\
+\\
+\normalsize{E-mail: \url{sergio.gomez@urv.cat}}\\
+\normalsize{Web {\sc Radalib}: \url{http://deim.urv.cat/\~sergio.gomez/radalib.php}}\\
+\normalsize{Web {\sc Radatools}: \url{http://deim.urv.cat/\~sergio.gomez/radatools.php}}\\
+}
+\date{}
+
+
+\begin{document}
+
+\maketitle
+
+%\thispagestyle{empty}
+
+%\vspace*{2.0cm}
+
+\begin{quote}
+%\footnotesize
+{\bf Abstract:} {\sc Radatools} is a set of freely distributed programs to analyze Complex Networks. In particular, it includes programs for Communities Detection, Mesoscales Determination, calculation of Network Properties, and general tools for the manipulation of Networks and Partitions. There are also several programs not strictly related with networks, standing out one for Agglomerative Hierarchical Clustering using Multidendrograms and Binary Dendrograms.
+
+{\sc Radatools} is just a set of binary executable programs whose source code is available in {\sc Radalib}. {\sc Radalib} is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License version 2.1 as published by the Free Software Foundation.
+
+Community detection and mesoscale determination in {\sc Radatools} is based on the optimization of {\em modularity}. In this document we describe the different definitions of modularity that have been implemented in {\sc Radatools}.
+\end{quote}
+
+\newpage
+
+
+\section{Definitions and notation}
+
+Let us suppose we have a complex network with $N$ nodes and a partition $C$ of the
+network in $M$ communities.
+%We will use lowercase Latin subscripts ($i$, $j$) to
+%run over the $N$ nodes, and lowercase Greek subscripts ($\alpha$, $\beta$) to run
+%over the $M$ communities.
+
+
+\subsection{Common to all kinds of networks}
+
+%\begin{description}
+\bdesc{12mm}{12mm}
+\item[$a_{ij}$] Adjacency matrix element, with value 1 if there is a link from node $i$ to node $j$, 0 otherwise
+\item[$A$] Adjacency matrix $A = (a_{ij}) \in \mathbb{R}^{N\times N}$
+\item[$w_{ij}$] Weight of the link from node $i$ to node $j$, 0 if there is no link
+\item[$W$] Weights matrix $W = (w_{ij}) \in \mathbb{R}^{N\times N}$
+\item[$C_i$] Index of community to which node $i$ belongs to
+\edesc
+%\end{description}
+
+\noindent
+Unweighted networks may be analyzed using $w_{ij}=a_{ij}$.
+
+
+\subsection{Undirected networks}
+
+Undirected networks are characterized by symmetric adjacency and weights matrices:
+$a_{ij}=a_{ji}$ and $w_{ij}=w_{ji}$ for all pairs of nodes $i$ and $j$.
+
+%\begin{description}
+\bdesc{12mm}{12mm}
+\item[$k^i$] Degree, number of links ok node $i$
+  \beq
+    k^i = \sum_{j=1}^N a_{ij}
+  \eeq
+\item[$2 L$] Total degree
+  \beq
+    2 L = \sum_{i=1}^N \sum_{j=1}^N a_{ij} = \sum_{i=1}^N k_i
+  \eeq
+\item[$w_i$] Strengh, sum of the weights of links of node $i$
+  \beq
+    w_i = \sum_{j=1}^N w_{ij}
+  \eeq
+\item[$2 w$] Total strength
+  \beq
+    2 w = \sum_{i=1}^N \sum_{j=1}^N w_{ij} = \sum_{i=1}^N w_i
+  \eeq
+\edesc
+%\end{description}
+
+\noindent
+In networks without self-loops, $L$ is the number of links.
+
+
+\subsection{Directed networks}
+
+Directed networks have asymmetric adjacency and weights matrices, thus it is necessary
+to distinguish between links departing and arriving to nodes.
+
+%\begin{description}
+\bdesc{12mm}{12mm}
+\item[$\wout{k}{i}$] Output degree, number of links from node $i$
+  \beq
+    \wout{k}{i} = \sum_{j=1}^N a_{ij}
+  \eeq
+\item[$\win{k}{j}$] Input degree, number of links to node $j$
+  \beq
+    \win{k}{j} = \sum_{i=1}^N a_{ij}
+  \eeq
+\item[$2 L$] Total degree
+  \beq
+    2 L = \sum_{i=1}^N \sum_{j=1}^N a_{ij} = \sum_{i=1}^N \wout{k}{i} = \sum_{j=1}^N \win{k}{j}
+  \eeq
+\item[$\wout{w}{i}$] Output strengh, sum of the weights of links from node $i$
+  \beq
+    \wout{w}{i} = \sum_{j=1}^N w_{ij}
+  \eeq
+\item[$\wout{w}{j}$] Input strengh, sum of the weights of links to node $j$
+  \beq
+    \win{w}{j} = \sum_{i=1}^N w_{ij}
+  \eeq
+\item[$2 w$] Total strength
+  \beq
+    2 w = \sum_{i=1}^N \sum_{j=1}^N w_{ij} = \sum_{i=1}^N \wout{w}{i} = \sum_{j=1}^N \win{w}{j}
+  \eeq
+\edesc
+%\end{description}
+
+\noindent
+Undirected networks are particular cases of the directed ones in which $\wout{k}{i}=\win{k}{j}=k_i$ and
+$\wout{w}{i}=\win{w}{j}=w_i$.
+
+
+\subsection{Signed networks}
+
+Signed networks are those with positive and negative weights.
+
+%\begin{description}
+\bdesc{12mm}{12mm}
+\item[$\wpm{w}{ij}$] Positive and negative weights
+  \bea
+    w_{ij}       & = & \wpos{w}{ij} - \wneg{w}{ij} \\
+    \wpos{w}{ij} & = & \max\{0,  w_{ij}\}  \\
+    \wneg{w}{ij} & = & \max\{0, -w_{ij}\}
+  \eea
+\item[$\wpm{w}{i}$] Positive and negative strengths
+  \beq
+    \wpm{w}{i} = \sum_{j=1}^N \wpm{w}{ij}
+  \eeq
+\item[$\wpm{w}{i}$] Positive and negative total strengths
+  \beq
+    2 \wpm{w}{} = \sum_{i=1}^N \sum_{j=1}^N \wpm{w}{ij} = \sum_{i=1}^N \wpm{w}{i}
+  \eeq
+\edesc
+%\end{description}
+
+\noindent
+If the network is signed and directed, then it is also necessary to distinguish between
+links departing and arriving to nodes.
+
+%\begin{description}
+\bdesc{12mm}{12mm}
+\item[$\wpmout{w}{i}$] Positive and negative output strengths
+  \beq
+    \wpmout{w}{i} = \sum_{j=1}^N \wpm{w}{ij}
+  \eeq
+\item[$\wpmin{w}{j}$] Positive and negative input strengths
+  \beq
+    \wpmin{w}{j} = \sum_{i=1}^N \wpm{w}{ij}
+  \eeq
+\item[$2 \wpm{w}{}$] Positive and negative total strengths
+  \beq
+    2 \wpm{w}{} = \sum_{i=1}^N \sum_{j=1}^N \wpm{w}{ij} = \sum_{i=1}^N \wpmout{w}{i} = \sum_{j=1}^N \wpmin{w}{j}
+  \eeq
+\edesc
+%\end{description}
+
+
+\subsection{Bipartite networks}
+
+In bipartite networks, nodes can be of two different classes, that we will refer to as Individuals~($I$) and Teams~($T$).
+
+%\begin{description}
+\bdesc{12mm}{12mm}
+\item[$b_{ia}$] Weight of the link between individual node $i\in\{1,\ldots,N_I\}$, and team node $a\in\{1,\ldots,N_T\}$.
+\item[$B$] Matrix $B=(b_{ia})\in\mathbb{R}^{N_I\times N_T}$
+\item[{$A$}] Weighted adjacency block matrix $A\in\mathbb{R}^{(N_I+N_T)\times(N_I+N_T)}$ of a bipartite network
+  \beq
+    A = \left(
+          \ba{cc}
+            0   & B \\
+            B^T & 0
+          \ea
+        \right)
+  \eeq
+\item[$u_i$] Individual node strength
+  \beq
+    u_i = \sum_{a=1}^{N_T} b_{ia}
+  \eeq
+\item[$v_a$] Team node strength
+  \beq
+    v_a = \sum_{i=1}^{N_I} b_{ia}
+  \eeq
+\item[$u$] Individuals total strength
+  \beq
+    u = \sum_{i=1}^{N_I} u_i = \sum_{i=1}^{N_I} \sum_{a=1}^{N_T} b_{ia}
+  \eeq
+\item[$v$] Teams total strength
+  \beq
+    v = \sum_{a=1}^{N_T} v_a  = \sum_{i=1}^{N_I} \sum_{a=1}^{N_T} b_{ia}
+  \eeq
+\edesc
+For these networks, $u=v$. Although not common, bipartite networks could also be directed.
+%\begin{description}
+\bdesc{12mm}{12mm}
+\item[$B$] Matrix $B=(b_{ia})\in\mathbb{R}^{N_I\times N_T}$
+\item[$D$] Matrix $D=(d_{ai})\in\mathbb{R}^{N_T\times N_I}$
+\item[{$A$}] Weighted adjacency block matrix $A\in\mathbb{R}^{(N_I+N_T)\times(N_I+N_T)}$ of a directed bipartite network, with $D\neq B^T$
+  \beq
+    A = \left(
+          \ba{cc}
+            0 & B \\
+            D & 0
+          \ea
+        \right)
+  \eeq
+\item[$\wout{u}{i}$] Individual node output strength
+  \beq
+    \wout{u}{i} = \sum_{a=1}^{N_T} b_{ia}
+  \eeq
+\item[$\win{u}{i}$] Individual node input strength
+  \beq
+    \win{u}{i} = \sum_{a=1}^{N_T} d_{ai}
+  \eeq
+\item[$\wout{v}{a}$] Team node output strength
+  \beq
+    \wout{v}{a} = \sum_{i=1}^{N_I} d_{ai}
+  \eeq
+\item[$\win{v}{a}$] Team node input strength
+  \beq
+    \win{v}{a} = \sum_{i=1}^{N_I} b_{ia}
+  \eeq
+\item[$\wout{u}{}$] Individuals total output strength
+  \beq
+    \wout{u}{} = \sum_{i=1}^{N_I} \wout{u}{i} = \sum_{i=1}^{N_I} \sum_{a=1}^{N_T} b_{ia}
+  \eeq
+\item[$\win{u}{}$] Individuals total input strength
+  \beq
+    \win{u}{} = \sum_{i=1}^{N_I} \win{u}{i} = \sum_{i=1}^{N_I} \sum_{a=1}^{N_T} d_{ai}
+  \eeq
+\item[$\wout{v}{}$] Teams total output strength
+  \beq
+    \wout{v}{} = \sum_{a=1}^{N_T} \wout{v}{a} = \sum_{i=1}^{N_I} \sum_{a=1}^{N_T} d_{ai}
+  \eeq
+\item[$\wout{v}{}$] Teams total input strength
+  \beq
+    \win{v}{} = \sum_{a=1}^{N_T} \win{v}{a} = \sum_{i=1}^{N_I} \sum_{a=1}^{N_T} b_{ia}
+  \eeq
+\edesc
+%\end{description}
+Thus, $\wout{u}{}=\win{v}{}$ and $\win{u}{}=\wout{v}{}$. Finally, bipartite networks could also be signed, thus giving rise to the corresponding $\wpm{u}{i}$, $\wpm{v}{a}$, $\wpmout{u}{i}$, $\wpmin{u}{i}$, $\wpmout{v}{a}$, $\wpmin{v}{a}$, $\wpm{u}{}$, $\wpm{v}{}$, $\wpmout{u}{}$, $\wpmin{u}{}$, $\wpmout{v}{}$, $\wpmin{v}{}$.
+
+
+\section{Modularity types}
+
+The detection of communities in {\sc Radatools} is currently performed by {\em modularity}
+optimization \cite{unwh}. In {\sc Radatools} it is possible to use different variants of
+{\em modularity}.
+
+%\begin{description}
+\bdesc{19mm}{19mm}
+\item[UN] Unweighted\_Newman \cite{unwh,dir}
+\item[UUN] Unweighted\_Uniform\_Nullcase \cite{unwh,unif}
+\item[WN] Weighted\_Newman \cite{wh,dir}
+\item[WS] Weighted\_Signed \cite{signed}
+\item[WUN] Weighted\_Uniform\_Nullcase \cite{wh,unif}
+\item[WLA] Weighted\_Local\_Average
+\item[WULA] Weighted\_Uniform\_Local\_Average
+\item[WLUN] Weighted\_Links\_Unweighted\_Nullcase \cite{unwh,wh,dir}
+\item[WNN] Weighted\_No\_Nullcase \cite{nonull}
+\item[WLR] Weighted\_Link\_Rank \cite{linkrank}
+\item[WBPM] Weighted\_Bipartite\_Path\_Motif \cite{motif}
+\item[WBPS] Weighted\_Bipartite\_Path\_Signed \cite{motif}
+\edesc
+%\end{description}
+
+
+\subsection{[UN] Unweighted\_Newman}
+
+\beq
+  Q = \frac{1}{2L} \sum_{i=1}^N \sum_{j=1}^N \left(
+        a_{ij} - \frac{\wout{k}{i}\,\win{k}{j}}{2L}
+      \right)\delta(C_i,C_j)
+\eeq
+
+
+\subsection{[UUN] Unweighted\_Uniform\_Nullcase}
+
+\beq
+  Q = \sum_{i=1}^N \sum_{j=1}^N \left(
+        \frac{a_{ij}}{2L} - \frac{1}{N^2}
+      \right)\delta(C_i,C_j)
+\eeq
+
+
+\subsection{[WN] Weighted\_Newman}
+
+\beq
+  Q = \frac{1}{2w} \sum_{i=1}^N \sum_{j=1}^N \left(
+        w_{ij} - \frac{\wout{w}{i}\,\win{w}{j}}{2w}
+      \right)\delta(C_i,C_j)
+\eeq
+
+
+\subsection{[WS] Weighted\_Signed}
+
+\beq
+  Q = \frac{1}{2\wpos{w}{} + 2\wneg{w}{}} \sum_{i=1}^N \sum_{j=1}^N \left(
+        w_{ij} - \left(
+        \frac{\wposout{w}{i}\,\wposin{w}{j}}{2\wpos{w}{}} - \frac{\wnegout{w}{i}\,\wnegin{w}{j}}{2\wneg{w}{}}
+        \right)
+      \right)\delta(C_i,C_j)
+\eeq
+
+
+\subsection{[WUN] Weighted\_Uniform\_Nullcase}
+
+\beq
+  Q = \sum_{i=1}^N \sum_{j=1}^N \left(
+        \frac{w_{ij}}{2w} - \frac{1}{N^2}
+      \right)\delta(C_i,C_j)
+\eeq
+
+
+\subsection{[WLA] Weighted\_Local\_Average}
+
+\beq
+  Q = \sum_{i=1}^N \sum_{j=1}^N \left(
+       \frac{w_{ij}}{2w}
+       - \frac{1}{D_a}\,\wout{k}{i}\,\win{k}{j}\,\frac{\wout{w}{i}+\win{w}{j}}{\wout{k}{i}+\win{k}{j}}
+      \right)\delta(C_i,C_j)
+\eeq
+where
+\beq
+  D_a = \sum_{i=1}^N \sum_{j=1}^N \wout{k}{i}\,\win{k}{j} \frac{\wout{w}{i}+\win{w}{j}}{\wout{k}{i}+\win{k}{j}}
+\eeq
+
+
+\subsection{[WULA] Weighted\_Uniform\_Local\_Average}
+
+\beq
+  Q = \sum_{i=1}^N \sum_{j=1}^N \left(
+       \frac{w_{ij}}{2w}
+       - \frac{1}{D_u}\,\frac{\wout{w}{i}+\win{w}{j}}{\wout{k}{i}+\win{k}{j}}
+      \right)\delta(C_i,C_j)
+\eeq
+where
+\beq
+  D_u = \sum_{i=1}^N \sum_{j=1}^N \frac{\wout{w}{i}+\win{w}{j}}{\wout{k}{i}+\win{k}{j}}
+\eeq
+
+
+\subsection{[WLUN] Weighted\_Links\_Unweighted\_Nullcase}
+
+\beq
+  Q = \sum_{i=1}^N \sum_{j=1}^N \left(
+       \frac{w_{ij}}{2w} - \frac{\wout{k}{i}\,\win{k}{j}}{(2L)^2}
+      \right)\delta(C_i,C_j)
+\eeq
+
+
+\subsection{[WNN] Weighted\_No\_Nullcase}
+
+\beq
+  Q = \frac{1}{2w} \sum_{i=1}^N \sum_{j=1}^N
+        w_{ij}
+      \delta(C_i,C_j)
+\eeq
+
+
+\subsection{[WLR] Weighted\_Link\_Rank}
+
+\beq
+  Q = \sum_{i=1}^N \sum_{j=1}^N \left(
+        \pi_i G_{ij} - \pi_i \pi_j
+      \right)\delta(C_i,C_j)
+\eeq
+where $\pi_i$ are the components of the left leading eigenvector of $G_{ij}$, the random walk transition matrix with teleportation $\tau$ (the same as for PageRank):
+\beq
+  \pi_j = \sum_{i=1}^N \pi_i G_{ij}
+\eeq
+and
+\beq
+  G_{ij} = \left\{
+             \ba{ll}
+               (1-\tau) \frac{\ds w_{ij}}{\ds\wout{w}{i}} + \frac{\ds\tau}{\ds N} & \mbox{if $\wout{w}{i} > 0$}
+               \\
+               \frac{1}{N} & \mbox{if $\wout{w}{i} = 0$}
+             \ea
+           \right.
+\eeq
+The default value of the teleportation is $\tau = 0.15$.
+
+
+\subsection{[WBPM] Weighted\_Bipartite\_Path\_Motif}
+
+For a bipartite network,
+\bea
+  Q &=& \sum_{i=1}^{N_I} \sum_{j=1}^{N_I} \left(
+          \frac{(BD)_{ij}}{\Psi} - \frac{\alpha_I\,\wout{u}{i}\,\win{u}{j}}{\Omega}
+        \right)\delta(C_i,C_j)
+        \\
+    &+& \sum_{a=1}^{N_T} \sum_{b=1}^{N_T} \left(
+          \frac{(DB)_{ab}}{\Psi} - \frac{\alpha_T\,\wout{v}{a}\,\win{v}{b}}{\Omega}
+        \right)\delta(C_a,C_b)
+\eea
+where
+\bea
+  && (BD)_{ij} = \ds \sum_{a=1}^{N_T} b_{ia}\,d_{aj}
+  \\
+  && (DB)_{ab} = \ds \sum_{i=1}^{N_I} d_{ai}\,b_{ib}
+\eea
+and
+\bea
+  && \alpha_I = \ds \frac{1}{\wout{u}{}\,\win{u}{}\,\win{v}{}\,\wout{v}{}}
+                     \sum_{a=1}^{N_T} \win{v}{a}\,\wout{v}{a}
+  \\
+  && \alpha_T = \ds \frac{1}{\wout{v}{}\,\win{v}{}\,\win{u}{}\,\wout{u}{}}
+                     \sum_{i=1}^{N_I} \win{u}{i}\,\wout{u}{i}
+\eea
+and
+\beq
+  \Psi = \sum_{i=1}^{N_I} \sum_{j=1}^{N_I} (BD)_{ij}
+       + \sum_{a=1}^{N_T} \sum_{b=1}^{N_T} (DB)_{ab}
+\eeq
+\beq
+  \Omega = \frac{1}{\win{u}{}\,\wout{u}{}} \sum_{i=1}^{N_I} \win{u}{i}\,\wout{u}{i}
+         + \frac{1}{\win{v}{}\,\wout{v}{}} \sum_{a=1}^{N_T} \win{v}{a}\,\wout{v}{a}
+\eeq
+Note that
+\beq
+  W = \left(
+        \ba{cc}
+          0 & B \\
+          D & 0
+        \ea
+      \right)
+      \quad\quad
+  W^2 = \left(
+          \ba{cc}
+            BD & 0    \\
+            0    & DB
+          \ea
+        \right)
+\eeq
+and
+\beq
+  N = \left(
+        \ba{cc}
+          0 & \ds\frac{1}{\wout{u}{}\,\win{v}{}}\,\wout{\bm{u}}{}\,{\win{\bm{v}}{}}^T \\
+          \ds\frac{1}{\wout{v}{}\,\win{u}{}}\,\wout{\bm{v}}{}\,{\win{\bm{u}}{}}^T & 0
+        \ea
+      \right)
+\eeq
+\beq
+  N^2 = \left(
+          \ba{cc}
+          \alpha_I\,\wout{\bm{u}}{}\,{\win{\bm{u}}{}}^T & 0 \\
+          0 & \alpha_T\,\wout{\bm{v}}{}\,{\win{\bm{v}}{}}^T
+          \ea
+        \right)
+\eeq
+If the network is not bipartite, the formulation is similar but with differences, and corresponds exactly to the path motif modularity (with only the extremes of the path inside the community) defined in \cite{motif}
+\beq
+  Q = \sum_{i=1}^{N} \sum_{j=1}^{N} \left(
+        \frac{(W^2)_{ij}}{\Psi} - \frac{\wout{w}{i}\,\win{w}{j}}{(2w)^2}
+      \right)\delta(C_i,C_j)
+\eeq
+where
+\beq
+  (W^2)_{ij} = \sum_{r=1}^{N} w_{ir}\,w_{rj}
+\eeq
+and
+\beq
+  \Psi = \sum_{i=1}^{N} \sum_{j=1}^{N} (W^2)_{ij}
+\eeq
+
+
+\subsection{[WBPS] Weighted\_Bipartite\_Path\_Signed}
+
+For a signed bipartite network,
+\bea
+  Q &=& \sum_{i=1}^{N_I} \sum_{j=1}^{N_I} \left(
+          \frac{(BD)_{ij}}{\Psi} - \frac{n^I_{ij}}{\Omega}
+        \right)\delta(C_i,C_j)
+  \\
+    &+& \sum_{a=1}^{N_T} \sum_{b=1}^{N_T} \left(
+          \frac{(DB)_{ab}}{\Psi} - \frac{n^T_{ab}}{\Omega}
+        \right)\delta(C_a,C_b)
+\eea
+where
+\bea
+  n^I_{ij} & = & \left(\xpp{\alpha}{I}\,\wposout{u}{i}\,\wposin{u}{j} +
+                       \xnn{\alpha}{I}\,\wnegout{u}{i}\,\wnegin{u}{j}\right) -
+                 \left(\xpn{\alpha}{I}\,\wposout{u}{i}\,\wnegin{u}{j} +
+                       \xnp{\alpha}{I}\,\wnegout{u}{i}\,\wposin{u}{j}\right)
+  \\
+  n^T_{ab} & = & \left(\xpp{\alpha}{T}\,\wposout{v}{a}\,\wposin{v}{b} +
+                       \xnn{\alpha}{T}\,\wnegout{v}{a}\,\wnegin{v}{b}\right) -
+                 \left(\xpn{\alpha}{T}\,\wposout{v}{a}\,\wnegin{v}{b} +
+                       \xnp{\alpha}{T}\,\wnegout{v}{a}\,\wposin{v}{b}\right)
+\eea
+and
+\bea
+  && \xpp{\alpha}{I} = \ds \frac{1}{\wposout{u}{}\,\wposin{u}{}\,\wposin{v}{}\,\wposout{v}{}}
+                       \sum_{a=1}^{N_T} \wposin{v}{a}\,\wposout{v}{a}
+  \\
+  && \xnn{\alpha}{I} = \ds \frac{1}{\wnegout{u}{}\,\wnegin{u}{}\,\wnegin{v}{}\,\wnegout{v}{}}
+                       \sum_{a=1}^{N_T} \wnegin{v}{a}\,\wnegout{v}{a}
+  \\
+  && \xpn{\alpha}{I} = \ds \frac{1}{\wposout{u}{}\,\wnegin{u}{}\,\wposin{v}{}\,\wnegout{v}{}}
+                       \sum_{a=1}^{N_T} \wposin{v}{a}\,\wnegout{v}{a}
+  \\
+  && \xnp{\alpha}{I} = \ds \frac{1}{\wnegout{u}{}\,\wposin{u}{}\,\wnegin{v}{}\,\wposout{v}{}}
+                       \sum_{a=1}^{N_T} \wnegin{v}{a}\,\wposout{v}{a}
+\eea
+\bea
+  && \xpp{\alpha}{T} = \ds \frac{1}{\wposout{v}{}\,\wposin{v}{}\,\wposin{u}{}\,\wposout{u}{}}
+                       \sum_{i=1}^{N_I} \wposin{u}{i}\,\wposout{u}{i}
+  \\
+  && \xnn{\alpha}{T} = \ds \frac{1}{\wnegout{v}{}\,\wnegin{v}{}\,\wnegin{u}{}\,\wnegout{u}{}}
+                       \sum_{i=1}^{N_I} \wnegin{u}{i}\,\wnegout{u}{i}
+  \\
+  && \xpn{\alpha}{T} = \ds \frac{1}{\wposout{v}{}\,\wnegin{v}{}\,\wposin{u}{}\,\wnegout{u}{}}
+                       \sum_{i=1}^{N_I} \wposin{u}{i}\,\wnegout{u}{i}
+  \\
+  && \xnp{\alpha}{T} = \ds \frac{1}{\wnegout{v}{}\,\wposin{v}{}\,\wnegin{u}{}\,\wposout{u}{}}
+                       \sum_{i=1}^{N_I} \wnegin{u}{i}\,\wposout{v}{i}
+\eea
+and
+\bea
+  \Psi &=& \sum_{i=1}^{N_I} \sum_{j=1}^{N_I} \left( (\wpos{B}{}\wpos{D}{})_{ij}
+                                                  + (\wneg{B}{}\wneg{D}{})_{ij}
+                                                  + (\wpos{B}{}\wneg{D}{})_{ij}
+                                                  + (\wneg{B}{}\wpos{D}{})_{ij}
+                                             \right)
+  \\
+       &+& \sum_{a=1}^{N_T} \sum_{b=1}^{N_T} \left( (\wpos{D}{}\wpos{B}{})_{ab}
+                                                  + (\wneg{D}{}\wneg{B}{})_{ab}
+                                                  + (\wpos{D}{}\wneg{B}{})_{ab}
+                                                  + (\wneg{D}{}\wpos{B}{})_{ab}
+                                             \right)
+\eea
+\bea
+  \Omega & = &
+           \frac{1}{\wposin{u}{}\,\wposout{u}{}}\sum_{i=1}^{N_I} \wposin{u}{i}\,\wposout{u}{i}\ + \
+           \frac{1}{\wnegin{u}{}\,\wnegout{u}{}}\sum_{i=1}^{N_I} \wnegin{u}{i}\,\wnegout{u}{i}
+  \\ &+&
+           \frac{1}{\wposin{u}{}\,\wnegout{u}{}}\sum_{i=1}^{N_I} \wposin{u}{i}\,\wnegout{u}{i}\ + \
+           \frac{1}{\wnegin{u}{}\,\wposout{u}{}}\sum_{i=1}^{N_I} \wnegin{u}{i}\,\wposout{u}{i}
+  \\ &+&
+           \frac{1}{\wposin{v}{}\,\wposout{v}{}}\sum_{a=1}^{N_T} \wposin{v}{a}\,\wposout{v}{a}\ + \
+           \frac{1}{\wnegin{v}{}\,\wnegout{v}{}}\sum_{a=1}^{N_T} \wnegin{v}{a}\,\wnegout{v}{a}
+  \\ &+&
+           \frac{1}{\wposin{v}{}\,\wnegout{v}{}}\sum_{a=1}^{N_T} \wposin{v}{a}\,\wnegout{v}{a}\ + \
+           \frac{1}{\wnegin{v}{}\,\wposout{v}{}}\sum_{a=1}^{N_T} \wnegin{v}{a}\,\wposout{v}{a}
+\eea
+Note that
+\bea
+  && W^2 = \left( \wpos{W}{} - \wneg{W}{} \right)^2 = \wpos{(W^2)}{} - \wneg{(W^2)}{} \\
+  && N^2 = \left( \wpos{W}{} - \wneg{W}{} \right)^2 = \wpos{(N^2)}{} - \wneg{(N^2)}{}
+\eea
+where
+\beq
+  \wpos{W}{} =
+    \left(
+      \ba{cc}
+        0 & \wpos{B}{} \\
+        \wpos{D}{} & 0
+      \ea
+    \right)
+\eeq
+\beq
+  \wneg{W}{} =
+    \left(
+      \ba{cc}
+        0 & \wneg{B}{} \\
+        \wneg{D}{} & 0
+      \ea
+    \right)
+\eeq
+\beq
+  \wpos{(W^2)}{} =
+    \left(
+      \ba{cc}
+        \wpos{B}{}\wpos{D}{} + \wneg{B}{}\wneg{D}{} & 0 \\
+        0 & \wpos{D}{}\wpos{B}{} + \wneg{D}{}\wneg{B}{}
+      \ea
+    \right)
+\eeq
+\beq
+  \wneg{(W^2)}{} =
+    \left(
+      \ba{cc}
+        \wpos{B}{}\wneg{D}{} + \wneg{B}{}\wpos{D}{} & 0 \\
+        0 & \wpos{D}{}\wneg{B}{} + \wneg{D}{}\wpos{B}{}
+      \ea
+    \right)
+\eeq
+and
+\bea
+  \wpos{(N^2)}{} & = &
+    \left(
+      \ba{cc}
+        \xpp{\alpha}{I}\,\wposout{\bm{u}}{}\,(\wposin{\bm{u}}{})^T & 0  \\
+        0 & \xpp{\alpha}{T}\,\wposout{\bm{v}}{}\,(\wposin{\bm{v}}{})^T
+      \ea
+    \right)
+  \\
+  & + &
+    \left(
+      \ba{cc}
+        \xnn{\alpha}{I}\,\wnegout{\bm{u}}{}\,(\wnegin{\bm{u}}{})^T & 0 \\
+        0 & \xnn{\alpha}{T}\,\wnegout{\bm{v}}{}\,(\wnegin{\bm{v}}{})^T
+      \ea
+    \right)
+\eea
+\bea
+  \wneg{(N^2)}{} & = &
+    \left(
+      \ba{cc}
+        \xpn{\alpha}{I}\,\wposout{\bm{u}}{}\,(\wnegin{\bm{u}}{})^T & 0 \\
+        0 & \xpn{\alpha}{T}\,\wposout{\bm{v}}{}\,(\wnegin{\bm{v}}{})^T
+      \ea
+    \right)
+  \\
+  & + &
+    \left(
+      \ba{cc}
+        \xnp{\alpha}{I}\,\wnegout{\bm{u}}{}\,(\wposin{\bm{u}}{})^T & 0 \\
+        0 & \xnp{\alpha}{T}\,\wnegout{\bm{v}}{}\,(\wposin{\bm{v}}{})^T
+      \ea
+    \right)
+\eea
+
+If the network is not bipartite, the expressions become
+\beq
+  Q = \sum_{i=1}^N \sum_{j=1}^N \left(
+          \frac{(W^2)_{ij}}{\Psi} - \frac{n_{ij}}{\Omega}
+        \right)\delta(C_i,C_j)
+\eeq
+where
+\beq
+  n_{ij} = \left(\xpp{\alpha}{}\,\wposout{w}{i}\,\wposin{w}{j} +
+                 \xnn{\alpha}{}\,\wnegout{w}{i}\,\wnegin{w}{j}\right) -
+           \left(\xpn{\alpha}{}\,\wposout{w}{i}\,\wnegin{w}{j} +
+                 \xnp{\alpha}{}\,\wnegout{w}{i}\,\wposin{w}{j}\right)
+\eeq
+and
+\bea
+  && \xpp{\alpha}{} = \ds \frac{1}{\wposout{w}{}\,\wposin{w}{}\,\wposin{w}{}\,\wposout{w}{}}
+                      \sum_{i=1}^N \wposin{w}{i}\,\wposout{w}{i}
+  \\
+  && \xnn{\alpha}{} = \ds \frac{1}{\wnegout{w}{}\,\wnegin{w}{}\,\wnegin{w}{}\,\wnegout{w}{}}
+                      \sum_{i=1}^N \wnegin{w}{i}\,\wnegout{w}{i}
+  \\
+  && \xpn{\alpha}{} = \ds \frac{1}{\wposout{w}{}\,\wnegin{w}{}\,\wposin{w}{}\,\wnegout{w}{}}
+                      \sum_{i=1}^N \wposin{w}{i}\,\wnegout{w}{i}
+  \\
+  && \xnp{\alpha}{} = \ds \frac{1}{\wnegout{w}{}\,\wposin{w}{}\,\wnegin{w}{}\,\wposout{w}{}}
+                       \sum_{i=1}^N \wnegin{w}{i}\,\wposout{w}{i}
+\eea
+and
+\beq
+  \Psi = \sum_{i=1}^{N_I} \sum_{j=1}^{N_I} \left( (\wpos{W}{}\wpos{W}{})_{ij}
+                                                + (\wneg{W}{}\wneg{W}{})_{ij}
+                                                + (\wpos{W}{}\wneg{W}{})_{ij}
+                                                + (\wneg{W}{}\wpos{W}{})_{ij}
+                                           \right)
+\eeq
+\bea
+  \Omega & = &
+           \frac{1}{\wposin{w}{}\,\wposout{w}{}}\sum_{i=1}^{N_I} \wposin{w}{i}\,\wposout{w}{i}\ + \
+           \frac{1}{\wnegin{w}{}\,\wnegout{w}{}}\sum_{i=1}^{N_I} \wnegin{w}{i}\,\wnegout{w}{i}
+  \\ &+&
+           \frac{1}{\wposin{w}{}\,\wnegout{w}{}}\sum_{i=1}^{N_I} \wposin{w}{i}\,\wnegout{w}{i}\ + \
+           \frac{1}{\wnegin{w}{}\,\wposout{w}{}}\sum_{i=1}^{N_I} \wnegin{w}{i}\,\wposout{w}{i}
+\eea
+
+
+\section{Modularity optimization}
+
+We have implemented in {\sc Radatools} several optimization heuristics:
+%\begin{description}
+\bdesc{10mm}{10mm}
+\item[h] Exhaustive search
+\item[t] Tabu search \cite{mesotabu}
+\item[e] Extremal optimization \cite{extremal}
+\item[s] Spectral optimization \cite{spectral}
+\item[f] Fast algorithm \cite{fast}
+\item[l] Louvain \cite{louvain}
+\item[r] Fine-tuning by reposition
+\item[b] Fine-tuning by bootstrapping based on tabu search \cite{mesotabu}
+\edesc
+%\end{description}
+
+
+\begin{thebibliography}{99}
+
+\bibitem{unwh}
+M.E.J. Newman and M. Girvan,
+Finding and evaluating community structure in networks,
+{\em Physical Review E} {\bf 69} (2004) 026113.
+
+\bibitem{dir}
+A. Arenas, J. Duch, A. Fern\'andez and S. G\'omez,
+Size reduction of complex networks preserving modularity,
+{\em New Journal of Physics} {\bf 9} (2007) 176.
+
+\bibitem{unif}
+J. Reichardt and S. Bornholdt,
+Statistical mechanics of community detection,
+{\em Physical Review E} {\bf 74} (2006) 016110.
+
+\bibitem{wh}
+M.E.J. Newman,
+Analysis of weighted networks,
+{\em Physical Review E} {\bf 70} (2004) 056131.
+
+\bibitem{signed}
+S. G\'omez, P. Jensen and A. Arenas,
+Analysis of community structure in networks of correlated data,
+{\em Physical Review E} {\bf 80} (2009) 016114.
+
+\bibitem{nonull}
+P. Jensen,
+Network-based predictions of retail store commercial categories and optimal locations,
+{\em Physical Review E} {\bf 74} (2006) 035101(R).
+
+\bibitem{linkrank}
+Y. Kim, S.-W. Son and H. Jeong,
+Finding communities in directed networks,
+{\em Physical Review E} {\bf 81} (2010) 016103.
+
+\bibitem{motif}
+A. Arenas, A. Fern\'andez, S. Fortunato and S. G\'omez,
+Motif-based communities in complex networks
+{\em Journal of Physics A: Mathematical and Theoretical} {\bf 41} (2008) 224001.
+
+\bibitem{mesotabu}
+A. Arenas, A. Fern\'andez and S. G\'omez,
+Analysis of the structure of complex networks at different resolution levels,
+{\em New Journal of Physics} {\bf 10} (2008) 053039.
+
+\bibitem{extremal}
+J. Duch and A. Arenas,
+Community detection in complex networks using extremal optimization,
+{\em Physical Review E} {\bf 72} (2005) 027104.
+
+\bibitem{spectral}
+M.E.J. Newman,
+Modularity and community structure in networks,
+{\em Proc. Nat. Acad. Sci. USA} {\bf 103} (2006) 8577.
+
+\bibitem{fast}
+M.E.J. Newman,
+Fast algorithm for detecting community structure in networks,
+{\em Physical Review E} {\bf 69} (2004) 066133.
+
+\bibitem{louvain}
+V.D. Blondel, J.-L. Guillaume, R.Lambiotte and E. Lefebvre,
+Fast unfolding of communities in large networks,
+J{\em ournal of Statistical Mechanics: Theory and Experiment} {\bf 101} (2008) P10008.
+
+\end{thebibliography}
+
+
+\end{document}

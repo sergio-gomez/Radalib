@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -17,7 +17,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 30/11/2007
--- @revision 26/02/2016
+-- @revision 31/08/2020
 -- @brief Reduces the size of a graph and outputs a reduced graph and the reduction Lol
 
 with Ada.Text_IO;                      use Ada.Text_IO;
@@ -29,15 +29,18 @@ with Pajek_IO;                         use Pajek_IO;
 with Utils;                            use Utils;
 with Graphs;
 with Graphs.Algorithms;
-with Graphs.Modularities;
+with Graphs.Operations.Modularities;
 with Graphs_Integer;
 with Graphs_Integer_Algorithms;
+with Graphs_Integer_Operations;
 with Graphs_Integer_Modularities_D;
 with Graphs_Float;
 with Graphs_Float_Algorithms;
+with Graphs_Float_Operations;
 with Graphs_Float_Modularities_D;
 with Graphs_Double;
 with Graphs_Double_Algorithms;
+with Graphs_Double_Operations;
 with Graphs_Double_Modularities_D;
 
 procedure Size_Reduction is
@@ -46,7 +49,7 @@ procedure Size_Reduction is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2019 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2021 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
@@ -61,12 +64,14 @@ procedure Size_Reduction is
   generic
     with package The_Graphs is new Graphs(<>);
     with package The_Graphs_Algorithms is new The_Graphs.Algorithms(<>);
-    with package The_Graphs_Modularities is new The_Graphs.Modularities(<>);
+    with package The_Graphs_Operations is new The_Graphs.Operations(<>);
+    with package The_Graphs_Modularities is new The_Graphs_Operations.Modularities(<>);
   procedure Generic_Graph_Size_Reduction(Gr: in The_Graphs.Graph; Ren: out List_Of_Lists; Gr_Ren: out The_Graphs.Graph; Steps: out Natural);
 
   procedure Generic_Graph_Size_Reduction(Gr: in The_Graphs.Graph; Ren: out List_Of_Lists; Gr_Ren: out The_Graphs.Graph; Steps: out Natural) is
     use The_Graphs;
     use The_Graphs_Algorithms;
+    use The_Graphs_Operations;
     use The_Graphs_Modularities;
 
     function Proper_Degree_To(V: in Vertex) return Natural is
@@ -283,12 +288,15 @@ procedure Size_Reduction is
 
   procedure Graph_Size_Reduction is new Generic_Graph_Size_Reduction(Graphs_Integer,
                                                                      Graphs_Integer_Algorithms,
+                                                                     Graphs_Integer_Operations,
                                                                      Graphs_Integer_Modularities_D);
   procedure Graph_Size_Reduction is new Generic_Graph_Size_Reduction(Graphs_Float,
                                                                      Graphs_Float_Algorithms,
+                                                                     Graphs_Float_Operations,
                                                                      Graphs_Float_Modularities_D);
   procedure Graph_Size_Reduction is new Generic_Graph_Size_Reduction(Graphs_Double,
                                                                      Graphs_Double_Algorithms,
+                                                                     Graphs_Double_Operations,
                                                                      Graphs_Double_Modularities_D);
 
   Net_Sufix: constant String := ".net";

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/12/2017
--- @revision 15/03/2018
+-- @revision 10/09/2020
 -- @brief Louvain Algorithm implementation
 
 with Ada.Containers.Ordered_Sets;
@@ -67,6 +67,7 @@ package body Modularities_Louvain is
     N, J: Positive;
     Directed: Boolean;
     Mi: Modularity_Info;
+    Gr_Neigh: Graph;
     Delta_Q, Delta_Q_Max: Double;
     Li, Lj, Lj_Max: List;
     Ei: Finite_Disjoint_Lists.Element;
@@ -82,6 +83,7 @@ package body Modularities_Louvain is
     N := Number_Of_Vertices(Gr);
     Directed := Is_Directed(Gr);
     Initialize(Mi, Gr, Mt, R, Pc);
+    Gr_Neigh := Neighbors_Graph(Mi);
     Update_Modularity(Mi, Lol, Mt);
     Q := Total_Modularity(Mi);
     Increased := True;
@@ -91,7 +93,7 @@ package body Modularities_Louvain is
         -- Find best neighbor
         Clear(S);
         Delta_Q_Max := Double'First;
-        Vi := Get_Vertex(Gr, I);
+        Vi := Get_Vertex(Gr_Neigh, I);
         Ei := Get_Element(Lol, I);
         Li := List_Of(Ei);
         Insert(S, Get_Id(Li));
@@ -145,7 +147,7 @@ package body Modularities_Louvain is
       -- Ensure connected communities if modularity improved
       if Increased then
         Q := Total_Modularity(Mi);
-        Connected_Components(Gr, Lol, Lol_Aux);
+        Connected_Components(Gr_Neigh, Lol, Lol_Aux);
         if Number_Of_Lists(Lol_Aux) > Number_Of_Lists(Lol) then
           Update_Modularity(Mi, Lol_Aux, Mt);
           Q_Aux := Total_Modularity(Mi);
@@ -179,7 +181,7 @@ package body Modularities_Louvain is
     Lol_Best: out List_Of_Lists; Q_Best: out Modularity_Rec;
     R: in Double := No_Resistance; Pc: in Double := 1.0)
   is
-    Q_Ren: Modularity_Rec;
+    Q_Ren, Q_Last: Modularity_Rec;
     Gr_Ren, Gr_Aux: Graph;
     Lol, Lol_Ren, Lol_Aux: List_Of_Lists;
     N, N_Ren: Positive;
@@ -188,6 +190,8 @@ package body Modularities_Louvain is
   begin
     R_Ren := R;
     Q_Best := Modularity(Gr, Lol_Ini, Mt, R, Pc);
+    Lol_Best := Clone(Lol_Ini);
+    Q_Last := Q_Best;
     Gr_Ren := Clone(Gr);
     N := Number_Of_Vertices(Gr);
     Initialize(Lol, N, Isolated_Initialization);
@@ -202,6 +206,7 @@ package body Modularities_Louvain is
       Optimization_Process(Log_Name, Mt, Gr_Ren, Lol_Ren, Q_Ren, R_Ren, Pc);
       if N_Ren = Number_Of_Lists(Lol_Ren) then
         Free(Gr_Ren);
+        Q_Ren := Q_Last;
         Finished := True;
       else
         Renormalize_Graph(Gr_Ren, Lol_Ren, Gr_Aux, R_Ren);
@@ -214,15 +219,21 @@ package body Modularities_Louvain is
         if Mt /= Weighted_Newman then
           Q_Ren := Modularity(Gr, Lol, Mt, R, Pc);
         end if;
+        Q_Last := Q_Ren;
+        if Q_Ren.Total > Q_Best.Total then
+          Free(Lol_Best);
+          Lol_Best := Clone(Lol);
+          Q_Best := Q_Ren;
+        end if;
         Improvement_Action(Log_Name, Lol, Q_Ren, S2U("resizing"));
       end if;
       Free(Lol_Ren);
     end loop;
     if Q_Ren.Total > Q_Best.Total then
+      Free(Lol_Best);
       Lol_Best := Lol;
       Q_Best := Q_Ren;
     else
-      Lol_Best := Clone(Lol_Ini);
       Free(Lol);
     end if;
   end Execute_Repetition;

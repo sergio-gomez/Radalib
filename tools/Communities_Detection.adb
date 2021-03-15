@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/05/2008
--- @revision 06/03/2018
+-- @revision 14/09/2020
 -- @brief Modularity optimization by combination of different heuristics
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -39,7 +39,7 @@ procedure Communities_Detection is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2019 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2021 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
@@ -48,7 +48,8 @@ procedure Communities_Detection is
     Put_Line("==   - unweighted (UN)          - uniform nullcase (UUN, WUN)    ==");
     Put_Line("==   - weighted (WN)            - local average (WLA, WULA)      ==");
     Put_Line("==   - weighted signed (WS)     - wh links unwh nullcase (WLUN)  ==");
-    Put_Line("==   - link rank (WLR)          - no nullcase (WNN)              ==");
+    Put_Line("==   - link rank (WLR)          - bipartite path motif (WBPM)    ==");
+    Put_Line("==   - no nullcase (WNN)        - bipartite path signed (WBPS)   ==");
     Put_Line("== Algorithms, which can be combined:                            ==");
     Put_Line("==   - exhaustive search (h)    - louvain (l)                    ==");
     Put_Line("==   - tabu search (t)          - fast algorithm (f)             ==");
@@ -94,7 +95,7 @@ begin
     Put_Line("                              n = None              p = Progress");
     Put_Line("                              s = Summary           v = Verbose");
     New_Line;
-    Put_Line("   Modularity Types    :  UN | UUN | WN | WS | WUN | WLA | WULA | WLUN | WNN | WLR");
+    Put_Line("   Modularity Types    :  UN | UUN | WN | WS | WUN | WLA | WULA | WLUN | WNN | WLR | WBPM | WBPS");
     Put_Line("                            also lowercase symbols");
     Put_Line("                            also case-insensitive full names (Unweighted_Newman, ...)");
     Put_Line("                              UN   = Unweighted_Newman");
@@ -107,6 +108,8 @@ begin
     Put_Line("                              WLUN = Weighted_Links_Unweighted_Nullcase");
     Put_Line("                              WNN  = Weighted_No_Nullcase");
     Put_Line("                              WLR  = Weighted_Link_Rank");
+    Put_Line("                              WBPM = Weighted_Bipartite_Path_Motif");
+    Put_Line("                              WBPS = Weighted_Bipartite_Path_Signed");
     New_Line;
     Put_Line("   Heuristics String   :  [htseflrb!:.+-]+");
     Put_Line("                            also uppercase symbols");

@@ -12,8 +12,14 @@ rm -f test-eps_plots_0?.eps
 # Finite_Disjoint_Lists_Test
 rm -f test-finite_disjoint_lists.txt
 
-# Graph_Eigenvalues
+# Graphs_Eigenvalues
 rm -f test-zachary_unwh-eig.txt
+
+# Graphs_Modularities_Move_Join_Save
+rm -f test-modularities_join*.txt
+
+# Graphs_Modularities_Move_Test_Save
+rm -f test-modularities_move*.txt
 
 # Multilayer_Test
 rm -f test-multiplex_out??.txt

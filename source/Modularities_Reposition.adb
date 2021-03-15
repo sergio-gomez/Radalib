@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2019 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 01/04/2008
--- @revision 15/03/2018
+-- @revision 31/08/2020
 -- @brief Reposition Algorithm implementation
 
 with Ada.Containers.Ordered_Sets;
@@ -70,6 +70,7 @@ package body Modularities_Reposition is
     use List_Id_Sets;
 
     N: constant Positive := Number_Of_Vertices(Gr);
+    Gr_Neigh: Graph;
     Processed: array(1..N) of Boolean;
     Nc: Natural;
     L_Ori, L, L_Best: List;
@@ -85,6 +86,7 @@ package body Modularities_Reposition is
   begin
     pragma Warnings(Off, Elf);
     pragma Warnings(Off, Elt);
+    Gr_Neigh := Neighbors_Graph(Mi);
     Processed := (others => False);
     Changed := False;
     Nc := 0;
@@ -110,7 +112,7 @@ package body Modularities_Reposition is
         -- Check adjacent Lists
         E_Ori := Get_Element(Lol_Actual, J_Sel);
         L_Ori := List_Of(E_Ori);
-        V_Ori := Get_Vertex(Gr, J_Sel);
+        V_Ori := Get_Vertex(Gr_Neigh, J_Sel);
         Elf := Edges_From(V_Ori);
         Save(Elf);
         Reset(Elf);
@@ -164,7 +166,7 @@ package body Modularities_Reposition is
     if Changed then
       -- Ensure connected communities if modularity improved
       Q_Actual := Total_Modularity(Mi);
-      Connected_Components(Gr, Lol_Actual, Lol_Aux);
+      Connected_Components(Gr_Neigh, Lol_Actual, Lol_Aux);
       if Number_Of_Lists(Lol_Aux) > Number_Of_Lists(Lol_Actual) then
         Update_Modularity(Mi, Lol_Aux, Mt);
         Q_Aux := Total_Modularity(Mi);

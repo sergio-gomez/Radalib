@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo "Compiling source..."
+
 for i in *.adb ; do
   gnatmake -O2 -D $RADALIB_ROOT/compiled $i
   #gnatmake -g -D $RADALIB_ROOT/compiled $i
@@ -12,3 +14,5 @@ for i in *.ads ; do
     #gnatmake -g -D $RADALIB_ROOT/compiled $i
   fi
 done
+
+echo "------"

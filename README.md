@@ -23,7 +23,10 @@ The selected language was Ada, for several reasons: performance (it is a compile
 **Radalib** is distributed in a single compressed file containing the following folders or directories:
 
 - `radalib`
-    Root of **Radalib**, containing README.txt, LICENSE.txt, version and howto files.
+    Root of **Radalib**, containing README, LICENSE, info, version and howto files.
+
+- `radalib/docs`
+    Mathematical description of all modularity types available in **Radalib**.
 
 - `radalib/source`
     All the packages which form the library, and scripts for their compilation.
@@ -40,11 +43,11 @@ The selected language was Ada, for several reasons: performance (it is a compile
 - `radalib/maintenance`
     Scripts to simplify the upgrade and installation of **Radalib** in the different platforms.
 
-The size of **Radalib** at version `radalib-20191129-195313` is:
+The size of **Radalib** at version `radalib-20210315-172806` is:
 
-- Code:     253 Ada files
-- Files:    672 files
-- Source: 64441 lines of Ada code
+- Code:     260 Ada files
+- Files:    717 files
+- Source: 65897 lines of Ada code
 
 
 ## Compilation
@@ -208,7 +211,7 @@ The tools in **Radalib** are:
 
 ## License
 
-**Radalib**, Copyright (c) 2019 by *Sergio Gomez* (sergio.gomez@urv.cat), *Alberto Fernandez* (alberto.fernandez@urv.cat)
+**Radalib**, Copyright (c) 2021 by *Sergio Gomez* (sergio.gomez@urv.cat), *Alberto Fernandez* (alberto.fernandez@urv.cat)
 
 This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License version 2.1 as published by the Free Software Foundation.
 
