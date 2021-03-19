@@ -59,7 +59,7 @@ How to install radalib for the first time
       D:\Users\MyUsername\AdaStuff\radalib\source\00-compile_all.bat
 
 6) Check if some tests work, e.g.:
-      D:\Users\MyUsername\AdaStuff\radalib\test\Graph_Modularity_Test.bat
+      D:\Users\MyUsername\AdaStuff\radalib\test\Graphs_Test.bat
       D:\Users\MyUsername\AdaStuff\radalib\test\Graphs_Properties_Test.bat
       D:\Users\MyUsername\AdaStuff\radalib\test\Eps_Plots_Test.bat
 

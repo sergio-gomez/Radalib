@@ -60,7 +60,7 @@ How to install radalib for the first time
 
 8) Check if some tests work, e.g.:
       $ cd radalib/test
-      $ ./graph_modularity_test.sh
+      $ ./graphs_test.sh
       $ ./graphs_properties_test.sh
       $ ./eps_plots_test.sh
 
