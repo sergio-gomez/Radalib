@@ -1,0 +1,16 @@
+{
+    "creators": [
+        {
+            "affiliation": "Universitat Rovira i Virgili, Spain",
+            "name": "Gómez, Sergio",
+            "orcid": "0000-0003-1820-0062"
+        },
+        {
+            "affiliation": "Universitat Rovira i Virgili, Spain",
+            "name": "Fernández, Alberto",
+            "orcid": "0000-0002-1241-1646"
+        }
+    ],
+    "description": "Radalib: Ada library and tools for the analysis of Complex Networks and more",
+    "title": "Radalib"
+}
