@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 08/05/2013
--- @revision 22/03/2018
+-- @revision 20/07/2021
 -- @brief Agglomerative Hierarchical Clustering with MultiDendrograms and Binary Dendrograms
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -56,7 +56,7 @@ procedure Hierarchical_Clustering is
     Put_Line("==   - (AL) Arithmetic linkage      - (BF) Beta flexible         ==");
     Put_Line("==   - (GL) Geometric linkage                                    ==");
     Put_Line("==                                                               ==");
-    Put_Line("== Equivalences between clustering algorithms:                   ==");
+    Put_Line("== Equivalences between clustering algorithms for distances:     ==");
     Put_Line("==   Arithmetic Linkage Unweighted  = UPGMA                      ==");
     Put_Line("==   Versatile Linkage (param +1.0) = Complete Linkage           ==");
     Put_Line("==   Versatile Linkage (param +0.1) = Arithmetic Linkage         ==");
@@ -64,12 +64,15 @@ procedure Hierarchical_Clustering is
     Put_Line("==   Versatile Linkage (param -0.1) = Harmonic Linkage           ==");
     Put_Line("==   Versatile Linkage (param -1.0) = Single Linkage             ==");
     Put_Line("==   Beta Flexible     (param  0.0) = Arithmetic Linkage         ==");
+    Put_Line("== For similarities, the signs of param must be exchanged        ==");
     Put_Line("==                                                               ==");
     Put_Line("== MultiDendrograms generates always a unique dendrogram         ==");
     Put_Line("== For Binary Dendrograms, in case of ties, many dendrograms     ==");
     Put_Line("== may exist, and this tool can enumerate or count all of them,  ==");
     Put_Line("== or choose the one with maximum cophenetic correlation         ==");
-    Put_Line("== See http://deim.urv.cat/~sergio.gomez/multidendrograms.php    ==");
+    Put_Line("== See also                                                      ==");
+    Put_Line("==   http://deim.urv.cat/~sergio.gomez/mdendro.php               ==");
+    Put_Line("==   http://deim.urv.cat/~sergio.gomez/multidendrograms.php      ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;
@@ -424,9 +427,17 @@ begin
     Put_Line("                              BF = Beta_Flexible");
     Put_Line("                              default => 0");
     Put_Line("                              ignored for the other clustering types");
+    Put_Line("                              for VL");
+    Put_Line("                                -1.0 corresponds to SL for DIST, and to CL for SIM");
+    Put_Line("                                -0.1 corresponds to HL for DIST, and to AL for SIM");
+    Put_Line("                                 0.0 corresponds to GL");
+    Put_Line("                                +0.1 corresponds to AL for DIST, and to HL for SIM");
+    Put_Line("                                +1.0 corresponds to CL for DIST, and to SL for SIM");
+    Put_Line("                              for BF");
+    Put_Line("                                 0.0 corresponds to AL");
     New_Line;
     Put_Line("   dendrogram_mode       :  Sorted | Unsorted | Best | Count");
-    Put_Line("                              also case-insensitive full names)");
+    Put_Line("                              also case-insensitive full names");
     Put_Line("                              default => " & To_Name(Default_Dendrogram_Mode));
     Put_Line("                              mode discarded for MultiDendrograms");
     New_Line;
@@ -487,7 +498,7 @@ begin
     Put_Line("  Clustering param : " & D2Sea(Cp, Aft => 3));
   elsif Ct = Versatile_Linkage then
     Put("  Clustering param : " & D2Sea(Cp, Aft => 4));
-    Ve := Versatile_Power(Pt, Cp);
+    Ve := Versatile_Power(Pt, Ct, Cp);
     if Ve = Double'Last then
       Put_Line(" -> Versatile exponent : +Infinity");
     elsif Ve = Double'First then

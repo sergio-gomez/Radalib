@@ -268,7 +268,7 @@ Usage:  Data_To_Correlations.exe  data_file  rows_or_columns  scaling_type  corr
 ===================================================================
 == Calculate many types of proximities (distances or             ==
 == similarities) between rows or columns in a data set:          ==
-==   - Eucldean, Manhattan, Chebyshev, Minkowski, Canberra       ==
+==   - Euclidean, Manhattan, Chebyshev, Minkowski, Canberra      ==
 ==   - Bray Curtis, correlation, cosine                          ==
 ==   - several scalings and transformations available            ==
 ===================================================================
@@ -388,7 +388,7 @@ Usage:  Extract_Subgraphs.exe  net_name  clu_or_lol_name  out_name_prefix  [ num
 ==   - (AL) Arithmetic linkage      - (BF) Beta flexible         ==
 ==   - (GL) Geometric linkage                                    ==
 ==                                                               ==
-== Equivalences between clustering algorithms:                   ==
+== Equivalences between clustering algorithms for distances:     ==
 ==   Arithmetic Linkage Unweighted  = UPGMA                      ==
 ==   Versatile Linkage (param +1.0) = Complete Linkage           ==
 ==   Versatile Linkage (param +0.1) = Arithmetic Linkage         ==
@@ -396,12 +396,15 @@ Usage:  Extract_Subgraphs.exe  net_name  clu_or_lol_name  out_name_prefix  [ num
 ==   Versatile Linkage (param -0.1) = Harmonic Linkage           ==
 ==   Versatile Linkage (param -1.0) = Single Linkage             ==
 ==   Beta Flexible     (param  0.0) = Arithmetic Linkage         ==
+== For similarities, the signs of param must be exchanged        ==
 ==                                                               ==
 == MultiDendrograms generates always a unique dendrogram         ==
 == For Binary Dendrograms, in case of ties, many dendrograms     ==
 == may exist, and this tool can enumerate or count all of them,  ==
 == or choose the one with maximum cophenetic correlation         ==
-== See http://deim.urv.cat/~sergio.gomez/multidendrograms.php    ==
+== See also                                                      ==
+==   http://deim.urv.cat/~sergio.gomez/mdendro.php               ==
+==   http://deim.urv.cat/~sergio.gomez/multidendrograms.php      ==
 ===================================================================
 
 
@@ -455,9 +458,17 @@ Usage:  Hierarchical_Clustering.exe  proximities_name  output_prefix  dendrogram
                               BF = Beta_Flexible
                               default => 0
                               ignored for the other clustering types
+                              for VL
+                                -1.0 corresponds to SL for DIST, and to CL for SIM
+                                -0.1 corresponds to HL for DIST, and to AL for SIM
+                                 0.0 corresponds to GL
+                                +0.1 corresponds to AL for DIST, and to HL for SIM
+                                +1.0 corresponds to CL for DIST, and to SL for SIM
+                              for BF
+                                 0.0 corresponds to AL
 
    dendrogram_mode       :  Sorted | Unsorted | Best | Count
-                              also case-insensitive full names)
+                              also case-insensitive full names
                               default => Sorted
                               mode discarded for MultiDendrograms
 

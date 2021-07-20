@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 11/05/2013
--- @revision 22/03/2018
+-- @revision 20/07/2021
 -- @brief Dendrograms Algorithms
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
@@ -323,9 +323,10 @@ package Dendrograms.Algorithms is
   -- Note    : Returns -Infinity (Double'First) or +Infinity (Double'Last) if Cp <= -1 or Cp >= +1
   --
   -- Pt      : The Proximity Type
+  -- Ct      : The Clustering Type
   -- Cp      : The Clustering Parameter, between -1 and +1
   -- return  : The Exponent
-  function Versatile_Power(Pt: in Proximity_Type; Cp: in Double) return Double;
+  function Versatile_Power(Pt: in Proximity_Type; Ct: in Clustering_Type; Cp: in Double) return Double;
 
 
 private

@@ -44,7 +44,7 @@ procedure Data_To_Proximities is
     Put_Line("===================================================================");
     Put_Line("== Calculate many types of proximities (distances or             ==");
     Put_Line("== similarities) between rows or columns in a data set:          ==");
-    Put_Line("==   - Eucldean, Manhattan, Chebyshev, Minkowski, Canberra       ==");
+    Put_Line("==   - Euclidean, Manhattan, Chebyshev, Minkowski, Canberra      ==");
     Put_Line("==   - Bray Curtis, correlation, cosine                          ==");
     Put_Line("==   - several scalings and transformations available            ==");
     Put_Line("===================================================================");

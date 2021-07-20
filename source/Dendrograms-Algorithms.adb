@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 11/05/2013
--- @revision 22/03/2018
+-- @revision 20/07/2021
 -- @brief Dendrograms Algorithms
 
 with Ada.Unchecked_Deallocation;
@@ -1059,10 +1059,16 @@ package body Dendrograms.Algorithms is
   -- Versatile_Power --
   ---------------------
 
-  function Versatile_Power(Pt: in Proximity_Type; Cp: in Double) return Double is
+  function Versatile_Power(Pt: in Proximity_Type; Ct: in Clustering_Type; Cp: in Double) return Double is
     S1: constant Double := 0.1;  -- 0 < S1 = Sigmoid(1) < 1
   begin
-    if    (Pt = Distance and Cp <= -1.0) or (Pt = Similarity and Cp >= +1.0) then
+    if    Ct = Arithmetic_Linkage then
+      return 1.0;
+    elsif Ct = Geometric_Linkage then
+      return 0.0;
+    elsif Ct = Harmonic_Linkage then
+      return -1.0;
+    elsif (Pt = Distance and Cp <= -1.0) or (Pt = Similarity and Cp >= +1.0) then
       return Double'First;
     elsif (Pt = Distance and Cp >= +1.0) or (Pt = Similarity and Cp <= -1.0) then
       return Double'Last;
@@ -1226,7 +1232,7 @@ package body Dendrograms.Algorithms is
             D_I_J := D_I_J * (Dij ** (S_Xi * S_Xj));
           end if;
         elsif Ct in Versatile_Clustering then
-          P := Versatile_Power(Pt, Cp);
+          P := Versatile_Power(Pt, Ct, Cp);
           if Wt = Weighted then
             D_I_J := D_I_J + (Dij ** P);
           else
@@ -1295,7 +1301,7 @@ package body Dendrograms.Algorithms is
         D := D_I_J ** (1.0 / Double(S_X_I * S_X_J));
       end if;
     elsif Ct in Versatile_Clustering then
-      P := Versatile_Power(Pt, Cp);
+      P := Versatile_Power(Pt, Ct, Cp);
       if Wt = Weighted then
         D := (D_I_J / Double(S_I * S_J)) ** (1.0 / P);
       else
