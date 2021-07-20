@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/46231296.svg)](https://zenodo.org/badge/latestdoi/46231296)
+
 # Radalib
 
 Ada library and tools for the analysis of Complex Networks and more.
