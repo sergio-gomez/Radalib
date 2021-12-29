@@ -408,7 +408,7 @@ Usage:  Extract_Subgraphs.exe  net_name  clu_or_lol_name  out_name_prefix  [ num
 ===================================================================
 
 
-Usage:  Hierarchical_Clustering.exe  proximities_name  output_prefix  dendrogram_type  proximity_type  [ precision ]  clustering_type  [ weighting_type ]  [ clustering_parameter ]  [ dendrogram_mode ]  [ internal_nodes_prefix ]
+Usage:  Hierarchical_Clustering.exe  proximities_name  output_prefix  dendrogram_type  proximity_type  [ precision ]  clustering_type  [ weighting_type ]  [ clustering_parameter ]  [ dendrogram_mode  [ max_num_dendrograms ]  [ sample_probability ] ]  [ internal_nodes_prefix ]
 
    proximities_name      :  name of the proximities file, either in matrix or list form
                               in matrix form, the names may be in first column, first row, or none
@@ -467,10 +467,23 @@ Usage:  Hierarchical_Clustering.exe  proximities_name  output_prefix  dendrogram
                               for BF
                                  0.0 corresponds to AL
 
-   dendrogram_mode       :  Sorted | Unsorted | Best | Count
+   dendrogram_mode       :  Sorted | Unsorted | Sample | Best | Count
                               also case-insensitive full names
                               default => Sorted
                               mode discarded for MultiDendrograms
+                              Sorted   : outputs all dendrograms sorted by decreasing cophenetic correlation
+                              Unsorted : outputs the first binary dendrograms found
+                              Sample   : outputs a sorted sample of binary dendrograms
+                              Best     : outputs the dendrogram(s) with largest cophenetic correlation
+                              Count    : outputs the number of binary dendrograms
+
+   max_num_dendrograms   :  Maximum number of binary dendrograms
+                              default => 1000
+                              stops recursion except for Count mode
+
+   sample_probability    :  Sample probability, between 0.0 and 1.0
+                              default => 0.02
+                              necessary for Sample mode, discarded for the rest
 
    internal_nodes_prefix :  Prefix for the names of the internal nodes
                               if 'None' (case insensitive) no names are assigned to internal nodes

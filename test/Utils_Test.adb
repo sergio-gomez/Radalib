@@ -16,7 +16,7 @@
 -- @author Sergio Gomez
 -- @version 1.0
 -- @date 12/05/2005
--- @revision 29/11/2019
+-- @revision 07/09/2021
 -- @brief Test of Utils package
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -127,6 +127,14 @@ begin
   Put_Line(D2Se0(D, Aft => 8) & ":  " & D2Se0(Floor(D), Aft => 4) & "  " & D2Se0(Round(D), Aft => 4) & "  " & D2Se0(Ceiling(D), Aft => 4));
   D := -98765432198.7654;
   Put_Line(D2Se0(D, Aft => 4) & ":  " & D2Se0(Floor(D), Aft => 4) & "  " & D2Se0(Round(D), Aft => 4) & "  " & D2Se0(Ceiling(D), Aft => 4));
+  New_Line;
+
+  D := 123.937500;
+  Put_Line(D2Se0(D, Aft => 10) & ":");
+  for Precision in 0..6 loop
+    Put_Line("  " & I2S(Precision) & "   -> " & D2Se0(Round(D, Precision), Aft => 8));
+  end loop;
+  Put_Line("  4&3 -> " & D2Se0(Round(Round(D, 4), 3), Aft => 8));
   New_Line;
 
   D := 123.937592;

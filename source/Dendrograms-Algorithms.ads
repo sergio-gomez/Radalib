@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 11/05/2013
--- @revision 20/07/2021
+-- @revision 28/12/2021
 -- @brief Dendrograms Algorithms
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
@@ -63,6 +63,7 @@ package Dendrograms.Algorithms is
   Unknown_Proximity_Type_Error : exception;
   Unknown_Clustering_Type_Error: exception;
   Unknown_Weighting_Type_Error : exception;
+  Stop_Dendrograms_Recursion   : exception;
 
   Data_Error: exception;
   Tied_Pairs_Combinations_Overflow: exception;
@@ -212,6 +213,7 @@ package Dendrograms.Algorithms is
   -- Note    : Distances and Similarities must be non-negative
   -- Note    : Diagonal Elements of Data matrix are ignored
   -- Note    : Names may be empty
+  -- Note    : The Handler can raise Stop_Dendrograms_Recursion to stop the recursion
   --
   -- Data    : The Data
   -- Names   : The Names of the Elements
@@ -232,6 +234,7 @@ package Dendrograms.Algorithms is
   -- Note    : Distances and Similarities must be non-negative
   -- Note    : Diagonal Elements of Data matrix are ignored
   -- Note    : Names may be empty
+  -- Note    : The Handler can raise Stop_Dendrograms_Recursion to stop the recursion
   --
   -- Data    : The Data
   -- Names   : The Names of the Elements
@@ -260,7 +263,7 @@ package Dendrograms.Algorithms is
   --
   -- Orig    : The Original Proximities
   -- Um      : The Ultrametric Proximities
-  -- Dv      : The Deviation Measure type
+  -- Dm      : The Deviation Measure type
   -- return  : The Deviation Measure
   -- raises  : Data_Error
   function Get_Deviation_Measure(Orig, Um: in PDoubless; Dm: in Deviation_Measure) return Double;

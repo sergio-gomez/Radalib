@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 11/05/2013
--- @revision 20/07/2021
+-- @revision 28/12/2021
 -- @brief Dendrograms Algorithms
 
 with Ada.Unchecked_Deallocation;
@@ -405,7 +405,12 @@ package body Dendrograms.Algorithms is
 
     -- Agglomerative Hierarchical Clustering
     Internal_Names := not Equal(Capitalize(Internal_Node_Name_Prefix), No_Internal_Node_Name);
-    Recursive_Clustering(Clus, Num_Clus, Total_Clus, Prox, Internal_Names);
+    begin
+      Recursive_Clustering(Clus, Num_Clus, Total_Clus, Prox, Internal_Names);
+    exception
+      when Stop_Dendrograms_Recursion =>
+        null;
+    end;
 
     -- Finalize
     Free(Clus(1).St);

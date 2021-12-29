@@ -48,9 +48,8 @@ The selected language was Ada, for several reasons: performance (it is a compile
 The size of **Radalib** at version `radalib-20210720-181118` is:
 
 - Code:     260 Ada files
-- Files:    719 files
-- Source: 65915 lines of Ada code
-
+- Files:    717 files
+- Source: 66026 lines of Ada code
 
 ## Compilation
 
