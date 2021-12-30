@@ -6,7 +6,7 @@ del /q *.ali
 del /q *.o
 echo -----------
 Hierarchical_Clustering.exe  test-hierarchical_toy_wout.txt  test-hierarchical_toy_wout-md-cl      MD  DIST  1  CL            clus
-Hierarchical_Clustering.exe  test-hierarchical_toy_wout.txt  test-hierarchical_toy_wout-bd-cl      BD  D        CL            Unsorted  100
+Hierarchical_Clustering.exe  test-hierarchical_toy_wout.txt  test-hierarchical_toy_wout-bd-cl      BD  D        CL            Sorted    100
 
 Hierarchical_Clustering.exe  test-hierarchical_toy_with.txt  test-hierarchical_toy_with-md-al      MD  DIST  1  AL  UW        internal_node_c
 Hierarchical_Clustering.exe  test-hierarchical_toy_with.txt  test-hierarchical_toy_with-md-gl      MD  D     1  GL  UW        c

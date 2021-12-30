@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 08/05/2013
--- @revision 29/12/2021
+-- @revision 30/12/2021
 -- @brief Agglomerative Hierarchical Clustering with MultiDendrograms and Binary Dendrograms
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -154,11 +154,20 @@ procedure Hierarchical_Clustering is
   -- Dendrogram Info
   type Dendro_Info_Rec is record
     Dendro: Dendrogram;
+    Um: PDoubless;
     Coph, Coph_Err, Nmse, Nmae: Double;
   end record;
 
   type Dendro_Info_Array is array(Integer range <>) of Dendro_Info_Rec;
   type PDendro_Info_Array is access Dendro_Info_Array;
+
+  procedure Free(Dir: in out Dendro_Info_Rec) is
+  begin
+    if Dir.Um /= null then
+      Free(Dir.Dendro);
+      Free(Dir.Um);
+    end if;
+  end Free;
 
   procedure Free(P: in out PDendro_Info_Array) is
     procedure Dispose is new Ada.Unchecked_Deallocation(Dendro_Info_Array, PDendro_Info_Array);
@@ -202,8 +211,7 @@ procedure Hierarchical_Clustering is
     Get_Cophenetic_Correlation(Data, Um, Coph, Coph_Err, Cet);
     Nmse := Get_Normalized_Mean_Squared_Error(Data, Um);
     Nmae := Get_Normalized_Mean_Absolute_Error(Data, Um);
-    Free(Um);
-    Di := (Dendro => T, Coph => Coph, Coph_Err => Coph_Err, Nmse => Nmse, Nmae => Nmae);
+    Di := (Dendro => T, Um => Um, Coph => Coph, Coph_Err => Coph_Err, Nmse => Nmse, Nmae => Nmae);
     return Di;
   end Get_Dendrogram_Info;
 
@@ -271,19 +279,21 @@ procedure Hierarchical_Clustering is
   Ft_Ultra: File_Type;
   I, N: Natural;
   Ve: Double;
-  Data, Um: PDoubless;
+  Data: PDoubless;
   Dendros: List_Of_Dendrograms;
   Col_Name, Row_Name, Names: PUstrings;
   Md, T: Dendrogram;
   Di: PDendro_Info_Array;
   Index: Natural;
+  Us: UString;
   Cet: Correlation_Error_Type := Auto;
 
   G: Generator;
   Num_Dendro: Longint := 0;
   Num_Saved: Natural := 0;
+  Search_Aborted: Boolean := False;
   Tick_Size, Big_Tick_Size: Longint;
-  Dir_Best: Dendro_Info_Rec := (Dendro => null, Coph => Double'First, Coph_Err => 0.0, Nmse => Double'Last, Nmae => Double'Last);
+  Dir_Best: Dendro_Info_Rec := (Dendro => null, Um => null, Coph => Double'First, Coph_Err => 0.0, Nmse => Double'Last, Nmae => Double'Last);
 
 
   -- Action with the Dendrogram
@@ -304,6 +314,7 @@ procedure Hierarchical_Clustering is
 
       when Unsorted =>
         Dir := Get_Dendrogram_Info(T, Data, Cet);
+        Free(Dir.Um);
         Put_Dendrogram(Ft_Text, T, Precision, Text_Tree);
         Put_Line(Ft_Text, "----------");
         Put_Dendrogram(Ft_Json, T, Precision, Json_Tree);
@@ -360,6 +371,7 @@ procedure Hierarchical_Clustering is
     end if;
 
     if Stop_Recursion then
+      Search_Aborted := True;
       raise Stop_Dendrograms_Recursion;
     end if;
   end Dendrogram_Action;
@@ -548,6 +560,12 @@ begin
     Dm := Sorted;
   end if;
 
+  if Dm = Unsorted then
+    Cet := Fisher_Transform;
+  else
+    Cet := Auto;
+  end if;
+
   if Dm = Count or Dm = Sample then
     Tick_Size := Mxd;
   else
@@ -572,6 +590,8 @@ begin
   end if;
 
   N := Data'Length(1);
+
+  -- Show clustering information
   Put_Line("  Proximity  type  : " & To_Name(Pt));
   Put_Line("  Clustering type  : " & To_Name(Ct));
   Put_Line("  Weighting  type  : " & To_Name(Wt));
@@ -594,19 +614,16 @@ begin
     Put_Line("  Dendrogram mode  : " & To_Name(Dm));
   end if;
 
-  -- Prepare output files
-  if Dm /= Count then
+  -- Prepare output for Unsorted
+  if Dm = Unsorted then
     Open_Or_Create(Ft_Text    , U2S(Fn_Out_Text));
     Open_Or_Create(Ft_Json    , U2S(Fn_Out_Json));
     Open_Or_Create(Ft_Newick  , U2S(Fn_Out_Newick));
     Open_Or_Create(Ft_Measures, U2S(Fn_Out_Measures));
 
-    if Dm = Unsorted then
-      Put_Line(Ft_Text, "# First Binary Dendrograms (maximum " & L2S(Mxd) & ")");
-      Put_Line(Ft_Json, "# First Binary Dendrograms (maximum " & L2S(Mxd) & ")");
-      Put_Line(Ft_Newick, "# All Binary Dendrograms");
-      Cet := Fisher_Transform;
-    end if;
+    Put_Line(Ft_Text  , "# First Binary Dendrograms (maximum " & L2S(Mxd) & ")");
+    Put_Line(Ft_Json  , "# First Binary Dendrograms (maximum " & L2S(Mxd) & ")");
+    Put_Line(Ft_Newick, "# First Binary Dendrograms (maximum " & L2S(Mxd) & ")");
     Put_Line(Ft_Measures, "Cophenetic_Correlation"        & HTab & "Cophenetic_Correlation_Error" & HTab &
                           "Normalized_Mean_Squared_Error" & HTab & "Normalized_Mean_Absolute_Error");
   end if;
@@ -640,12 +657,16 @@ begin
         Put_Line("  Result           : " & L2S(Num_Dendro) & " Binary Dendrograms");
       end if;
       Delete_File(U2S(Fn_Out_Count));
-      Put_String_Line(U2S(Fn_Out_Count), L2S(Num_Dendro) & " Binary Dendrograms (mode: " & To_Name(Dm) & ")");
+      if Search_Aborted then
+        Put_String_Line(U2S(Fn_Out_Count), L2S(Num_Dendro) & " Binary Dendrograms found (search aborted, " & To_Name(Dm) & " mode)");
+      else
+        Put_String_Line(U2S(Fn_Out_Count), L2S(Num_Dendro) & " Binary Dendrograms found");
+      end if;
   end case;
   New_Line;
 
   -- Treatment of Saved Dendrograms
-  if Num_Saved > 0 then
+  if Num_Saved >= 1 then
     -- Calculate Deviation Measures and Sort in Descending Cophenetic Correlation
     Di := new Dendro_Info_Array(1..Num_Saved);
 
@@ -666,46 +687,62 @@ begin
 
     Sort(Di.all);
 
-    -- Write Saved Dendrograms and Deviation Measures
+    -- Write results
+    Open_Or_Create(Ft_Text    , U2S(Fn_Out_Text));
+    Open_Or_Create(Ft_Json    , U2S(Fn_Out_Json));
+    Open_Or_Create(Ft_Newick  , U2S(Fn_Out_Newick));
+    Open_Or_Create(Ft_Measures, U2S(Fn_Out_Measures));
+    Open_Or_Create(Ft_Ultra   , U2S(Fn_Out_Ultra));
+
+    if Search_Aborted then
+      Us := S2U(" (search aborted after " & L2S(Num_Dendro) & " dendrograms)");
+    else
+      Us := Null_Ustring;
+    end if;
+
     case Dt is
       when Multidendrogram =>
         Put_Line(Ft_Text  , "# MultiDendrogram");
         Put_Line(Ft_Json  , "# MultiDendrogram");
         Put_Line(Ft_Newick, "# MultiDendrogram");
+        Put_Line(Ft_Ultra , "# Ultrametric of MultiDendrogram");
       when Binary_Dendrogram =>
-        if Num_Dendro = 1 then
+        if Num_Saved = 1 then
           Put_Line(Ft_Text  , "# Binary Dendrogram");
           Put_Line(Ft_Json  , "# Binary Dendrogram");
           Put_Line(Ft_Newick, "# Binary Dendrogram");
+          Put_Line(Ft_Ultra , "# Ultrametric of Binary Dendrogram");
         else
           case Dm is
             when Sorted =>
-              Put_Line(Ft_Text  , "# Binary Dendrograms sorted by Cophenetic Correlation (maximum " & L2S(Mxd) & ")");
-              Put_Line(Ft_Json  , "# Binary Dendrograms sorted by Cophenetic Correlation (maximum " & L2S(Mxd) & ")");
-              Put_Line(Ft_Newick, "# Binary Dendrograms sorted by Cophenetic Correlation (maximum " & L2S(Mxd) & ")");
+              Put_Line(Ft_Text  , "# " & I2S(Num_Saved) & " Binary Dendrograms sorted by Cophenetic Correlation" & U2S(Us));
+              Put_Line(Ft_Json  , "# " & I2S(Num_Saved) & " Binary Dendrograms sorted by Cophenetic Correlation" & U2S(Us));
+              Put_Line(Ft_Newick, "# " & I2S(Num_Saved) & " Binary Dendrograms sorted by Cophenetic Correlation" & U2S(Us));
             when Unsorted =>
-              Put_Line(Ft_Text  , "# Binary Dendrograms (maximum " & L2S(Mxd) & ")");
-              Put_Line(Ft_Json  , "# Binary Dendrograms (maximum " & L2S(Mxd) & ")");
-              Put_Line(Ft_Newick, "# Binary Dendrograms (maximum " & L2S(Mxd) & ")");
+              null;
             when Sample =>
-              Put_Line(Ft_Text  , "# Sample Binary Dendrograms (maximum " & L2S(Mxd) & ")");
-              Put_Line(Ft_Json  , "# Sample Binary Dendrograms (maximum " & L2S(Mxd) & ")");
-              Put_Line(Ft_Newick, "# Sample Binary Dendrograms (maximum " & L2S(Mxd) & ")");
+              Put_Line(Ft_Text  , "# " & I2S(Num_Saved) & " Sample Binary Dendrograms" & U2S(Us));
+              Put_Line(Ft_Json  , "# " & I2S(Num_Saved) & " Sample Binary Dendrograms" & U2S(Us));
+              Put_Line(Ft_Newick, "# " & I2S(Num_Saved) & " Sample Binary Dendrograms" & U2S(Us));
             when Best =>
               if Num_Saved = 1 then
-                Put_Line(Ft_Text  , "# Binary Dendrogram with Highest Cophenetic Correlation");
-                Put_Line(Ft_Json  , "# Binary Dendrogram with Highest Cophenetic Correlation");
-                Put_Line(Ft_Newick, "# Binary Dendrogram with Highest Cophenetic Correlation");
+                Put_Line(Ft_Text  , "# Binary Dendrogram with Highest Cophenetic Correlation" & U2S(Us));
+                Put_Line(Ft_Json  , "# Binary Dendrogram with Highest Cophenetic Correlation" & U2S(Us));
+                Put_Line(Ft_Newick, "# Binary Dendrogram with Highest Cophenetic Correlation" & U2S(Us));
               else
-                Put_Line(Ft_Text  , "# The " & I2S(Num_Saved) & " Binary Dendrograms with Highest Cophenetic Correlation");
-                Put_Line(Ft_Json  , "# The " & I2S(Num_Saved) & " Binary Dendrograms with Highest Cophenetic Correlation");
-                Put_Line(Ft_Newick, "# The " & I2S(Num_Saved) & " Binary Dendrograms with Highest Cophenetic Correlation");
+                Put_Line(Ft_Text  , "# The " & I2S(Num_Saved) & " Binary Dendrograms with Highest Cophenetic Correlation" & U2S(Us));
+                Put_Line(Ft_Json  , "# The " & I2S(Num_Saved) & " Binary Dendrograms with Highest Cophenetic Correlation" & U2S(Us));
+                Put_Line(Ft_Newick, "# The " & I2S(Num_Saved) & " Binary Dendrograms with Highest Cophenetic Correlation" & U2S(Us));
               end if;
             when Count =>
               null;
           end case;
+          Put_Line(Ft_Ultra , "# Ultrametric of Binary Dendrograms");
         end if;
     end case;
+
+    Put_Line(Ft_Measures, "Cophenetic_Correlation"        & HTab & "Cophenetic_Correlation_Error" & HTab &
+                          "Normalized_Mean_Squared_Error" & HTab & "Normalized_Mean_Absolute_Error");
 
     for I in Di'Range loop
       Put_Dendrogram(Ft_Text, Di(I).Dendro, Precision, Text_Tree);
@@ -713,37 +750,22 @@ begin
       Put_Dendrogram(Ft_Json, Di(I).Dendro, Precision, Json_Tree);
       New_Line(Ft_Json);
       Put_Dendrogram(Ft_Newick, Di(I).Dendro, Precision, Newick_Tree);
+      Put_Ultrametric(Ft_Ultra, Di(I).Um, Names, Precision);
+      New_Line(Ft_Ultra);
       Put_Line(Ft_Measures, D2Se0(Di(I).Coph, Aft => 6) & HTab & D2Se0(Di(I).Coph_Err, Aft => 6) & HTab &
                             D2Se0(Di(I).Nmse, Aft => 6) & HTab & D2Se0(Di(I).Nmae, Aft => 6));
     end loop;
   end if;
 
+  -- Finalize output
   if Dm /= Count then
     Close(Ft_Text);
     Close(Ft_Json);
     Close(Ft_Newick);
     Close(Ft_Measures);
-  end if;
-
-  -- Write Ultrametric Matrix
-  if Num_Saved = 1 or Dm = Sorted or Dm = Sample or Dm = Best then
-    Open_Or_Create(Ft_Ultra, U2S(Fn_Out_Ultra));
-    if Dt = Multidendrogram then
-      Put_Line(Ft_Ultra, "# Ultrametric of MultiDendrogram");
-    elsif Dm = Best then
-      Put_Line(Ft_Ultra, "# Ultrametric of Binary Dendrograms with Highest Cophenetic Correlation");
-    elsif Num_Dendro = 1 then
-      Put_Line(Ft_Ultra, "# Ultrametric of Binary Dendrogram");
-    else
-      Put_Line(Ft_Ultra, "# Ultrametric of Binary Dendrograms");
+    if Dm /= Unsorted then
+      Close(Ft_Ultra);
     end if;
-    for I in Di'Range loop
-      Um := Get_Ultrametric_Matrix(Di(I).Dendro);
-      Put_Ultrametric(Ft_Ultra, Um, Names, Precision);
-      New_Line(Ft_Ultra);
-      Free(Um);
-    end loop;
-    Close(Ft_Ultra);
   end if;
 
   -- Free space
@@ -754,7 +776,7 @@ begin
 
   if Num_Saved > 0 then
     for I in Di'Range loop
-      Free(Di(I).Dendro);
+      Free(Di(I));
     end loop;
     Free(Di);
   end if;
