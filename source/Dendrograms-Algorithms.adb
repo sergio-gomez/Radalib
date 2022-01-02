@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2021 by
+-- Radalib, Copyright (c) 2022 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 11/05/2013
--- @revision 28/12/2021
+-- @revision 02/01/2022
 -- @brief Dendrograms Algorithms
 
 with Ada.Unchecked_Deallocation;
@@ -267,8 +267,9 @@ package body Dendrograms.Algorithms is
       Clus(C) := (Id => C, St => New_Tree(Nod_Inf), Num_Leaves => 0);
     end loop;
 
-    -- Agglomerative Hierarchical Clustering
     Internal_Names := not Equal(Capitalize(Internal_Node_Name_Prefix), No_Internal_Node_Name);
+
+    -- Agglomerative Hierarchical Clustering
     while Num_Clus > 1 loop
       Clus_Prev.all := Clus.all;
 
@@ -354,11 +355,12 @@ package body Dendrograms.Algorithms is
     N, Nc: Positive;
     Off1, Off2, Offn: Integer;
     Prox: PPsDoubles;
-    Clus: PClusters;
+    Clus, Clus_Prev: PClusters;
     Nod_Inf: Node_Info;
     Name: Ustring;
     Total_Clus, Num_Clus: Natural;
     Internal_Names: Boolean;
+    Lol: List_Of_Lists;
 
   begin
     Check_Data(Data, Names);
@@ -403,8 +405,21 @@ package body Dendrograms.Algorithms is
       Clus(C) := (Id => C, St => New_Tree(Nod_Inf), Num_Leaves => 0);
     end loop;
 
-    -- Agglomerative Hierarchical Clustering
     Internal_Names := not Equal(Capitalize(Internal_Node_Name_Prefix), No_Internal_Node_Name);
+
+    -- Join Identical Patterns
+    if Pt = Distance then
+      Clus_Prev := new Clusters(1..Nc);
+      Clus_Prev.all := Clus.all;
+      Find_Indentical_Patterns(Clus, Num_Clus, Prox, Pt, Precision, Lol);
+      Num_Clus := Number_Of_Lists(Lol);
+      if Num_Clus < N then
+        Join_Clusters(Lol, Clus, Clus_Prev, Total_Clus, Prox, Pt, Precision, Ct, Wt, Cp, Internal_Names);
+      end if;
+      Free(Lol);
+    end if;
+
+    -- Agglomerative Hierarchical Clustering
     begin
       Recursive_Clustering(Clus, Num_Clus, Total_Clus, Prox, Internal_Names);
     exception
@@ -796,6 +811,156 @@ package body Dendrograms.Algorithms is
     Prox(Min(I, J))(Max(I, J)) := Val;
   end Set_Proximity;
 
+  ------------------------------
+  -- Find_Indentical_Patterns --
+  ------------------------------
+
+  procedure Find_Indentical_Patterns(Clus: in PClusters; Num_Clus: in Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Precision: in Natural; Lol: out List_Of_Lists) is
+    Dist, Dist_I_K, Dist_J_K, Epsilon: Double;
+    I, J, K: Positive;
+    Ei, Ej: Element;
+    Dists_Eq: Boolean;
+  begin
+    Epsilon := 1.0 / (10.0 ** (Precision + 1));
+
+    Initialize(Lol, Num_Clus, Isolated_Initialization);
+    case Pt is
+      when Distance =>
+        for Ci in 1..(Num_Clus-1) loop
+          I := Clus(Ci).Id;
+          for Cj in (Ci+1)..Num_Clus loop
+            -- Find the zero distances
+            J := Clus(Cj).Id;
+            Dist := Get_Proximity(Prox, I, J);
+            Dist := Round(Dist, Precision);
+            if abs Dist < Epsilon then
+              -- Check whether distances to the rest coinicide
+              Dists_Eq := True;
+              for Ck in 1..Num_Clus loop
+                K := Clus(Ck).Id;
+                if K /= I and K /= J then
+                  Dist_I_K := Get_Proximity(Prox, I, K);
+                  Dist_J_K := Get_Proximity(Prox, J, K);
+                  Dist_I_K := Round(Dist_I_K, Precision);
+                  Dist_J_K := Round(Dist_J_K, Precision);
+                  if abs (Dist_I_K - Dist_J_K) > Epsilon then
+                    Dists_Eq := False;
+                    exit;
+                  end if;
+                end if;
+              end loop;
+              -- Join identical patterns
+              if Dists_Eq then
+                Ei := Get_Element(Lol, Ci);
+                Ej := Get_Element(Lol, Cj);
+                Move(List_Of(Ej), List_Of(Ei));
+              end if;
+            end if;
+          end loop;
+        end loop;
+        Remove_Empty(Lol);
+        Sort_Lists(Lol);
+      when Similarity =>
+        null;
+    end case;
+  end Find_Indentical_Patterns;
+
+  ------------------------------
+  -- Find_Indentical_Patterns --
+  ------------------------------
+
+  procedure Find_Indentical_Patterns(Data: in PDoubless; Pt: in Proximity_Type; Precision: in Natural; Lol_Deg: out List_Of_Lists) is
+    N: Positive;
+    Off1, Off2: Integer;
+    Dist, Dist_I_K, Dist_J_K, Epsilon: Double;
+    Ei, Ej: Element;
+    Dists_Eq: Boolean;
+  begin
+    Epsilon := 1.0 / (10.0 ** (Precision + 1));
+
+    N := Data'Length(1);
+    Off1 := Data'First(1) - 1;
+    Off2 := Data'First(2) - 1;
+
+    Initialize(Lol_Deg, N, Isolated_Initialization);
+    case Pt is
+      when Distance =>
+        for I in 1..(N-1) loop
+          for J in (I+1)..N loop
+            -- Find the zero distances
+            Dist := Round(Data(Off1 + I, Off2 + J), Precision);
+            if abs Dist < Epsilon then
+              -- Check whether distances to the rest coinicide
+              Dists_Eq := True;
+              for K in 1..N loop
+                if K /= I and K /= J then
+                  Dist_I_K := Round(Data(Off1 + I, Off2 + K), Precision);
+                  Dist_J_K := Round(Data(Off1 + J, Off2 + K), Precision);
+                  if abs (Dist_I_K - Dist_J_K) > Epsilon then
+                    Dists_Eq := False;
+                    exit;
+                  end if;
+                end if;
+              end loop;
+              -- Join identical patterns
+              if Dists_Eq then
+                Ei := Get_Element(Lol_Deg, I);
+                Ej := Get_Element(Lol_Deg, J);
+                Move(List_Of(Ej), List_Of(Ei));
+              end if;
+            end if;
+          end loop;
+        end loop;
+        Remove_Empty(Lol_Deg);
+        Sort_Lists(Lol_Deg);
+      when Similarity =>
+        null;
+    end case;
+  end Find_Indentical_Patterns;
+
+  --------------------------------------
+  -- Indentical_Patterns_Degeneration --
+  --------------------------------------
+
+  function Indentical_Patterns_Degeneration(Lol_Deg: in List_Of_Lists) return Longint is
+
+    function A006472(N: in Positive) return Longint is
+      Num_Values: constant Positive := 10;
+      Values: Longints(1..Num_Values) := (1, 1, 3, 18, 180, 2700, 56700, 1587600, 57153600, 2571912000);
+      Kl, Val: Longint := 1;
+    begin
+      if N <= Num_Values then
+        return Values(N);
+      else
+        Val := Values(Num_Values);
+        for K in (Num_Values + 1)..N loop
+          Kl := Longint(K);
+          Val := Val * (Kl * (Kl - 1) / 2);
+        end loop;
+      end if;
+      return Val;
+    end A006472;
+
+    L: List;
+    Ne: Natural;
+    Num_Deg: Longint;
+  begin
+    Num_Deg := 1;
+
+    Save(Lol_Deg);
+    Reset(Lol_Deg);
+    while Has_Next_List(Lol_Deg) loop
+      L := Next_List(Lol_Deg);
+      Ne := Number_Of_Elements(L);
+      if Ne > 1 then
+        Num_Deg := Num_Deg * A006472(Ne);
+      end if;
+    end loop;
+    Restore(Lol_Deg);
+
+    return Num_Deg;
+  end Indentical_Patterns_Degeneration;
+
   ---------------------------
   -- Find_Joining_Clusters --
   ---------------------------
@@ -806,7 +971,7 @@ package body Dendrograms.Algorithms is
     Ei, Ej: Element;
   begin
     Epsilon := 1.0 / (10.0 ** (Precision + 1));
-    -- Find the extreme Proximity;
+    -- Find the extreme Proximity
     case Pt is
       when Distance =>
         Prox_Join := Double'Last;
@@ -869,7 +1034,7 @@ package body Dendrograms.Algorithms is
     pragma Warnings(Off, L);
     Epsilon := 1.0 / (10.0 ** (Precision + 1));
     Num_Tied := 1;
-    -- Find the extreme Proximity;
+    -- Find the extreme Proximity
     case Pt is
       when Distance =>
         Prox_Join := Double'Last;

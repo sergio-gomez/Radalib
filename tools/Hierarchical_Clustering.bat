@@ -6,7 +6,7 @@ del /q *.ali
 del /q *.o
 echo -----------
 Hierarchical_Clustering.exe  test-hierarchical_toy_wout.txt  test-hierarchical_toy_wout-md-cl      MD  DIST  1  CL            clus
-Hierarchical_Clustering.exe  test-hierarchical_toy_wout.txt  test-hierarchical_toy_wout-bd-cl      BD  D        CL            Sorted    100
+Hierarchical_Clustering.exe  test-hierarchical_toy_wout.txt  test-hierarchical_toy_wout-bd-cl      BD  D        CL            Sorted     100
 
 Hierarchical_Clustering.exe  test-hierarchical_toy_with.txt  test-hierarchical_toy_with-md-al      MD  DIST  1  AL  UW        internal_node_c
 Hierarchical_Clustering.exe  test-hierarchical_toy_with.txt  test-hierarchical_toy_with-md-gl      MD  D     1  GL  UW        c
@@ -25,7 +25,7 @@ Hierarchical_Clustering.exe  test-hierarchical_toy_with.txt  test-hierarchical_t
 Hierarchical_Clustering.exe  test-hierarchical_toy_with.txt  test-hierarchical_toy_with-bd-al-c    BD  D     1  AL  UW        Count
 Hierarchical_Clustering.exe  test-hierarchical_toy_with.txt  test-hierarchical_toy_with-bd-al-s    BD  D     1  AL  UW        Sorted    1000      c
 Hierarchical_Clustering.exe  test-hierarchical_toy_with.txt  test-hierarchical_toy_with-bd-al-u    BD  D     1  AL  UW        Unsorted
-Hierarchical_Clustering.exe  test-hierarchical_toy_with.txt  test-hierarchical_toy_with-bd-al-m    BD  D     1  AL  UW        Sample    100  0.1
+Hierarchical_Clustering.exe  test-hierarchical_toy_with.txt  test-hierarchical_toy_with-bd-al-m    BD  D     1  AL  UW        Sample     100  0.1
 Hierarchical_Clustering.exe  test-hierarchical_toy_with.txt  test-hierarchical_toy_with-bd-al-b    BD  D        AL  UW        Best
 
 Hierarchical_Clustering.exe  test-hierarchical_toy_with.txt  test-hierarchical_toy_with-md-s-al    MD  SIM   1  AL  UW
@@ -33,10 +33,10 @@ Hierarchical_Clustering.exe  test-hierarchical_toy_with.txt  test-hierarchical_t
 Hierarchical_Clustering.exe  test-hierarchical_toy_with.txt  test-hierarchical_toy_with-bd-s-vl    BD  S     1  VL  UW  -0.1  Best
 
 Hierarchical_Clustering.exe  test-hierarchical_toy_wmny.txt  test-hierarchical_toy_wmny-md-al2     MD  DIST  2  AL  UW
-Hierarchical_Clustering.exe  test-hierarchical_toy_wmny.txt  test-hierarchical_toy_wmny-bd-al2-s   BD  D     2  AL  UW        Sorted
-Hierarchical_Clustering.exe  test-hierarchical_toy_wmny.txt  test-hierarchical_toy_wmny-bd-al2-u   BD  D     2  AL  UW        Unsorted  100
-Hierarchical_Clustering.exe  test-hierarchical_toy_wmny.txt  test-hierarchical_toy_wmny-bd-al2-m   BD  D     2  AL  UW        Sample    100  0.5
-Hierarchical_Clustering.exe  test-hierarchical_toy_wmny.txt  test-hierarchical_toy_wmny-bd-al2-b   BD  D     2  AL  UW        Best
+Hierarchical_Clustering.exe  test-hierarchical_toy_wmny.txt  test-hierarchical_toy_wmny-bd-al2-c   BD  D     2  AL  UW        Count
+Hierarchical_Clustering.exe  test-hierarchical_toy_wmny.txt  test-hierarchical_toy_wmny-bd-al2-u   BD  D     2  AL  UW        Unsorted   100
+Hierarchical_Clustering.exe  test-hierarchical_toy_wmny.txt  test-hierarchical_toy_wmny-bd-al2-m   BD  D     2  AL  UW        Sample     100  0.2
+Hierarchical_Clustering.exe  test-hierarchical_toy_wmny.txt  test-hierarchical_toy_wmny-bd-al2-b   BD  D     2  AL  UW        Best      2000
 
 Hierarchical_Clustering.exe  test-hierarchical_toy_wmny.txt  test-hierarchical_toy_wmny-bd-al2-c   BD  D     2  AL  UW        Count
 Hierarchical_Clustering.exe  test-hierarchical_toy_wmny.txt  test-hierarchical_toy_wmny-bd-al-c    BD  D        AL  UW        Count

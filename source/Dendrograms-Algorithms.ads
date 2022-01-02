@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2021 by
+-- Radalib, Copyright (c) 2022 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 11/05/2013
--- @revision 28/12/2021
+-- @revision 02/01/2022
 -- @brief Dendrograms Algorithms
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
@@ -173,6 +173,23 @@ package Dendrograms.Algorithms is
   -- Data    : The Data
   -- Precision:The number of Significant Digits
   procedure Round_Data(Data: in PDoubless; Precision: in Natural);
+
+  -- Purpose : Find the Clusters of Identical Patterns
+  -- Note    : Only for Distance, not for Similarity
+  -- Note    : Identical Patterns have distance zero beteen them and the same distance values with the rest
+  -- Note    : No empty Lists in the returned List of Lists
+  --
+  -- Data    : The Data
+  -- Pt      : The Proximity Type
+  -- Precision:The number of Significant Digits for the calculations
+  -- Lol_Deg : The Clusters of Identical Patterns
+  procedure Find_Indentical_Patterns(Data: in PDoubless; Pt: in Proximity_Type; Precision: in Natural; Lol_Deg: out List_Of_Lists);
+
+  -- Purpose : Return number of Degenerated Dendrograms due to Identical Patterns
+  --
+  -- Lol_Deg : The Clusters of Identical Patterns
+  -- return  : The Degeneration
+  function Indentical_Patterns_Degeneration(Lol_Deg: in List_Of_Lists) return Longint;
 
   -- Purpose : Perform Variable-Group Agglomerative Hierarchical Clustering to obtain the corresponding Multidendrogram
   -- Note    : Data must be a squared symmetric matrix representing Distances or Similarities between a set of Elements
@@ -413,6 +430,19 @@ private
   -- J       : The Index of the Second Cluster
   -- return  : The Proximity
   procedure Set_Proximity(Prox: in PPsDoubles; I, J: Positive; Val: in Double);
+
+  -- Purpose : Find the Clusters of Identical Patterns
+  -- Note    : Only for Distance, not for Similarity
+  -- Note    : Identical Patterns have distance zero beteen them and the same distance values with the rest
+  -- Note    : No empty Lists in the returned List of Lists
+  --
+  -- Clus    : The Clusters
+  -- Num_Clus: The current Number of Clusters
+  -- Prox    : The Proximities between Clusters
+  -- Pt      : The Proximity Type
+  -- Precision:The number of Significant Digits for the calculations
+  -- Lol     : The Clusters to be joined
+  procedure Find_Indentical_Patterns(Clus: in PClusters; Num_Clus: in Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Precision: in Natural; Lol: out List_Of_Lists);
 
   -- Purpose : Find the Clusters to be joined
   -- Note    : No empty Lists in the returned List of Lists
