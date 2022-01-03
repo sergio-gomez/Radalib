@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2022 by
+-- Radalib, Copyright (c) 2021 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 08/05/2013
--- @revision 02/01/2022
+-- @revision 03/01/2022
 -- @brief Agglomerative Hierarchical Clustering with MultiDendrograms and Binary Dendrograms
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -293,7 +293,11 @@ procedure Hierarchical_Clustering is
     while Has_Next_List(Lol_Deg) loop
       L := Next_List(Lol_Deg);
       if Number_Of_Elements(L) > 1 then
-        Uip := Uip & S2U("(");
+        if Uip = Null_Ustring then
+          Uip := S2U("(");
+        else
+          Uip := Uip & S2U(", (");
+        end if;
         Save(L);
         Reset(L);
         I := Index_Of(Next_Element(L));
@@ -303,11 +307,11 @@ procedure Hierarchical_Clustering is
           Uip := Uip & S2U(", " & I2S(I));
         end loop;
         Restore(L);
-        Uip := Uip & S2U(") ");
+        Uip := Uip & S2U(")");
       end if;
     end loop;
     Restore(Lol_Deg);
-    return Trim_Spaces(Uip);
+    return Uip;
   end Identical_Patterns;
 
 
@@ -324,9 +328,9 @@ procedure Hierarchical_Clustering is
   Newick_Sufix   : constant String  := "-newick.txt";
   Measures_Sufix : constant String  := "-measures.txt";
   Ultra_Sufix    : constant String  := "-ultrametric.txt";
-  Sel_Text_Sufix     : constant String  := "-selected_tree.txt";
-  Sel_Measures_Sufix : constant String  := "-selected_measures.txt";
-  Sel_Ultra_Sufix    : constant String  := "-selected_ultrametric.txt";
+  Dis_Text_Sufix     : constant String  := "-dissimilar_tree.txt";
+  Dis_Measures_Sufix : constant String  := "-dissimilar_measures.txt";
+  Dis_Ultra_Sufix    : constant String  := "-dissimilar_ultrametric.txt";
   No_Value       : constant Double  := Double'First;
 
   Fn_In, Fn_Out: Ustring;
@@ -348,17 +352,17 @@ procedure Hierarchical_Clustering is
   Fn_Out_Newick: Ustring;
   Fn_Out_Measures: Ustring;
   Fn_Out_Ultra: Ustring;
-  Fn_Out_Sel_Text: Ustring;
-  Fn_Out_Sel_Measures: Ustring;
-  Fn_Out_Sel_Ultra: Ustring;
+  Fn_Out_Dis_Text: Ustring;
+  Fn_Out_Dis_Measures: Ustring;
+  Fn_Out_Dis_Ultra: Ustring;
   Ft_Text: File_Type;
   Ft_Json: File_Type;
   Ft_Newick: File_Type;
   Ft_Measures: File_Type;
   Ft_Ultra: File_Type;
-  Ft_Sel_Text: File_Type;
-  Ft_Sel_Measures: File_Type;
-  Ft_Sel_Ultra: File_Type;
+  Ft_Dis_Text: File_Type;
+  Ft_Dis_Measures: File_Type;
+  Ft_Dis_Ultra: File_Type;
   I, N: Natural;
   Ve: Double;
   Data: PDoubless;
@@ -370,8 +374,8 @@ procedure Hierarchical_Clustering is
   Us: UString;
   Cet: Correlation_Error_Type := Fisher_Transform;
 
-  Sel_Index: Integers(1..2);
-  Sel_Di: Dendro_Info_Array(1..2);
+  Dis_Index: Integers(1..2);
+  Dis_Di: Dendro_Info_Array(1..2);
   Sim, Min_Sim: Double;
 
   G: Generator;
@@ -638,9 +642,9 @@ begin
   Fn_Out_Measures := S2U(U2S(Fn_Out) & Measures_Sufix);
   Fn_Out_Ultra    := S2U(U2S(Fn_Out) & Ultra_Sufix);
 
-  Fn_Out_Sel_Text     := S2U(U2S(Fn_Out) & Sel_Text_Sufix);
-  Fn_Out_Sel_Measures := S2U(U2S(Fn_Out) & Sel_Measures_Sufix);
-  Fn_Out_Sel_Ultra    := S2U(U2S(Fn_Out) & Sel_Ultra_Sufix);
+  Fn_Out_Dis_Text     := S2U(U2S(Fn_Out) & Dis_Text_Sufix);
+  Fn_Out_Dis_Measures := S2U(U2S(Fn_Out) & Dis_Measures_Sufix);
+  Fn_Out_Dis_Ultra    := S2U(U2S(Fn_Out) & Dis_Ultra_Sufix);
 
   Delete_File(U2S(Fn_Out_Count));
   Delete_File(U2S(Fn_Out_Text));
@@ -649,9 +653,9 @@ begin
   Delete_File(U2S(Fn_Out_Measures));
   Delete_File(U2S(Fn_Out_Ultra));
 
-  Delete_File(U2S(Fn_Out_Sel_Text));
-  Delete_File(U2S(Fn_Out_Sel_Measures));
-  Delete_File(U2S(Fn_Out_Sel_Ultra));
+  Delete_File(U2S(Fn_Out_Dis_Text));
+  Delete_File(U2S(Fn_Out_Dis_Measures));
+  Delete_File(U2S(Fn_Out_Dis_Ultra));
 
   if Dt = Multidendrogram then
     Dm := Sorted;
@@ -725,10 +729,15 @@ begin
   Initialize(Dendros);
 
   -- Find Identical Patterns Degeneration
-  Find_Indentical_Patterns(Data, Pt, Precision, Lol_Degenerated);
-  Num_Degenerated := Indentical_Patterns_Degeneration(Lol_Degenerated);
-  Uip := Identical_Patterns(Lol_Degenerated);
-  Free(Lol_Degenerated);
+  if Dt = Binary_Dendrogram then
+    Find_Indentical_Patterns(Data, Pt, Precision, Lol_Degenerated);
+    Num_Degenerated := Indentical_Patterns_Degeneration(Lol_Degenerated);
+    Uip := Identical_Patterns(Lol_Degenerated);
+    Free(Lol_Degenerated);
+    if Num_Degenerated > 1 then
+      Put_Line("  Degeneration     : " & L2S(Num_Degenerated) & " due to Identical Patterns " & U2S(Uip));
+    end if;
+  end if;
 
   -- Perform the Hierarchical Clustering
   case Dt is
@@ -759,7 +768,6 @@ begin
         Put_Line("  Result           : " & L2S(Num_Dendro) & " Binary Dendrograms");
       end if;
       if Num_Degenerated > 1 then
-        Put_Line("                   : Degeneration " & L2S(Num_Degenerated) & " due to Identical Patterns");
         Put_Line("                   : " & L2S(Num_Dendro * Num_Degenerated) & " Binary Dendrograms if degeneration included");
       end if;
 
@@ -892,46 +900,46 @@ begin
         Sim := Dendrograms_Similarity(Di(I).Um, Di(J).Um);
         if Sim < Min_Sim then
           Min_Sim := Sim;
-          Sel_Index(1) := I;
-          Sel_Index(2) := J;
+          Dis_Index(1) := I;
+          Dis_Index(2) := J;
         end if;
       end loop;
     end loop;
-    Sel_Di(1) := Di(Sel_Index(1));
-    Sel_Di(2) := Di(Sel_Index(2));
+    Dis_Di(1) := Di(Dis_Index(1));
+    Dis_Di(2) := Di(Dis_Index(2));
 
-    Put_Line("  Most dissimilar  : Dendrograms " & I2S(Sel_Index(1)) & " and " & I2S(Sel_Index(2)) & ", sim = " & D2Se0(Min_Sim, Aft => 6));
+    Put_Line("  Most dissimilar  : Dendrograms " & I2S(Dis_Index(1)) & " and " & I2S(Dis_Index(2)) & ", sim = " & D2Se0(Min_Sim, Aft => 6));
 
     -- Save most dissimilar dendrograms
-    Open_Or_Create(Ft_Sel_Text    , U2S(Fn_Out_Sel_Text));
-    Open_Or_Create(Ft_Sel_Measures, U2S(Fn_Out_Sel_Measures));
-    Open_Or_Create(Ft_Sel_Ultra   , U2S(Fn_Out_Sel_Ultra));
+    Open_Or_Create(Ft_Dis_Text    , U2S(Fn_Out_Dis_Text));
+    Open_Or_Create(Ft_Dis_Measures, U2S(Fn_Out_Dis_Measures));
+    Open_Or_Create(Ft_Dis_Ultra   , U2S(Fn_Out_Dis_Ultra));
 
-    Put(Ft_Sel_Measures, "Dendrogram_Id" & HTab);
-    Put_Line(Ft_Sel_Measures, "Cophenetic_Correlation"        & HTab & "Cophenetic_Correlation_Error" & HTab &
+    Put(Ft_Dis_Measures, "Dendrogram_Id" & HTab);
+    Put_Line(Ft_Dis_Measures, "Cophenetic_Correlation"        & HTab & "Cophenetic_Correlation_Error" & HTab &
                               "Normalized_Mean_Squared_Error" & HTab & "Normalized_Mean_Absolute_Error");
 
-    for I in Sel_Di'Range loop
-      Put_Line(Ft_Sel_Text, "# Dendrogram " & I2S(Sel_Index(I)));
-      Put_Dendrogram(Ft_Sel_Text, Sel_Di(I).Dendro, Precision, Text_Tree);
-      New_Line(Ft_Sel_Text);
+    for I in Dis_Di'Range loop
+      Put_Line(Ft_Dis_Text, "# Dendrogram " & I2S(Dis_Index(I)));
+      Put_Dendrogram(Ft_Dis_Text, Dis_Di(I).Dendro, Precision, Text_Tree);
+      New_Line(Ft_Dis_Text);
 
-      Put_Line(Ft_Sel_Ultra, "# Dendrogram " & I2S(Sel_Index(I)));
-      Put_Ultrametric(Ft_Sel_Ultra, Sel_Di(I).Um, Names, Precision);
-      New_Line(Ft_Sel_Ultra);
+      Put_Line(Ft_Dis_Ultra, "# Dendrogram " & I2S(Dis_Index(I)));
+      Put_Ultrametric(Ft_Dis_Ultra, Dis_Di(I).Um, Names, Precision);
+      New_Line(Ft_Dis_Ultra);
 
-      Put(Ft_Sel_Measures, I2S(Sel_Index(I)) & HTab);
-      Put_Line(Ft_Sel_Measures, D2Se0(Sel_Di(I).Coph, Aft => 6) & HTab & D2Se0(Sel_Di(I).Coph_Err, Aft => 6) & HTab &
-                                D2Se0(Sel_Di(I).Nmse, Aft => 6) & HTab & D2Se0(Sel_Di(I).Nmae, Aft => 6));
+      Put(Ft_Dis_Measures, I2S(Dis_Index(I)) & HTab);
+      Put_Line(Ft_Dis_Measures, D2Se0(Dis_Di(I).Coph, Aft => 6) & HTab & D2Se0(Dis_Di(I).Coph_Err, Aft => 6) & HTab &
+                                D2Se0(Dis_Di(I).Nmse, Aft => 6) & HTab & D2Se0(Dis_Di(I).Nmae, Aft => 6));
     end loop;
 
-    New_Line(Ft_Sel_Measures);
-    Put_Line(Ft_Sel_Measures, "Similarity between them");
-    Put_Line(Ft_Sel_Measures, D2Se0(Min_Sim, Aft => 6));
+    New_Line(Ft_Dis_Measures);
+    Put_Line(Ft_Dis_Measures, "Similarity between them");
+    Put_Line(Ft_Dis_Measures, D2Se0(Min_Sim, Aft => 6));
 
-    Close(Ft_Sel_Text);
-    Close(Ft_Sel_Measures);
-    Close(Ft_Sel_Ultra);
+    Close(Ft_Dis_Text);
+    Close(Ft_Dis_Measures);
+    Close(Ft_Dis_Ultra);
   end if;
   New_Line;
 

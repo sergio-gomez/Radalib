@@ -1,5 +1,5 @@
 ===================================================================
-== Radalib 20220102-232751                                       ==
+== Radalib 20220103-190559                                       ==
 ==                                                               ==
 == Copyright (c) 2022 by                                         ==
 ==   Sergio Gomez             (sergio.gomez@urv.cat)             ==
@@ -104,11 +104,11 @@ Their contents are:
     platforms.
 
 
-The size of radalib at version radalib-20220102-232751 is:
+The size of radalib at version radalib-20220103-190559 is:
 
 Code:     260 Ada files
 Files:    703 files
-Source: 66411 lines of Ada code
+Source: 66419 lines of Ada code
 
 
 -----------
