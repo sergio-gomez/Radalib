@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 11/05/2013
--- @revision 02/01/2022
+-- @revision 18/01/2022
 -- @brief Dendrograms Algorithms
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;
@@ -156,6 +156,7 @@ package Dendrograms.Algorithms is
   -- Note    :    UW | Unweighted
   --
   -- Wt      : The Weighting Type
+  -- Short   : Choose between Short or Long Name
   -- return  : The Weighting Type Name
   function To_Name(Wt: in Weighting_Type; Short: in Boolean := False) return String;
 
@@ -176,14 +177,16 @@ package Dendrograms.Algorithms is
 
   -- Purpose : Find the Clusters of Identical Patterns
   -- Note    : Only for Distance, not for Similarity
-  -- Note    : Identical Patterns have distance zero beteen them and the same distance values with the rest
+  -- Note    : Identical Patterns have distance zero between them and the same distance values with the rest
+  -- Note    : Inconsistent Patterns have distance zero between them and a different distance value with some of the rest
   -- Note    : No empty Lists in the returned List of Lists
   --
   -- Data    : The Data
   -- Pt      : The Proximity Type
   -- Precision:The number of Significant Digits for the calculations
   -- Lol_Deg : The Clusters of Identical Patterns
-  procedure Find_Indentical_Patterns(Data: in PDoubless; Pt: in Proximity_Type; Precision: in Natural; Lol_Deg: out List_Of_Lists);
+  -- Has_Inconsistent : True if Data has Inconsistent Patterns
+  procedure Find_Indentical_Patterns(Data: in PDoubless; Pt: in Proximity_Type; Precision: in Natural; Lol_Deg: out List_Of_Lists; Has_Inconsistent: out Boolean);
 
   -- Purpose : Return number of Degenerated Dendrograms due to Identical Patterns
   --
@@ -433,7 +436,8 @@ private
 
   -- Purpose : Find the Clusters of Identical Patterns
   -- Note    : Only for Distance, not for Similarity
-  -- Note    : Identical Patterns have distance zero beteen them and the same distance values with the rest
+  -- Note    : Identical Patterns have distance zero between them and the same distance values with the rest
+  -- Note    : Inconsistent Patterns have distance zero between them and a different distance value with some of the rest
   -- Note    : No empty Lists in the returned List of Lists
   --
   -- Clus    : The Clusters
@@ -442,7 +446,8 @@ private
   -- Pt      : The Proximity Type
   -- Precision:The number of Significant Digits for the calculations
   -- Lol     : The Clusters to be joined
-  procedure Find_Indentical_Patterns(Clus: in PClusters; Num_Clus: in Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Precision: in Natural; Lol: out List_Of_Lists);
+  -- Has_Inconsistent : True if Data has Inconsistent Patterns
+  procedure Find_Indentical_Patterns(Clus: in PClusters; Num_Clus: in Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Precision: in Natural; Lol: out List_Of_Lists; Has_Inconsistent: out Boolean);
 
   -- Purpose : Find the Clusters to be joined
   -- Note    : No empty Lists in the returned List of Lists

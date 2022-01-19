@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 08/05/2013
--- @revision 03/01/2022
+-- @revision 18/01/2022
 -- @brief Agglomerative Hierarchical Clustering with MultiDendrograms and Binary Dendrograms
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -383,6 +383,8 @@ procedure Hierarchical_Clustering is
   Num_Saved: Natural := 0;
   Lol_Degenerated: List_of_Lists;
   Num_Degenerated: Longint := 0;
+  Has_Identical: Boolean := False;
+  Has_Inconsistent: Boolean := False;
   Uip: UString;
   Search_Aborted: Boolean := False;
   Tick_Size, Big_Tick_Size: Longint;
@@ -728,14 +730,18 @@ begin
 
   Initialize(Dendros);
 
-  -- Find Identical Patterns Degeneration
+  -- Find Identical and Inconsistent Patterns
   if Dt = Binary_Dendrogram then
-    Find_Indentical_Patterns(Data, Pt, Precision, Lol_Degenerated);
+    Find_Indentical_Patterns(Data, Pt, Precision, Lol_Degenerated, Has_Inconsistent);
     Num_Degenerated := Indentical_Patterns_Degeneration(Lol_Degenerated);
+    Has_Identical := Number_Of_Lists(Lol_Degenerated) < N;
     Uip := Identical_Patterns(Lol_Degenerated);
     Free(Lol_Degenerated);
-    if Num_Degenerated > 1 then
+    if Has_Identical then
       Put_Line("  Degeneration     : " & L2S(Num_Degenerated) & " due to Identical Patterns " & U2S(Uip));
+    end if;
+    if Has_Inconsistent then
+      Put_Line("  Inconsistency    : There are Inconsistent Patterns that prevent problem simplification");
     end if;
   end if;
 
@@ -767,7 +773,7 @@ begin
       else
         Put_Line("  Result           : " & L2S(Num_Dendro) & " Binary Dendrograms");
       end if;
-      if Num_Degenerated > 1 then
+      if Num_Degenerated > 1 and not Has_Inconsistent then
         Put_Line("                   : " & L2S(Num_Dendro * Num_Degenerated) & " Binary Dendrograms if degeneration included");
       end if;
 
@@ -777,8 +783,13 @@ begin
       else
         Put_String_Line(U2S(Fn_Out_Count), L2S(Num_Dendro) & " Binary Dendrograms found");
       end if;
-      if Num_Degenerated > 1 then
+      if Has_Identical then
         Put_String_Line(U2S(Fn_Out_Count), "Degeneration " & L2S(Num_Degenerated) & " due to Identical Patterns " & U2S(Uip));
+      end if;
+      if Has_Inconsistent then
+        Put_String_Line(U2S(Fn_Out_Count), "There are Inconsistent Patterns that prevent problem simplification");
+      end if;
+      if Num_Degenerated > 1 and not Has_Inconsistent then
         Put_String_Line(U2S(Fn_Out_Count), L2S(Num_Dendro * Num_Degenerated) & " Binary Dendrograms if degeneration included");
       end if;
   end case;

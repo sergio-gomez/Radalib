@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 11/05/2013
--- @revision 02/01/2022
+-- @revision 18/01/2022
 -- @brief Dendrograms Algorithms
 
 with Ada.Unchecked_Deallocation;
@@ -361,6 +361,7 @@ package body Dendrograms.Algorithms is
     Total_Clus, Num_Clus: Natural;
     Internal_Names: Boolean;
     Lol: List_Of_Lists;
+    Has_Inconsistent: Boolean;
 
   begin
     Check_Data(Data, Names);
@@ -411,10 +412,12 @@ package body Dendrograms.Algorithms is
     if Pt = Distance then
       Clus_Prev := new Clusters(1..Nc);
       Clus_Prev.all := Clus.all;
-      Find_Indentical_Patterns(Clus, Num_Clus, Prox, Pt, Precision, Lol);
-      Num_Clus := Number_Of_Lists(Lol);
-      if Num_Clus < N then
+      Find_Indentical_Patterns(Clus, Num_Clus, Prox, Pt, Precision, Lol, Has_Inconsistent);
+      if Number_Of_Lists(Lol) < N and not Has_Inconsistent then
+        Num_Clus := Number_Of_Lists(Lol);
         Join_Clusters(Lol, Clus, Clus_Prev, Total_Clus, Prox, Pt, Precision, Ct, Wt, Cp, Internal_Names);
+      else
+        Free(Clus_Prev);
       end if;
       Free(Lol);
     end if;
@@ -815,7 +818,7 @@ package body Dendrograms.Algorithms is
   -- Find_Indentical_Patterns --
   ------------------------------
 
-  procedure Find_Indentical_Patterns(Clus: in PClusters; Num_Clus: in Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Precision: in Natural; Lol: out List_Of_Lists) is
+  procedure Find_Indentical_Patterns(Clus: in PClusters; Num_Clus: in Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Precision: in Natural; Lol: out List_Of_Lists; Has_Inconsistent: out Boolean) is
     Dist, Dist_I_K, Dist_J_K, Epsilon: Double;
     I, J, K: Positive;
     Ei, Ej: Element;
@@ -826,6 +829,7 @@ package body Dendrograms.Algorithms is
     Initialize(Lol, Num_Clus, Isolated_Initialization);
     case Pt is
       when Distance =>
+        Has_Inconsistent := False;
         for Ci in 1..(Num_Clus-1) loop
           I := Clus(Ci).Id;
           for Cj in (Ci+1)..Num_Clus loop
@@ -845,6 +849,7 @@ package body Dendrograms.Algorithms is
                   Dist_J_K := Round(Dist_J_K, Precision);
                   if abs (Dist_I_K - Dist_J_K) > Epsilon then
                     Dists_Eq := False;
+                    Has_Inconsistent := True;
                     exit;
                   end if;
                 end if;
@@ -869,7 +874,7 @@ package body Dendrograms.Algorithms is
   -- Find_Indentical_Patterns --
   ------------------------------
 
-  procedure Find_Indentical_Patterns(Data: in PDoubless; Pt: in Proximity_Type; Precision: in Natural; Lol_Deg: out List_Of_Lists) is
+  procedure Find_Indentical_Patterns(Data: in PDoubless; Pt: in Proximity_Type; Precision: in Natural; Lol_Deg: out List_Of_Lists; Has_Inconsistent: out Boolean) is
     N: Positive;
     Off1, Off2: Integer;
     Dist, Dist_I_K, Dist_J_K, Epsilon: Double;
@@ -885,6 +890,7 @@ package body Dendrograms.Algorithms is
     Initialize(Lol_Deg, N, Isolated_Initialization);
     case Pt is
       when Distance =>
+        Has_Inconsistent := False;
         for I in 1..(N-1) loop
           for J in (I+1)..N loop
             -- Find the zero distances
@@ -898,6 +904,7 @@ package body Dendrograms.Algorithms is
                   Dist_J_K := Round(Data(Off1 + J, Off2 + K), Precision);
                   if abs (Dist_I_K - Dist_J_K) > Epsilon then
                     Dists_Eq := False;
+                    Has_Inconsistent := True;
                     exit;
                   end if;
                 end if;
