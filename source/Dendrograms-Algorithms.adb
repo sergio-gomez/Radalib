@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2022 by
+-- Radalib, Copyright (c) 2023 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -9,7 +9,7 @@
 -- See the GNU Lesser General Public License for more details.
 --
 -- You should have received a copy of the GNU Lesser General Public License along with this
--- library (see LICENSE.txt); if not, see http://www.gnu.org/licenses/
+-- library (see LICENSE.txt); if not, see https://www.gnu.org/licenses/
 
 
 -- @filename Dendrograms-Algorithms.adb
@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 11/05/2013
--- @revision 18/01/2022
+-- @revision 26/03/2023
 -- @brief Dendrograms Algorithms
 
 with Ada.Unchecked_Deallocation;
@@ -827,9 +827,9 @@ package body Dendrograms.Algorithms is
     Epsilon := 1.0 / (10.0 ** (Precision + 1));
 
     Initialize(Lol, Num_Clus, Isolated_Initialization);
+    Has_Inconsistent := False;
     case Pt is
       when Distance =>
-        Has_Inconsistent := False;
         for Ci in 1..(Num_Clus-1) loop
           I := Clus(Ci).Id;
           for Cj in (Ci+1)..Num_Clus loop
@@ -888,9 +888,9 @@ package body Dendrograms.Algorithms is
     Off2 := Data'First(2) - 1;
 
     Initialize(Lol_Deg, N, Isolated_Initialization);
+    Has_Inconsistent := False;
     case Pt is
       when Distance =>
-        Has_Inconsistent := False;
         for I in 1..(N-1) loop
           for J in (I+1)..N loop
             -- Find the zero distances
@@ -978,6 +978,7 @@ package body Dendrograms.Algorithms is
     Ei, Ej: Element;
   begin
     Epsilon := 1.0 / (10.0 ** (Precision + 1));
+
     -- Find the extreme Proximity
     case Pt is
       when Distance =>
@@ -1005,9 +1006,9 @@ package body Dendrograms.Algorithms is
           end loop;
         end loop;
     end case;
+    Prox_Join := Round(Prox_Join, Precision);
 
     -- Find the Joining Clusters
-    Prox_Join := Round(Prox_Join, Precision);
     Initialize(Lol, Num_Clus, Isolated_Initialization);
     for Ci in 1..(Num_Clus-1) loop
       I := Clus(Ci).Id;
@@ -1033,14 +1034,14 @@ package body Dendrograms.Algorithms is
   procedure Find_Tied_Pairs(Clus: in PClusters; Num_Clus: in Positive; Prox: in PPsDoubles; Pt: in Proximity_Type; Precision: in Natural; Tp: out Tied_Pairs) is
     Lol: List_Of_Lists;
     Prox_Join, Px, Epsilon: Double;
-    Num_Tied, I, J, Ci, Cj: Positive;
-    Num_Cc, Cc, Pind: Natural;
+    I, J, Ci, Cj: Positive;
+    Num_Tied, Num_Cc, Cc, Pind: Natural;
     L: List;
     Ei, Ej: Element;
   begin
     pragma Warnings(Off, L);
     Epsilon := 1.0 / (10.0 ** (Precision + 1));
-    Num_Tied := 1;
+
     -- Find the extreme Proximity
     case Pt is
       when Distance =>
@@ -1050,44 +1051,40 @@ package body Dendrograms.Algorithms is
           for Cj in (Ci+1)..Num_Clus loop
             J := Clus(Cj).Id;
             Px := Get_Proximity(Prox, I, J);
-            if abs (Px - Prox_Join) < Epsilon then
-              Prox_Join := Min(Prox_Join, Px);
-              Num_Tied := Num_Tied + 1;
-            elsif Px < Prox_Join then
+            if Px < Prox_Join then
               Prox_Join := Px;
-              Num_Tied := 1;
             end if;
           end loop;
         end loop;
       when Similarity =>
-        Prox_Join := Double'First;
-        for Ci in 1..(Num_Clus-1) loop
+       Prox_Join := Double'First;
+       for Ci in 1..(Num_Clus-1) loop
           I := Clus(Ci).Id;
           for Cj in (Ci+1)..Num_Clus loop
             J := Clus(Cj).Id;
             Px := Get_Proximity(Prox, I, J);
-            if abs (Px - Prox_Join) < Epsilon then
-              Prox_Join := Max(Prox_Join, Px);
-              Num_Tied := Num_Tied + 1;
-            elsif Px > Prox_Join then
+            if Px > Prox_Join then
               Prox_Join := Px;
-              Num_Tied := 1;
             end if;
           end loop;
         end loop;
     end case;
+    Prox_Join := Round(Prox_Join, Precision);
 
     -- Find the Connected Components of Tied Pairs
+    Num_Tied := 0;
     Initialize(Lol, Num_Clus, Isolated_Initialization);
     for Ci in 1..(Num_Clus-1) loop
       I := Clus(Ci).Id;
       for Cj in (Ci+1)..Num_Clus loop
         J := Clus(Cj).Id;
         Px := Get_Proximity(Prox, I, J);
+        Px := Round(Px, Precision);
         if abs (Px - Prox_Join) < Epsilon then
           Ei := Get_Element(Lol, Ci);
           Ej := Get_Element(Lol, Cj);
           Move(List_Of(Ej), List_Of(Ei));
+          Num_Tied := Num_Tied + 1;
         end if;
       end loop;
     end loop;
@@ -1130,6 +1127,7 @@ package body Dendrograms.Algorithms is
           while Has_Next_Element(L) loop
             Cj := Index_Of(Next_Element(L));
             Px := Get_Proximity(Prox, Clus(Ci).Id, Clus(Cj).Id);
+            Px := Round(Px, Precision);
             if abs (Px - Prox_Join) < Epsilon then
               Pind := Pind + 1;
               Tp.Cc_Size(Cc) := Tp.Cc_Size(Cc) + 1;

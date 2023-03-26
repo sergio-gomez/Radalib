@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2021 by
+-- Radalib, Copyright (c) 2023 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -9,7 +9,7 @@
 -- See the GNU Lesser General Public License for more details.
 --
 -- You should have received a copy of the GNU Lesser General Public License along with this
--- library (see LICENSE.txt); if not, see http://www.gnu.org/licenses/
+-- library (see LICENSE.txt); if not, see https://www.gnu.org/licenses/
 
 
 -- @filename Hierarchical_Clustering.adb
@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 08/05/2013
--- @revision 18/01/2022
+-- @revision 26/03/2023
 -- @brief Agglomerative Hierarchical Clustering with MultiDendrograms and Binary Dendrograms
 
 with Ada.Command_Line; use Ada.Command_Line;
@@ -44,7 +44,7 @@ procedure Hierarchical_Clustering is
   begin
     New_Line(2);
     Put_Line("===================================================================");
-    Put_Line("== Radalib, Copyright (c) 2022 by                                ==");
+    Put_Line("== Radalib, Copyright (c) 2023 by                                ==");
     Put_Line("==   Sergio Gomez             (sergio.gomez@urv.cat)             ==");
     Put_Line("==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==");
     Put_Line("== See LICENSE.txt                                               ==");
@@ -73,8 +73,8 @@ procedure Hierarchical_Clustering is
     Put_Line("== may exist, and this tool can enumerate or count all of them,  ==");
     Put_Line("== or choose the one with maximum cophenetic correlation         ==");
     Put_Line("== See also                                                      ==");
-    Put_Line("==   http://deim.urv.cat/~sergio.gomez/mdendro.php               ==");
-    Put_Line("==   http://deim.urv.cat/~sergio.gomez/multidendrograms.php      ==");
+    Put_Line("==   https://deim.urv.cat/~sergio.gomez/mdendro.php              ==");
+    Put_Line("==   https://deim.urv.cat/~sergio.gomez/multidendrograms.php     ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;
@@ -609,6 +609,16 @@ begin
     Put_Line("                              Sample   : outputs a sorted sample of binary dendrograms");
     Put_Line("                              Best     : outputs the dendrogram(s) with largest cophenetic correlation");
     Put_Line("                              Count    : outputs the number of binary dendrograms");
+    Put_Line("                              structurally equivalent dendrograms may appear, even if built differently");
+    Put_Line("                              this affects connected components of tied distances of size greater than 3");
+    Put_Line("                              to obtain the structurally different dendrograms:");
+    Put_Line("                                set 'dendrogram_mode' to 'Sorted' or 'Unsorted'");
+    Put_Line("                                set 'internal_nodes_prefix' to 'None'");
+    Put_Line("                                set 'max_num_dendrograms' such that all binary dendrograms are generated");
+    Put_Line("                                run this tool");
+    Put_Line("                                $ cat FILENAME-bd-newick.txt | grep -v Binary | sort | uniq");
+    Put_Line("                              to count the structurally different dendrograms:");
+    Put_Line("                                $ cat FILENAME-bd-newick.txt | grep -v Binary | sort | uniq | wc -l");
     New_Line;
     Put_Line("   max_num_dendrograms   :  Maximum number of binary dendrograms");
     Put_Line("                              default => " & L2S(Default_Max_Num_Dendro));

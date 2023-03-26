@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2022 by
+-- Radalib, Copyright (c) 2023 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -9,7 +9,7 @@
 -- See the GNU Lesser General Public License for more details.
 --
 -- You should have received a copy of the GNU Lesser General Public License along with this
--- library (see LICENSE.txt); if not, see http://www.gnu.org/licenses/
+-- library (see LICENSE.txt); if not, see https://www.gnu.org/licenses/
 
 
 -- @filename Graphs_String_Operations_Arrays.ads

@@ -1,4 +1,4 @@
--- Radalib, Copyright (c) 2022 by
+-- Radalib, Copyright (c) 2023 by
 -- Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 --
 -- This library is free software; you can redistribute it and/or modify it under the terms of the
@@ -9,7 +9,7 @@
 -- See the GNU Lesser General Public License for more details.
 --
 -- You should have received a copy of the GNU Lesser General Public License along with this
--- library (see LICENSE.txt); if not, see http://www.gnu.org/licenses/
+-- library (see LICENSE.txt); if not, see https://www.gnu.org/licenses/
 
 
 -- @filename Dendrograms-Algorithms.ads
@@ -17,7 +17,7 @@
 -- @author Alberto Fernandez
 -- @version 1.0
 -- @date 11/05/2013
--- @revision 18/01/2022
+-- @revision 25/03/2023
 -- @brief Dendrograms Algorithms
 
 with Finite_Disjoint_Lists; use Finite_Disjoint_Lists;

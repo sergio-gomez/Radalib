@@ -1,7 +1,7 @@
 ===================================================================
-== Radalib 20220119-160106                                       ==
+== Radalib 20230326-204401                                       ==
 ==                                                               ==
-== Copyright (c) 2022 by                                         ==
+== Copyright (c) 2023 by                                         ==
 ==   Sergio Gomez             (sergio.gomez@urv.cat)             ==
 ==   Alberto Fernandez        (alberto.fernandez@urv.cat)        ==
 ==                                                               ==
@@ -108,7 +108,7 @@ The size of radalib at version radalib-20220119-160106 is:
 
 Code:     260 Ada files
 Files:    703 files
-Source: 66442 lines of Ada code
+Source: 66450 lines of Ada code
 
 
 -----------
@@ -303,7 +303,7 @@ The tools in Radalib are:
 License
 -------
 
-Radalib, Copyright (c) 2021 by
+Radalib, Copyright (c) 2023 by
 Sergio Gomez (sergio.gomez@urv.cat), Alberto Fernandez (alberto.fernandez@urv.cat)
 
 This library is free software; you can redistribute it and/or modify it under the terms
@@ -315,7 +315,7 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License along with
-this library (see LICENSE.txt); if not, see http://www.gnu.org/licenses/
+this library (see LICENSE.txt); if not, see https://www.gnu.org/licenses/
 
 
 ----------------

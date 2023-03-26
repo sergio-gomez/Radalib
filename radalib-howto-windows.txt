@@ -19,9 +19,6 @@ How to install the GNAT Ada compiler
 
 2) The installer automatically adds the "bin" folder of GNAT Ada GPL to the PATH
 
-3) Recommended: AdaGIDE, a simple IDE for Ada
-      http://adagide.martincarlisle.com
-
 
 -----------------------------------------
 How to install radalib for the first time
@@ -46,7 +43,7 @@ How to install radalib for the first time
       Right-click Computer -> Properties -> Advanced system settings -> Advanced -> Environment Variables
 
 3) Download latest radalib to the installation folder:
-      http://deim.urv.cat/~sergio.gomez/radalib/radalib.zip
+      https://deim.urv.cat/~sergio.gomez/radalib/radalib.zip
 
 4) Unzip radalib in the installation folder; the following main folders should appear:
       D:\Users\MyUsername\AdaStuff\radalib\compiled
@@ -67,12 +64,13 @@ How to install radalib for the first time
    since updates are frequent and require removing it before the new version
    is installed
 
+
 ---------------------
 How to update radalib
 ---------------------
 
 1) Check the version of the latest radalib available visiting:
-      http://deim.urv.cat/~sergio.gomez/radalib
+      https://deim.urv.cat/~sergio.gomez/radalib
    If the file
       radalib-yyyymmdd-hhmmss.txt
    represents a date posterior to your current radalib
@@ -87,7 +85,7 @@ How to update radalib
    Be sure this folder only contains radalib before removing it
 
 4) Download latest radalib to the installation folder:
-      http://deim.urv.cat/~sergio.gomez/radalib/radalib.zip
+      https://deim.urv.cat/~sergio.gomez/radalib/radalib.zip
 
 5) Unzip radalib in the installation folder; the following main folders should appear:
       D:\Users\MyUsername\AdaStuff\radalib\compiled

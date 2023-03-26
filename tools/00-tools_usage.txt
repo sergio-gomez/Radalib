@@ -403,8 +403,8 @@ Usage:  Extract_Subgraphs.exe  net_name  clu_or_lol_name  out_name_prefix  [ num
 == may exist, and this tool can enumerate or count all of them,  ==
 == or choose the one with maximum cophenetic correlation         ==
 == See also                                                      ==
-==   http://deim.urv.cat/~sergio.gomez/mdendro.php               ==
-==   http://deim.urv.cat/~sergio.gomez/multidendrograms.php      ==
+==   https://deim.urv.cat/~sergio.gomez/mdendro.php              ==
+==   https://deim.urv.cat/~sergio.gomez/multidendrograms.php     ==
 ===================================================================
 
 
@@ -476,6 +476,16 @@ Usage:  Hierarchical_Clustering.exe  proximities_name  output_prefix  dendrogram
                               Sample   : outputs a sorted sample of binary dendrograms
                               Best     : outputs the dendrogram(s) with largest cophenetic correlation
                               Count    : outputs the number of binary dendrograms
+                              structurally equivalent dendrograms may appear, even if built differently
+                              this affects connected components of tied distances of size greater than 3
+                              to obtain the structurally different dendrograms:
+                                set 'dendrogram_mode' to 'Sorted' or 'Unsorted'
+                                set 'internal_nodes_prefix' to 'None'
+                                set 'max_num_dendrograms' such that all binary dendrograms are generated
+                                run this tool
+                                $ cat FILENAME-bd-newick.txt | grep -v Binary | sort | uniq
+                              to count the structurally different dendrograms:
+                                $ cat FILENAME-bd-newick.txt | grep -v Binary | sort | uniq | wc -l
 
    max_num_dendrograms   :  Maximum number of binary dendrograms
                               default => 1000
