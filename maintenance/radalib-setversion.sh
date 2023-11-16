@@ -11,5 +11,5 @@ cd ..
 rm -f radalib-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9].txt
 echo $VERSNAME > $VERSFILE
 
-sed -e "s/^== Radalib .*==$/== Radalib $VERS                                       ==/g" $README > $READMETMP
+sed -e "s/^== Radalib .*==/== Radalib $VERS                                       ==/g" $README > $READMETMP
 mv $READMETMP $README

@@ -73,8 +73,8 @@ procedure Hierarchical_Clustering is
     Put_Line("== may exist, and this tool can enumerate or count all of them,  ==");
     Put_Line("== or choose the one with maximum cophenetic correlation         ==");
     Put_Line("== See also                                                      ==");
-    Put_Line("==   https://deim.urv.cat/~sergio.gomez/mdendro.php              ==");
-    Put_Line("==   https://deim.urv.cat/~sergio.gomez/multidendrograms.php     ==");
+    Put_Line("==  https://webs-deim.urv.cat/~sergio.gomez/mdendro.php          ==");
+    Put_Line("==  https://webs-deim.urv.cat/~sergio.gomez/multidendrograms.php ==");
     Put_Line("===================================================================");
     New_Line(2);
   end Put_Info;

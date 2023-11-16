@@ -7,7 +7,7 @@ Ada library and tools for the analysis of Complex Networks and more.
 
 ## Description
 
-**Radalib** is a library originally developed by [*Sergio Gómez*](https://deim.urv.cat/~sergio.gomez) (sergio.gomez@urv.cat) and *Alberto Fernández* (alberto.fernandez@urv.cat), which we have continuously been updating for our research within the [*Alephsys*](https://deim.urv.cat/~alephsys) research group, led by [*Alex Arenas*](https://deim.urv.cat/~alexandre.arenas), at [*Universitat Rovira i Virgili*](https://www.urv.cat/en/) (URV), Tarragona, since 2004. Previous experience showed that the continuous reuse of code was a painful task, thus we decided to be more structured and separate general purpose code (e.g. manipulation of networks and partitions) from the specific details of particular applications (e.g. Monte Carlo simulation of epidemic spreading). The result was the development of a general purpose library, mostly devoted to complex networks, and developed around abstract data types. This means the types are defined as "private", with public subprograms operating on them and encapsulating their implementations, thus allowing for future enhancements without having to modify the programs already using them. We could have used object oriented programming, but we believe polymorphism and inheritance are basically useless for this kind of applications.
+**Radalib** is a library originally developed by [*Sergio Gómez*](https://webs-deim.urv.cat/~sergio.gomez) (sergio.gomez@urv.cat) and *Alberto Fernández* (alberto.fernandez@urv.cat), which we have continuously been updating for our research within the [*Alephsys*](https://webs-deim.urv.cat/~alephsys) research group, led by [*Alex Arenas*](https://webs-deim.urv.cat/~alexandre.arenas), at [*Universitat Rovira i Virgili*](https://www.urv.cat/en/) (URV), Tarragona, since 2004. Previous experience showed that the continuous reuse of code was a painful task, thus we decided to be more structured and separate general purpose code (e.g. manipulation of networks and partitions) from the specific details of particular applications (e.g. Monte Carlo simulation of epidemic spreading). The result was the development of a general purpose library, mostly devoted to complex networks, and developed around abstract data types. This means the types are defined as "private", with public subprograms operating on them and encapsulating their implementations, thus allowing for future enhancements without having to modify the programs already using them. We could have used object oriented programming, but we believe polymorphism and inheritance are basically useless for this kind of applications.
 
 The selected language was Ada, for several reasons: performance (it is a compiled language, not interpreted), readable code, support for abstract data types, strict data type system (allows catching many errors at compile time), advanced support of generics, high level support for concurrent programming (just in case it is needed), availability of high quality compilers for the main platforms (*Windows*, *Linux*, *MacOS*), and the confidence in your code when using it. The main drawback was the absence of code from other people we could reuse, but that was not a problem since we wanted full control and detailed understanding of every line of code used for our research.
 
@@ -16,8 +16,8 @@ The selected language was Ada, for several reasons: performance (it is a compile
 
 ## Webs
 
-- **Radalib** home: https://deim.urv.cat/~sergio.gomez/radalib.php and [GitHub](https://github.com/sergio-gomez/Radalib)
-- **Radatools** home: https://deim.urv.cat/~sergio.gomez/radatools.php
+- **Radalib** home: https://webs-deim.urv.cat/~sergio.gomez/radalib.php and [GitHub](https://github.com/sergio-gomez/Radalib)
+- **Radatools** home: https://webs-deim.urv.cat/~sergio.gomez/radatools.php
 
 
 ## Structure
@@ -230,5 +230,5 @@ We thank *Javier Borge-Holthoefer* for his important contributions to **Radalib*
 
 - **Alberto Fernández**: Dept. Enginyeria Química, Universitat Rovira i Virgili, Tarragona (Spain). ([email](mailto:alberto.fernandez@urv.cat?subject=[mdendro])) ([ORCID](https://orcid.org/0000-0002-1241-1646)) ([Google Scholar](https://scholar.google.es/citations?user=AbH4r0IAAAAJ)) ([GitHub](https://github.com/albyfs))
 
-- **Sergio Gómez**: Dept. Enginyeria Informàtica i Matemàtiques, Universitat Rovira i Virgili, Tarragona (Spain). ([web](https://deim.urv.cat/~sergio.gomez/)) ([email](mailto:sergio.gomez@urv.cat?subject=[mdendro])) ([ORCID](https://orcid.org/0000-0003-1820-0062)) ([Google Scholar](https://scholar.google.es/citations?user=ETrjkSIAAAAJ)) ([GitHub](https://github.com/sergio-gomez)) ([Twitter](https://twitter.com/SergioGomezJ))
+- **Sergio Gómez**: Dept. Enginyeria Informàtica i Matemàtiques, Universitat Rovira i Virgili, Tarragona (Spain). ([web](https://webs-deim.urv.cat/~sergio.gomez/)) ([email](mailto:sergio.gomez@urv.cat?subject=[mdendro])) ([ORCID](https://orcid.org/0000-0003-1820-0062)) ([Google Scholar](https://scholar.google.es/citations?user=ETrjkSIAAAAJ)) ([GitHub](https://github.com/sergio-gomez)) ([Twitter](https://twitter.com/SergioGomezJ))
 

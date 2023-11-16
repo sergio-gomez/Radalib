@@ -49,10 +49,10 @@ How to install radalib for the first time
       $ cd /home/myusername/ada
 
 5) Download latest radalib to the installation folder (with wget or a browser):
-      $ wget https://deim.urv.cat/~sergio.gomez/radalib/radalib.zip
+      $ wget https://webs-deim.urv.cat/~sergio.gomez/radalib/radalib.zip
 
 6) Download installation script to the installation folder (with wget or a browser):
-      $ wget https://deim.urv.cat/~sergio.gomez/radalib/radalib-install-linux.sh
+      $ wget https://webs-deim.urv.cat/~sergio.gomez/radalib/radalib-install-linux.sh
 
 7) Run the installation script:
       $ chmod 755 radalib-install-linux.sh
@@ -74,7 +74,7 @@ How to update radalib
 ---------------------
 
 1) Check the version of the latest radalib available visiting:
-      https://deim.urv.cat/~sergio.gomez/radalib
+      https://webs-deim.urv.cat/~sergio.gomez/radalib
    If the file
       radalib-yyyymmdd-hhmmss.txt
    represents a date posterior to your current radalib
@@ -89,10 +89,10 @@ How to update radalib
    Be sure this directory only contains radalib before removing it
 
 4) Download latest radalib to the installation folder (with wget or a browser):
-      $ wget https://deim.urv.cat/~sergio.gomez/radalib/radalib.zip
+      $ wget https://webs-deim.urv.cat/~sergio.gomez/radalib/radalib.zip
 
 5) Download installation script to the installation folder (with wget or a browser):
-      $ wget https://deim.urv.cat/~sergio.gomez/radalib/radalib-install-linux.sh
+      $ wget https://webs-deim.urv.cat/~sergio.gomez/radalib/radalib-install-linux.sh
 
 6) Run the installation script:
       $ chmod 755 radalib-install-linux.sh

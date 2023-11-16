@@ -403,8 +403,8 @@ Usage:  Extract_Subgraphs.exe  net_name  clu_or_lol_name  out_name_prefix  [ num
 == may exist, and this tool can enumerate or count all of them,  ==
 == or choose the one with maximum cophenetic correlation         ==
 == See also                                                      ==
-==   https://deim.urv.cat/~sergio.gomez/mdendro.php              ==
-==   https://deim.urv.cat/~sergio.gomez/multidendrograms.php     ==
+==  https://webs-deim.urv.cat/~sergio.gomez/mdendro.php          ==
+==  https://webs-deim.urv.cat/~sergio.gomez/multidendrograms.php ==
 ===================================================================
 
 
